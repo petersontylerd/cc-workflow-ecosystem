@@ -1,0 +1,41 @@
+[project]
+name = "workflow-ecosystem"
+version = "0.1.0"
+description = "Comprehensive workflow ecosystem for human-agent co-development"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pyyaml>=6.0.0",
+    "jsonschema>=4.23.0",
+]
+
+[dependency-groups]
+dev = [
+    "bandit>=1.8.6",
+    "mypy>=1.18.2",
+    "pip-audit>=2.9.0",
+    "pre-commit>=4.3.0",
+    "pytest>=8.3.0",
+    "pytest-cov>=6.0.0",
+    "ruff>=0.13.1",
+    "types-pyyaml>=6.0.12.20250915",
+]
+
+[tool.ruff]
+# Neutral: only help with version inference.
+target-version = "py312"
+
+[tool.mypy]
+# Neutral: only declare Python version + ignore missing imports for low friction.
+python_version = "3.12"
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+
+[tool.coverage.run]
+source = ["tests"]
+omit = ["tests/conftest.py"]

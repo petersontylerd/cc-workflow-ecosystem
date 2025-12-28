@@ -1,0 +1,41 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.9
+    hooks:
+      - id: ruff-format
+        stages: [pre-commit]
+        files: '\.py$'
+      - id: ruff
+        stages: [pre-commit]
+        files: '\.py$'
+
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.17.2
+    hooks:
+      - id: markdownlint-cli2
+        stages: [pre-commit]
+        files: '\.(md|markdown)$'
+        exclude: '^(archive/|\.serena/|MASTER_CLAUDE\.md|CLAUDE\.md)'
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.11.2
+    hooks:
+      - id: mypy
+        stages: [pre-commit]
+        files: '\.py$'
+        additional_dependencies: [types-PyYAML]
+
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.9
+    hooks:
+      - id: bandit
+        stages: [pre-push]
+        files: '\.py$'
+        args: [-q, -r, .]
+
+  - repo: https://github.com/pypa/pip-audit
+    rev: v2.7.3
+    hooks:
+      - id: pip-audit
+        stages: [pre-push]
+        pass_filenames: false

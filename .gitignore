@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.uv/
+.coverage
+.pytest_cache/
+
+# Node / Next.js
+node_modules/
+dist/
+.next/
+.out/
+
+# Editors / OS
+.vscode/
+.DS_Store
+
+
+# Tooling and workspace artifacts
+.codex/
+.serena/
+scratchpaper/
+!scratchpaper/modeling/native_feature_indices_demo.json
+project_needle.code-workspace
+project_needle_2.code-workspace
+MASTER_AGENTS.md
+**/AGENTS.md
+__pycache__/
+*.py[cod]
+*.pyo
+.mypy_cache/
+.pytest_cache/
+.npm-cache/
+.ruff_cache/
+.npm-cache/
+.coverage
+htmlcov/
+.venv/
+.env
+env/
+.vscode/
+.idea/
+.uv/
+.uv-cache/
+build/
+dist/
+*.egg-info/
+.scratch/
+
+# Joblib temp folder
+.joblib_temp

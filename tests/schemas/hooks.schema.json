@@ -1,0 +1,85 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Claude Code Plugin Hooks",
+  "description": "Schema for hooks/hooks.json",
+  "type": "object",
+  "required": ["hooks"],
+  "properties": {
+    "hooks": {
+      "type": "object",
+      "description": "Hook configurations by event type",
+      "properties": {
+        "SessionStart": {
+          "type": "array",
+          "description": "Hooks triggered on session start",
+          "items": {
+            "$ref": "#/definitions/hookEntry"
+          }
+        },
+        "PreToolUse": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/hookEntry"
+          }
+        },
+        "PostToolUse": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/hookEntry"
+          }
+        },
+        "Notification": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/hookEntry"
+          }
+        },
+        "Stop": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/hookEntry"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "definitions": {
+    "hookEntry": {
+      "type": "object",
+      "properties": {
+        "matcher": {
+          "type": "string",
+          "description": "Regex pattern to match events"
+        },
+        "hooks": {
+          "type": "array",
+          "description": "List of hook commands",
+          "items": {
+            "$ref": "#/definitions/hookCommand"
+          }
+        }
+      },
+      "required": ["hooks"]
+    },
+    "hookCommand": {
+      "type": "object",
+      "required": ["type", "command"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["command"],
+          "description": "Hook type"
+        },
+        "command": {
+          "type": "string",
+          "description": "Command to execute"
+        },
+        "timeout": {
+          "type": "integer",
+          "description": "Timeout in milliseconds"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,90 @@
+---
+description: Create a bite-sized implementation plan with exact file paths, complete code, and test commands
+argument-hint: "[feature name or design document path]"
+---
+
+# /plan Command
+
+Create a detailed implementation plan from a design or requirements.
+
+## Usage
+
+```
+/plan user-authentication
+/plan docs/plans/2024-01-15-auth-design.md
+/plan "add email validation to registration"
+```
+
+## Workflow
+
+This command invokes the `writing-plans` skill.
+
+### What Happens
+
+1. **Read Design**: Load the design document or understand the feature
+2. **Break Down Tasks**: Decompose into 2-5 minute steps
+3. **Detail Each Task**: For each task, specify:
+   - Exact file paths to create/modify
+   - Complete code (no placeholders)
+   - Test commands with expected output
+   - TDD cycle (test → fail → implement → pass → commit)
+4. **Save Plan**: Write to `docs/plans/YYYY-MM-DD-<feature>-plan.md`
+
+### Output Format
+
+```markdown
+# [Feature] Implementation Plan
+
+**Goal:** [One sentence]
+**Architecture:** [2-3 sentences]
+**Tech Stack:** [Technologies]
+
+---
+
+## Task 1: [Component Name]
+
+**Files:**
+- Create: `exact/path/to/file.py`
+- Test: `tests/path/to/test.py`
+
+**Step 1: Write failing test**
+[Complete test code]
+
+**Step 2: Run test to verify it fails**
+Run: `pytest tests/...`
+Expected: FAIL
+
+**Step 3: Write minimal implementation**
+[Complete implementation code]
+
+**Step 4: Run test to verify it passes**
+Run: `pytest tests/...`
+Expected: PASS
+
+**Step 5: Commit**
+`git commit -m "feat(scope): description"`
+
+---
+
+## Task 2: ...
+```
+
+### Next Steps
+
+After plan is complete:
+- `/implement` - Execute with subagent orchestration
+- Manual execution following the plan steps
+
+## Key Principles
+
+- **2-5 minutes per step** - Bite-sized and focused
+- **Complete code** - No "add validation here"
+- **Exact commands** - Include expected output
+- **TDD always** - Test → Fail → Implement → Pass → Commit
+
+## Related Commands
+
+- `/brainstorm` - Explore design before planning
+- `/branch` - Create feature branch
+- `/implement` - Execute the plan
+- `/verify` - Validate implementation
