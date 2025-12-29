@@ -57,6 +57,7 @@ Or enable auto-updates through `/plugin` → Marketplaces → workflow-ecosystem
 /verify        # Run pre-completion verification
 /commit        # Create atomic commit with conventional format
 /pr            # Generate PR description
+/workflow      # Manage enforcement state (skip/status/reset)
 ```
 
 ## Components
@@ -83,6 +84,7 @@ Or enable auto-updates through `/plugin` → Marketplaces → workflow-ecosystem
 | `/verify` | Run pre-completion checks |
 | `/commit` | Create atomic commit |
 | `/pr` | Generate PR description |
+| `/workflow` | Manage enforcement state (skip/status/reset) |
 
 ### Agents
 
@@ -122,6 +124,19 @@ User Request
 
 ## Key Disciplines
 
+### Workflow Enforcement
+
+The plugin **actively blocks** violations through hooks:
+
+| Action | Blocked When | Resolution |
+|--------|--------------|------------|
+| Write/Edit code | On main/master branch | Run `/branch` first |
+| Write/Edit code | In brainstorming phase | Complete `/branch` → `/plan` |
+| Write/Edit code | Branch created but no plan | Run `/plan` first |
+| Git commit | Source files without tests | Stage test files first |
+
+**Escape hatch**: Use `/workflow skip` to bypass enforcement (not recommended).
+
 ### Verification
 
 No completion claims without evidence:
@@ -134,12 +149,14 @@ No completion claims without evidence:
 Write test first, watch it fail, implement, watch it pass:
 - Red-green-refactor cycle is mandatory
 - No implementation without a failing test first
+- Commits blocked if source files staged without tests
 
 ### Feature Branches
 
 Never commit to main:
 - Pattern: `feat/<issue>-<slug>` or `fix/<issue>-<slug>`
 - Atomic commits with conventional format
+- Write/Edit blocked on main/master branch
 
 ## Directory Structure
 
@@ -148,15 +165,19 @@ workflow-ecosystem/
 ├── .claude-plugin/
 │   └── plugin.json              # Plugin manifest
 ├── hooks/
-│   ├── hooks.json               # Hook configurations (SessionStart, PreToolCall, PostToolCall)
+│   ├── hooks.json               # Hook configurations (SessionStart, PreToolUse, PostToolUse)
 │   ├── run-hook.cmd             # Cross-platform hook runner
 │   ├── session-start.sh         # Inject ecosystem context on startup
+│   ├── main-branch-protection.sh # BLOCKS Write/Edit on main/master
+│   ├── workflow-phase-check.sh  # BLOCKS Write/Edit without plan
+│   ├── phase-transition.sh      # Updates workflow phase on skill completion
+│   ├── workflow-skip-set.sh     # Sets skip marker for bypass
 │   ├── brainstorm-mode-check.sh # Block Write/Edit during brainstorming
 │   ├── brainstorm-start.sh      # Set brainstorming state
 │   ├── brainstorm-end.sh        # Clear brainstorming state
 │   ├── verify-before-commit.sh  # Pre-commit verification reminder
 │   ├── validate-context-packet.sh # Validate subagent context
-│   └── tdd-precommit-check.sh   # TDD discipline reminder
+│   └── tdd-precommit-check.sh   # BLOCKS commits without tests
 ├── skills/                       # Core competencies
 ├── commands/                     # User-invokable workflows
 ├── agents/                       # Specialized subagents

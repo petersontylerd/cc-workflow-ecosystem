@@ -59,6 +59,7 @@ def expected_commands() -> list[str]:
         "plan",
         "pr",
         "verify",
+        "workflow",
     ]
 
 
@@ -79,9 +80,13 @@ def expected_hooks() -> list[str]:
         "brainstorm-end.sh",
         "brainstorm-mode-check.sh",
         "brainstorm-start.sh",
+        "main-branch-protection.sh",
+        "phase-transition.sh",
         "run-hook.cmd",
         "session-start.sh",
         "tdd-precommit-check.sh",
         "validate-context-packet.sh",
         "verify-before-commit.sh",
+        "workflow-phase-check.sh",
+        "workflow-skip-set.sh",
     ]

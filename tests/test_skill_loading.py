@@ -46,9 +46,9 @@ class TestSkillLoading:
             data = yaml.safe_load(frontmatter)
 
             assert "name" in data, f"Missing 'name' in {skill_name}/SKILL.md"
-            assert (
-                "description" in data
-            ), f"Missing 'description' in {skill_name}/SKILL.md"
+            assert "description" in data, (
+                f"Missing 'description' in {skill_name}/SKILL.md"
+            )
             assert len(data["name"]) > 0, f"Empty name in {skill_name}"
             assert len(data["description"]) > 0, f"Empty description in {skill_name}"
 
@@ -64,9 +64,9 @@ class TestSkillLoading:
 
             # Remove frontmatter and check content
             body = self._extract_body(content)
-            assert (
-                len(body.strip()) > 100
-            ), f"Content too short in {skill_name}/SKILL.md"
+            assert len(body.strip()) > 100, (
+                f"Content too short in {skill_name}/SKILL.md"
+            )
 
     def test_skill_names_match_directory(
         self, plugin_root: Path, expected_skills: list[str]

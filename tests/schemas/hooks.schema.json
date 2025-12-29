@@ -16,16 +16,16 @@
             "$ref": "#/definitions/hookEntry"
           }
         },
-        "PreToolCall": {
+        "PreToolUse": {
           "type": "array",
-          "description": "Hooks triggered before tool calls",
+          "description": "Hooks triggered before tool use",
           "items": {
             "$ref": "#/definitions/hookEntry"
           }
         },
-        "PostToolCall": {
+        "PostToolUse": {
           "type": "array",
-          "description": "Hooks triggered after tool calls",
+          "description": "Hooks triggered after tool use",
           "items": {
             "$ref": "#/definitions/hookEntry"
           }

@@ -54,6 +54,7 @@ Claude: Uses /branch to create feat/42-user-auth
 | `/plan` | After design is complete | Creates bite-sized implementation plan |
 | `/implement` | With a plan ready | Orchestrates subagents for execution |
 | `/verify` | Before claiming done | Runs verification checks |
+| `/workflow` | Managing enforcement | Skip, check status, or reset workflow state |
 
 ## Understanding Skills
 
@@ -118,7 +119,20 @@ git checkout -b feat/<issue>-<slug>
 
 All work happens on feature branches with proper naming.
 
-### 4. Atomic Commits
+### 4. Workflow Enforcement
+
+The ecosystem **actively blocks** violations:
+
+| Blocked Action | When | How to Proceed |
+|----------------|------|----------------|
+| Write/Edit code | On main/master | Run `/branch` first |
+| Write/Edit code | During brainstorming | Complete `/branch` → `/plan` |
+| Write/Edit code | No plan exists | Run `/plan` first |
+| Git commit | No test files staged | Stage tests with source |
+
+**Escape hatch**: `/workflow skip` bypasses enforcement (use sparingly).
+
+### 5. Atomic Commits
 
 ```
 One logical change per commit
@@ -216,6 +230,19 @@ Claude:
 - Trust subagent success reports without checking
 
 ## Troubleshooting
+
+### "Claude is blocking my edits"
+
+The workflow enforcement hooks block edits in certain situations:
+
+| Block Message | Cause | Solution |
+|---------------|-------|----------|
+| "Cannot edit on main/master" | You're on the main branch | Run `/branch feat/<issue>-<slug>` |
+| "Still in brainstorming phase" | Brainstorming not complete | Run `/branch` then `/plan` |
+| "No implementation plan" | Branch exists but no plan | Run `/plan` |
+| "TDD VIOLATION" | Committing source without tests | Stage test files too |
+
+**Quick bypass**: `/workflow skip` disables all enforcement for the session.
 
 ### "Claude isn't using the skills"
 

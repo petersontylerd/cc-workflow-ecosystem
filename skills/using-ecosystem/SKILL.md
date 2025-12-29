@@ -38,6 +38,7 @@ This ecosystem provides three tiers of automation:
 | `/implement` | Execute plan with subagent orchestration |
 | `/branch` | Create/switch feature branches with enforcement |
 | `/verify` | Run pre-completion verification |
+| `/workflow` | Manage enforcement state (skip/status/reset) |
 
 ## Available Agents
 
@@ -118,6 +119,38 @@ These disciplines are NON-NEGOTIABLE:
 2. **Verification**: Run command → See output → THEN claim result
 3. **Atomic Commits**: One logical change per commit
 4. **Feature Branches**: Never commit to main directly
+
+## Workflow Enforcement
+
+The ecosystem **actively enforces** workflow discipline through blocking hooks:
+
+### What Gets Blocked
+
+| Action | Blocked When | How to Proceed |
+|--------|--------------|----------------|
+| Write/Edit code | On main/master branch | Run `/branch` first |
+| Write/Edit code | In brainstorming phase | Complete `/branch` → `/plan` |
+| Write/Edit code | Branch created but no plan | Run `/plan` first |
+| Git commit | Source files without tests staged | Stage test files or `/workflow skip` |
+
+### Workflow Phases
+
+```
+idle → brainstorming → branched → planned → implementing → verifying → idle
+       (blocks edits)   (blocks edits)   (allows edits)
+```
+
+### Escape Hatch
+
+For experienced users who understand the risks:
+
+```
+/workflow skip    # Bypass enforcement for this session
+/workflow status  # Check current phase
+/workflow reset   # Re-enable enforcement
+```
+
+**Warning**: Skipping enforcement removes guardrails that prevent bugs and maintain quality.
 
 ## Subagent Orchestration Pattern
 

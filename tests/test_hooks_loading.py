@@ -99,3 +99,99 @@ class TestHooksLoading:
                                 commands.append(hook["command"])
 
         return commands
+
+
+class TestEnforcementHooks:
+    """Tests for workflow enforcement hooks."""
+
+    def test_main_branch_protection_exists(self, plugin_root: Path) -> None:
+        """main-branch-protection.sh must exist and be executable."""
+        script = plugin_root / "hooks" / "main-branch-protection.sh"
+        assert script.exists(), "Missing main-branch-protection.sh"
+
+        import os
+        import stat
+
+        mode = os.stat(script).st_mode
+        is_executable = mode & (stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+        assert is_executable, "main-branch-protection.sh not executable"
+
+    def test_workflow_phase_check_exists(self, plugin_root: Path) -> None:
+        """workflow-phase-check.sh must exist and be executable."""
+        script = plugin_root / "hooks" / "workflow-phase-check.sh"
+        assert script.exists(), "Missing workflow-phase-check.sh"
+
+        import os
+        import stat
+
+        mode = os.stat(script).st_mode
+        is_executable = mode & (stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+        assert is_executable, "workflow-phase-check.sh not executable"
+
+    def test_phase_transition_exists(self, plugin_root: Path) -> None:
+        """phase-transition.sh must exist and be executable."""
+        script = plugin_root / "hooks" / "phase-transition.sh"
+        assert script.exists(), "Missing phase-transition.sh"
+
+        import os
+        import stat
+
+        mode = os.stat(script).st_mode
+        is_executable = mode & (stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+        assert is_executable, "phase-transition.sh not executable"
+
+    def test_workflow_skip_set_exists(self, plugin_root: Path) -> None:
+        """workflow-skip-set.sh must exist and be executable."""
+        script = plugin_root / "hooks" / "workflow-skip-set.sh"
+        assert script.exists(), "Missing workflow-skip-set.sh"
+
+        import os
+        import stat
+
+        mode = os.stat(script).st_mode
+        is_executable = mode & (stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+        assert is_executable, "workflow-skip-set.sh not executable"
+
+    def test_hooks_json_has_write_edit_enforcement(self, plugin_root: Path) -> None:
+        """hooks.json must have main-branch-protection and workflow-phase-check for Write|Edit."""
+        hooks_json = plugin_root / "hooks" / "hooks.json"
+        data = json.loads(hooks_json.read_text())
+
+        pretool_hooks = data.get("hooks", {}).get("PreToolUse", [])
+        write_edit_hooks = [
+            h for h in pretool_hooks if h.get("matcher") == "Write|Edit"
+        ]
+
+        assert len(write_edit_hooks) == 1, "Expected exactly one Write|Edit hook entry"
+
+        commands = [
+            hook.get("command", "") for hook in write_edit_hooks[0].get("hooks", [])
+        ]
+        commands_str = " ".join(commands)
+
+        assert "main-branch-protection.sh" in commands_str, (
+            "Write|Edit hooks missing main-branch-protection.sh"
+        )
+        assert "workflow-phase-check.sh" in commands_str, (
+            "Write|Edit hooks missing workflow-phase-check.sh"
+        )
+
+    def test_hooks_json_has_phase_transitions(self, plugin_root: Path) -> None:
+        """hooks.json must have phase-transition.sh for skill completions."""
+        hooks_json = plugin_root / "hooks" / "hooks.json"
+        data = json.loads(hooks_json.read_text())
+
+        posttool_hooks = data.get("hooks", {}).get("PostToolUse", [])
+
+        # Extract all commands from PostToolUse hooks
+        commands = []
+        for hook_entry in posttool_hooks:
+            for hook in hook_entry.get("hooks", []):
+                cmd = hook.get("command", "")
+                if cmd:
+                    commands.append(cmd)
+
+        commands_str = " ".join(commands)
+        assert "phase-transition.sh" in commands_str, (
+            "PostToolUse hooks missing phase-transition.sh"
+        )

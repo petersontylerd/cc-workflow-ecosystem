@@ -30,6 +30,14 @@
         "hooks": [
           {
             "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" main-branch-protection.sh"
+          },
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" workflow-phase-check.sh"
+          },
+          {
+            "type": "command",
             "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" brainstorm-mode-check.sh"
           }
         ]
@@ -60,6 +68,42 @@
           {
             "type": "command",
             "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" brainstorm-end.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Skill.*(git-workflow|branch)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" phase-transition.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Skill.*(orchestrating|implement)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" phase-transition.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Skill.*(verification|verify)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" phase-transition.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Skill.*workflow.*skip",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" workflow-skip-set.sh"
           }
         ]
       }

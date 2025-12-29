@@ -49,9 +49,9 @@ class TestPluginJsonSchema:
         data = json.loads(plugin_json.read_text())
         version = data.get("version", "")
         semver_pattern = r"^\d+\.\d+\.\d+(-[a-zA-Z0-9.]+)?$"
-        assert re.match(
-            semver_pattern, version
-        ), f"Version '{version}' is not valid semver"
+        assert re.match(semver_pattern, version), (
+            f"Version '{version}' is not valid semver"
+        )
 
 
 class TestHooksJsonSchema:

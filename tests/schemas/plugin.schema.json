@@ -25,8 +25,18 @@
       "format": "uri"
     },
     "author": {
-      "type": "string",
-      "description": "Plugin author"
+      "oneOf": [
+        {"type": "string"},
+        {
+          "type": "object",
+          "properties": {
+            "name": {"type": "string"},
+            "email": {"type": "string", "format": "email"}
+          },
+          "required": ["name"]
+        }
+      ],
+      "description": "Plugin author (string or object with name/email)"
     },
     "license": {
       "type": "string",

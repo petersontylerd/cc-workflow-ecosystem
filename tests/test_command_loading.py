@@ -30,9 +30,9 @@ class TestCommandLoading:
 
             # Should have # title after frontmatter
             first_line = body.strip().split("\n")[0]
-            assert first_line.startswith(
-                "# "
-            ), f"Command {command_name} should have '# ' title after frontmatter"
+            assert first_line.startswith("# "), (
+                f"Command {command_name} should have '# ' title after frontmatter"
+            )
 
     def test_all_commands_have_usage_section(
         self, plugin_root: Path, expected_commands: list[str]
@@ -57,9 +57,9 @@ class TestCommandLoading:
             command_file = commands_dir / f"{command_name}.md"
             content = command_file.read_text()
 
-            assert (
-                "## Workflow" in content or "## What Happens" in content
-            ), f"Missing workflow documentation in {command_name}"
+            assert "## Workflow" in content or "## What Happens" in content, (
+                f"Missing workflow documentation in {command_name}"
+            )
 
     def test_all_commands_have_sufficient_content(
         self, plugin_root: Path, expected_commands: list[str]
@@ -90,9 +90,9 @@ class TestCommandLoading:
             first_line = body.strip().split("\n")[0].lower()
 
             # Title should contain the command name or /command
-            assert (
-                command_name in first_line or f"/{command_name}" in first_line
-            ), f"Title doesn't reference command name in {command_name}"
+            assert command_name in first_line or f"/{command_name}" in first_line, (
+                f"Title doesn't reference command name in {command_name}"
+            )
 
     def _extract_body(self, content: str) -> str:
         """Extract body content after frontmatter."""

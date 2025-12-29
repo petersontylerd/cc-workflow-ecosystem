@@ -67,9 +67,9 @@ class TestSkillsDirectory:
             content = skill_file.read_text()
             assert content.startswith("---"), f"{skill_file} missing frontmatter"
             assert "name:" in content, f"{skill_file} missing 'name' in frontmatter"
-            assert (
-                "description:" in content
-            ), f"{skill_file} missing 'description' in frontmatter"
+            assert "description:" in content, (
+                f"{skill_file} missing 'description' in frontmatter"
+            )
 
 
 class TestCommandsDirectory:

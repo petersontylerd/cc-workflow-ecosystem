@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# PreToolCall hook: Check for TDD discipline before commit
-# Reminds about test-first development when committing source files
+# PreToolUse hook: Enforce TDD discipline before commit
+# BLOCKS commits of source files without corresponding tests
 
 set -euo pipefail
 
@@ -12,9 +12,13 @@ if ! echo "$TOOL_INPUT" | grep -qE "git\s+commit"; then
   exit 0
 fi
 
-# Determine plugin root to check project structure
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
-PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+# Check for workflow skip marker
+SESSION_DIR="${CLAUDE_SESSION_DIR:-${TMPDIR:-/tmp}/claude-session}"
+SKIP_FILE="${SESSION_DIR}/.workflow_skip"
+if [[ -f "$SKIP_FILE" ]]; then
+  echo '{}'
+  exit 0
+fi
 
 # Check if we're in a git repo with staged files
 if ! git rev-parse --git-dir > /dev/null 2>&1; then
@@ -48,9 +52,8 @@ if [[ -n "$UNTESTED_FILES" ]]; then
   UNTESTED_FILES="${UNTESTED_FILES%, }"
   cat <<EOF
 {
-  "hookSpecificOutput": {
-    "additionalContext": "TDD REMINDER: Committing source files without corresponding tests: ${UNTESTED_FILES}. Per TDD discipline: write test first, watch it fail, implement, watch it pass, then commit. Consider adding tests before committing."
-  }
+  "decision": "block",
+  "reason": "TDD VIOLATION: Committing source files without tests: ${UNTESTED_FILES}. TDD discipline requires: write test → watch fail → implement → watch pass → commit. Stage test files or use /workflow skip to bypass."
 }
 EOF
   exit 0
