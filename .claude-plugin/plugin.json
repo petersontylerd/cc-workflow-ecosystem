@@ -9,6 +9,5 @@
   "homepage": "https://github.com/petersontylerd/cc-workflow-ecosystem",
   "repository": "https://github.com/petersontylerd/cc-workflow-ecosystem",
   "license": "MIT",
-  "keywords": ["workflow", "tdd", "planning", "verification", "subagents", "brainstorming"],
-  "hooks": "./hooks/hooks.json"
+  "keywords": ["workflow", "tdd", "planning", "verification", "subagents", "brainstorming"]
 }
