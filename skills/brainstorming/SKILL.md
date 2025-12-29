@@ -1,6 +1,6 @@
 ---
 name: brainstorming
-description: "Use when starting any creative or implementation work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation."
+description: "Use when starting any creative or implementation work - before writing any code"
 ---
 
 # Brainstorming Ideas Into Designs
@@ -10,6 +10,19 @@ description: "Use when starting any creative or implementation work - creating f
 Help turn ideas into fully formed designs through collaborative dialogue.
 
 **Core principle:** Understand completely before implementing anything.
+
+## Environment Enforcement
+
+**Brainstorming is enforced in read-only mode.** Write/Edit tools are blocked while brainstorming is active.
+
+This ensures:
+- No premature code suggestions
+- Design documentation before implementation
+- Clear separation between exploration and execution
+
+The block is lifted when you:
+1. Save the design to `docs/plans/`
+2. Or invoke `/plan` to proceed to implementation planning
 
 ## The Process
 

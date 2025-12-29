@@ -70,3 +70,18 @@ def expected_agents() -> list[str]:
         "quality-reviewer",
         "spec-reviewer",
     ]
+
+
+@pytest.fixture
+def expected_hooks() -> list[str]:
+    """Return list of expected hook script names."""
+    return [
+        "brainstorm-end.sh",
+        "brainstorm-mode-check.sh",
+        "brainstorm-start.sh",
+        "run-hook.cmd",
+        "session-start.sh",
+        "tdd-precommit-check.sh",
+        "validate-context-packet.sh",
+        "verify-before-commit.sh",
+    ]

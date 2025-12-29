@@ -17,6 +17,8 @@ Create or switch to a properly named feature branch.
 
 ## Workflow
 
+This command invokes the `git-workflow` skill.
+
 ### Step 1: Verify Clean Working Tree
 
 Run `git status -sb` to check for uncommitted changes.
@@ -70,6 +72,13 @@ Report: "Created and switched to branch `<name>`. Ready for development."
 | Invalid branch name | Explain convention, ask for correction |
 | Branch already exists | Offer to switch or create new name |
 | Pull fails | Report error, suggest manual resolution |
+
+## Next Steps
+
+After creating the branch:
+- `/brainstorm` - Explore requirements if unclear
+- `/plan` - Create implementation plan if design is ready
+- Start development with clear feature scope
 
 ## Related
 

@@ -1,6 +1,6 @@
 ---
 name: writing-plans
-description: "Use when you have a spec or requirements for a multi-step task - creates bite-sized implementation plans with exact file paths, complete code, and test commands"
+description: "Use when you have a spec or requirements for a multi-step task, before touching code"
 ---
 
 # Writing Implementation Plans
@@ -222,6 +222,32 @@ Offer execution options:
 | "Run tests" | Include exact command and expected output |
 | One huge task | Break into 2-5 minute steps |
 | Skip test step | TDD is mandatory |
+
+## Plan Updates
+
+If a plan needs modification during execution:
+
+1. **STOP** current task
+2. **Document** what changed and why in the plan file
+3. **Mark** affected tasks with status:
+   - `[COMPLETED]` - Done before change
+   - `[OBSOLETE]` - No longer needed
+   - `[MODIFIED]` - Updated requirements
+   - `[NEW]` - Added tasks
+4. **Re-extract** tasks from updated plan
+5. **Update** TodoWrite to reflect new task list
+6. **Continue** from next incomplete task
+
+### Plan Update Example
+
+```markdown
+## Task 3: Login validation [MODIFIED]
+
+**Original:** Email-only validation
+**Updated:** Email + phone validation (per user feedback)
+
+**Reason:** User requested phone as alternate login method
+```
 
 ## Remember
 

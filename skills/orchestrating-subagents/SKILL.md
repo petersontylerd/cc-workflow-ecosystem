@@ -1,6 +1,6 @@
 ---
 name: orchestrating-subagents
-description: Use when executing implementation plans with multiple tasks - orchestrates code-implementer, spec-reviewer, and quality-reviewer in sequence for each task
+description: Use when executing implementation plans with multiple independent tasks
 ---
 
 # Orchestrating Subagents
@@ -272,6 +272,37 @@ Quality-reviewer: "✅ Approved."
 4. **Two-stage review** - Spec compliance before code quality
 5. **Review loops** - Issues found = fix = re-review
 6. **Sequential execution** - One task at a time, avoid conflicts
+
+## Mandatory Task Tool Usage
+
+You MUST use the Task tool to dispatch each subagent. This is not optional.
+
+### Dispatch Checklist
+
+For each task, verify you have:
+- [ ] Dispatched code-implementer via Task tool
+- [ ] Received and reviewed completion report
+- [ ] Dispatched spec-reviewer via Task tool
+- [ ] Received approval OR fixed gaps and re-dispatched
+- [ ] Dispatched quality-reviewer via Task tool
+- [ ] Received approval OR fixed issues and re-dispatched
+- [ ] Updated TodoWrite to mark task complete
+
+**Violation:** Implementing code yourself instead of dispatching code-implementer is a workflow violation. The orchestrator orchestrates; subagents implement.
+
+## Context Packet Checklist
+
+Before dispatching any subagent, verify your context packet includes:
+
+- [ ] **Task header** (`## Task: [Name]`)
+- [ ] **Context section** (where this fits, dependencies)
+- [ ] **Requirements** (FULL task text, not summarized)
+- [ ] **Files to touch** (create, modify, test)
+- [ ] **Success criteria** (specific, measurable)
+- [ ] **Conventions** (coding style, patterns if applicable)
+- [ ] **Fresh task marker** ("This is a fresh task context.")
+
+**Incomplete context = poor subagent performance.**
 
 ## Integration
 

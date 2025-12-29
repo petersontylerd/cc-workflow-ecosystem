@@ -50,3 +50,4 @@ dist/
 
 # Joblib temp folder
 .joblib_temp
+*.code-workspace

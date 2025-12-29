@@ -19,6 +19,14 @@ Start a collaborative exploration of requirements and design.
 
 This command invokes the `brainstorming` skill.
 
+### Environment
+
+This command activates **read-only mode**. Write/Edit tools are blocked until:
+1. You save the design to `docs/plans/YYYY-MM-DD-<topic>-design.md`
+2. Or you invoke `/plan` to proceed to implementation planning
+
+This prevents premature implementation during the exploration phase.
+
 ### What Happens
 
 1. **Context Check**: Examine current project state (files, docs, recent commits)

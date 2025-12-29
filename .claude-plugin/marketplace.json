@@ -1,0 +1,15 @@
+{
+  "name": "workflow-ecosystem",
+  "owner": {
+    "name": "petersontylerd",
+    "email": "petersontylerd@example.com"
+  },
+  "plugins": [
+    {
+      "name": "workflow-ecosystem",
+      "source": ".",
+      "version": "1.0.0",
+      "description": "Platform-agnostic development workflow with brainstorming, planning, implementation, and verification skills"
+    }
+  ]
+}

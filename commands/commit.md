@@ -17,6 +17,8 @@ Create an atomic, well-formatted commit.
 
 ## Workflow
 
+This command invokes the `git-workflow` skill.
+
 ### Step 1: Check Status
 
 ```bash
@@ -157,6 +159,12 @@ If hooks fail:
 4. Try commit again
 
 **Never use `--no-verify`** to skip hooks.
+
+## Next Steps
+
+After committing:
+- `/verify` - Run verification before creating PR
+- Continue development if more commits needed
 
 ## Related Commands
 

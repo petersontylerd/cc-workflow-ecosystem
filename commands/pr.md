@@ -17,6 +17,8 @@ Create a pull request with a structured description and issue linking.
 
 ## Workflow
 
+This command invokes the `git-workflow` skill.
+
 ### Step 1: Pre-PR Verification
 
 Before creating PR, verify:
@@ -117,6 +119,13 @@ Report:
 | No commits | "No commits on branch. Nothing to PR." |
 | Already has PR | "PR #X already exists for this branch." |
 | Not on feature branch | "Switch to a feature branch first." |
+
+## Next Steps
+
+After PR is created:
+- Await review feedback from team members
+- Address any review comments with additional commits
+- Merge after approval (using your team's merge policy)
 
 ## Related Commands
 

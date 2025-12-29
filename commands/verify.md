@@ -117,6 +117,12 @@ NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
 - [ ] No debug statements
 - [ ] Git status clean
 
+## Next Steps
+
+After verification passes:
+- `/pr` - Create a pull request with the verified changes
+- `/commit` - Make additional commits if needed before PR
+
 ## Related Commands
 
 - `/implement` - Execute implementation plan

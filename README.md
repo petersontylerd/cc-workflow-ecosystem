@@ -12,24 +12,36 @@ A comprehensive Claude Code plugin for human-agent co-development, providing ski
 
 ## Installation
 
-### Local Plugin (Development)
+### Marketplace (Recommended)
 
-Clone this repository and use the `--plugin-dir` flag:
-
-```bash
-git clone https://github.com/<your-user>/workflow-ecosystem.git
-cd your-project
-claude --plugin-dir /path/to/workflow-ecosystem
-```
-
-### Local Plugin (Permanent)
-
-Clone to Claude Code's local plugins directory:
+Add the marketplace and install the plugin:
 
 ```bash
-mkdir -p ~/.claude/plugins/local
-git clone https://github.com/<your-user>/workflow-ecosystem.git ~/.claude/plugins/local/workflow-ecosystem
+# Add the marketplace
+/plugin marketplace add petersontylerd/cc-workflow-ecosystem
+
+# Install the plugin
+/plugin install workflow-ecosystem@petersontylerd-cc-workflow-ecosystem
 ```
+
+### Development (Local)
+
+For plugin development or customization:
+
+```bash
+git clone https://github.com/petersontylerd/cc-workflow-ecosystem.git
+claude --plugin-dir /path/to/cc-workflow-ecosystem
+```
+
+## Updates
+
+Update via the marketplace:
+
+```bash
+/plugin update workflow-ecosystem
+```
+
+Or enable auto-updates through `/plugin` → Marketplaces → workflow-ecosystem → Enable auto-update.
 
 ## Quick Start
 
@@ -134,17 +146,22 @@ Never commit to main:
 ```
 workflow-ecosystem/
 ├── .claude-plugin/
-│   └── plugin.json          # Plugin manifest
+│   └── plugin.json              # Plugin manifest
 ├── hooks/
-│   ├── hooks.json           # SessionStart hook config
-│   ├── run-hook.cmd         # Cross-platform hook runner
-│   └── session-start.sh     # Inject ecosystem context
-├── skills/                   # Core competencies
-├── commands/                 # User-invokable workflows
-├── agents/                   # Specialized subagents
-├── docs/                     # Documentation
-├── tests/                    # Pressure test scenarios
-├── templates/                # Document templates
+│   ├── hooks.json               # Hook configurations (SessionStart, PreToolCall, PostToolCall)
+│   ├── run-hook.cmd             # Cross-platform hook runner
+│   ├── session-start.sh         # Inject ecosystem context on startup
+│   ├── brainstorm-mode-check.sh # Block Write/Edit during brainstorming
+│   ├── brainstorm-start.sh      # Set brainstorming state
+│   ├── brainstorm-end.sh        # Clear brainstorming state
+│   ├── verify-before-commit.sh  # Pre-commit verification reminder
+│   ├── validate-context-packet.sh # Validate subagent context
+│   └── tdd-precommit-check.sh   # TDD discipline reminder
+├── skills/                       # Core competencies
+├── commands/                     # User-invokable workflows
+├── agents/                       # Specialized subagents
+├── docs/                         # Documentation
+├── tests/                        # Plugin structure tests
 └── README.md
 ```
 
