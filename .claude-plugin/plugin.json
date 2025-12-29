@@ -1,32 +1,13 @@
 {
   "name": "workflow-ecosystem",
-  "version": "1.0.2",
   "description": "Platform-agnostic development workflow with brainstorming, planning, implementation, and verification skills",
-  "author": "petersontylerd",
+  "version": "1.0.3",
+  "author": {
+    "name": "petersontylerd",
+    "email": "petersontylerd@example.com"
+  },
   "homepage": "https://github.com/petersontylerd/cc-workflow-ecosystem",
   "repository": "https://github.com/petersontylerd/cc-workflow-ecosystem",
   "license": "MIT",
-  "keywords": ["workflow", "tdd", "planning", "verification", "subagents", "brainstorming"],
-  "commands": [
-    {"name": "brainstorm", "description": "Collaborative idea exploration"},
-    {"name": "branch", "description": "Create feature branches with conventions"},
-    {"name": "commit", "description": "Atomic commits with proper messages"},
-    {"name": "implement", "description": "Execute implementation with verification"},
-    {"name": "plan", "description": "Create detailed implementation plans"},
-    {"name": "pr", "description": "Generate PR descriptions"},
-    {"name": "verify", "description": "Run verification checks"}
-  ],
-  "agents": [
-    {"name": "code-implementer", "description": "Implements features from specs"},
-    {"name": "quality-reviewer", "description": "Reviews code for quality"},
-    {"name": "spec-reviewer", "description": "Reviews specifications"}
-  ],
-  "skills": [
-    {"name": "brainstorming", "description": "Idea exploration workflow"},
-    {"name": "git-workflow", "description": "Feature branch development patterns"},
-    {"name": "orchestrating-subagents", "description": "Multi-agent coordination"},
-    {"name": "using-ecosystem", "description": "Plugin usage guide"},
-    {"name": "verification", "description": "Quality verification patterns"},
-    {"name": "writing-plans", "description": "Implementation planning"}
-  ]
+  "keywords": ["workflow", "tdd", "planning", "verification", "subagents", "brainstorming"]
 }
