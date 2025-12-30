@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# PostToolCall hook: Clear brainstorming marker when design is saved or /plan invoked
+# PostToolUse hook: Clear brainstorming marker when design is saved or /backlog-development invoked
 
 set -euo pipefail
 

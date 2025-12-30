@@ -1,16 +1,16 @@
 ---
-description: Execute an implementation plan using orchestrated subagents with two-stage review
-argument-hint: "[plan file path or feature name]"
+description: Execute a backlog using orchestrated subagents with two-stage review
+argument-hint: "[backlog file path or feature name]"
 ---
 
 # /implement Command
 
-Execute an implementation plan with automated subagent orchestration.
+Execute a backlog with automated subagent orchestration.
 
 ## Usage
 
 ```
-/implement docs/plans/2024-01-15-auth-plan.md
+/implement docs/backlogs/2024-01-15-auth-backlog.md
 /implement user-authentication
 ```
 
@@ -20,7 +20,7 @@ This command invokes the `orchestrating-subagents` skill.
 
 ### What Happens
 
-For each task in the plan:
+For each task in the backlog:
 
 ```
 1. Prepare context packet for task
@@ -69,8 +69,8 @@ Issues are never skipped. Fixes are always re-verified.
 
 ### Context Flow
 
-- **You (orchestrator)**: Read plan once, maintain full context
-- **Subagents**: Receive curated context packets, not raw plan
+- **You (orchestrator)**: Read backlog once, maintain full context
+- **Subagents**: Receive curated context packets, not raw backlog
 
 ### Output
 
@@ -88,6 +88,6 @@ After completion:
 
 ## Related Commands
 
-- `/plan` - Create the implementation plan
+- `/backlog-development` - Create the backlog
 - `/verify` - Run pre-completion verification
 - `/pr` - Create pull request

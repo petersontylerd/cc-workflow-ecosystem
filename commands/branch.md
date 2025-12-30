@@ -77,7 +77,7 @@ Report: "Created and switched to branch `<name>`. Ready for development."
 
 After creating the branch:
 - `/brainstorm` - Explore requirements if unclear
-- `/plan` - Create implementation plan if design is ready
+- `/backlog-development` - Create backlog if design is ready
 - Start development with clear feature scope
 
 ## Related

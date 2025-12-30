@@ -5,7 +5,7 @@ A comprehensive Claude Code plugin for human-agent co-development, providing ski
 ## Features
 
 - **Brainstorming**: Explore requirements before implementation
-- **Planning**: Create bite-sized, executable implementation plans
+- **Backlog Development**: Create bite-sized, executable backlogs
 - **Subagent Orchestration**: Coordinate implementer, spec-reviewer, and quality-reviewer agents
 - **Verification**: Evidence-based completion claims (no "should work" allowed)
 - **Git Workflow**: Feature branch enforcement with atomic commits
@@ -50,14 +50,14 @@ Or enable auto-updates through `/plugin` → Marketplaces → workflow-ecosystem
 3. Use commands to guide your workflow:
 
 ```
-/brainstorm    # Explore requirements before implementation
-/branch        # Create feature branch with naming enforcement
-/plan          # Create bite-sized implementation plan
-/implement     # Execute plan with subagent orchestration
-/verify        # Run pre-completion verification
-/commit        # Create atomic commit with conventional format
-/pr            # Generate PR description
-/workflow      # Manage enforcement state (skip/status/reset)
+/brainstorm           # Explore requirements before implementation
+/branch               # Create feature branch with naming enforcement
+/backlog-development  # Create bite-sized backlog
+/implement            # Execute backlog with subagent orchestration
+/verify               # Run pre-completion verification
+/commit               # Create atomic commit with conventional format
+/pr                   # Generate PR description
+/workflow             # Manage enforcement state (skip/status/reset)
 ```
 
 ## Components
@@ -68,7 +68,7 @@ Or enable auto-updates through `/plugin` → Marketplaces → workflow-ecosystem
 |-------|-------------|
 | `using-ecosystem` | Ecosystem introduction (auto-injected on session start) |
 | `brainstorming` | Pre-implementation requirement exploration |
-| `writing-plans` | Bite-sized task planning with exact code |
+| `developing-backlogs` | Bite-sized task backlog creation with exact code |
 | `orchestrating-subagents` | Multi-agent coordination pattern |
 | `verification` | Evidence-based completion discipline |
 | `git-workflow` | Branch and commit enforcement |
@@ -79,8 +79,8 @@ Or enable auto-updates through `/plugin` → Marketplaces → workflow-ecosystem
 |---------|---------|
 | `/brainstorm` | Explore requirements one question at a time |
 | `/branch` | Create/switch to feature branch |
-| `/plan` | Generate implementation plan |
-| `/implement` | Execute plan with subagent dispatch |
+| `/backlog-development` | Generate backlog |
+| `/implement` | Execute backlog with subagent dispatch |
 | `/verify` | Run pre-completion checks |
 | `/commit` | Create atomic commit |
 | `/pr` | Generate PR description |
@@ -100,26 +100,26 @@ Or enable auto-updates through `/plugin` → Marketplaces → workflow-ecosystem
 User Request
     |
     v
-/brainstorm  ->  Explore requirements (one question at a time)
+/brainstorm           ->  Explore requirements (one question at a time)
     |
     v
-/branch      ->  Create feat/<issue>-<slug> branch
+/branch               ->  Create feat/<issue>-<slug> branch
     |
     v
-/plan        ->  Create bite-sized tasks with exact code
+/backlog-development  ->  Create bite-sized tasks with exact code
     |
     v
-/implement   ->  For each task:
-                   1. Dispatch code-implementer
-                   2. Dispatch spec-reviewer
-                   3. Dispatch quality-reviewer
-                   4. Fix issues, mark complete
+/implement            ->  For each task:
+                            1. Dispatch code-implementer
+                            2. Dispatch spec-reviewer
+                            3. Dispatch quality-reviewer
+                            4. Fix issues, mark complete
     |
     v
-/verify      ->  Evidence-based completion check
+/verify               ->  Evidence-based completion check
     |
     v
-/pr          ->  Generate PR description for your platform
+/pr                   ->  Generate PR description for your platform
 ```
 
 ## Key Disciplines
@@ -131,8 +131,8 @@ The plugin **actively blocks** violations through hooks:
 | Action | Blocked When | Resolution |
 |--------|--------------|------------|
 | Write/Edit code | On main/master branch | Run `/branch` first |
-| Write/Edit code | In brainstorming phase | Complete `/branch` → `/plan` |
-| Write/Edit code | Branch created but no plan | Run `/plan` first |
+| Write/Edit code | In brainstorming phase | Complete `/branch` → `/backlog-development` |
+| Write/Edit code | Branch created but no backlog | Run `/backlog-development` first |
 | Git commit | Source files without tests | Stage test files first |
 
 **Escape hatch**: Use `/workflow skip` to bypass enforcement (not recommended).
@@ -169,7 +169,7 @@ workflow-ecosystem/
 │   ├── run-hook.cmd             # Cross-platform hook runner
 │   ├── session-start.sh         # Inject ecosystem context on startup
 │   ├── main-branch-protection.sh # BLOCKS Write/Edit on main/master
-│   ├── workflow-phase-check.sh  # BLOCKS Write/Edit without plan
+│   ├── workflow-phase-check.sh  # BLOCKS Write/Edit without backlog
 │   ├── phase-transition.sh      # Updates workflow phase on skill completion
 │   ├── workflow-skip-set.sh     # Sets skip marker for bypass
 │   ├── brainstorm-mode-check.sh # Block Write/Edit during brainstorming
@@ -194,7 +194,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 1. Fork this repository
 2. Create a feature branch: `git checkout -b feat/your-feature`
-3. Follow the workflow disciplines (brainstorm, plan, implement, verify)
+3. Follow the workflow disciplines (brainstorm, backlog-development, implement, verify)
 4. Create a pull request
 
 ## Acknowledgments

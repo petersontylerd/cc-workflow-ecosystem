@@ -183,7 +183,7 @@ npm run build
 ### Requirements Verification
 
 ```
-1. Re-read the original requirements/plan
+1. Re-read the original requirements/backlog
 2. Create checklist of each requirement
 3. Verify each one individually
 4. Report completion only when ALL checked

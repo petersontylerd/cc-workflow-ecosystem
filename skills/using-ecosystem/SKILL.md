@@ -24,8 +24,8 @@ This ecosystem provides three tiers of automation:
 | Skill | When to Use |
 |-------|-------------|
 | `brainstorming` | Before any creative or implementation work |
-| `writing-plans` | When spec/requirements exist, before touching code |
-| `orchestrating-subagents` | When executing multi-task plans with subagent delegation |
+| `developing-backlogs` | When spec/requirements exist, before touching code |
+| `orchestrating-subagents` | When executing multi-task backlogs with subagent delegation |
 | `verification` | Before claiming work is complete or making success claims |
 | `git-workflow` | When creating branches, commits, or managing version control |
 
@@ -34,8 +34,8 @@ This ecosystem provides three tiers of automation:
 | Command | Purpose |
 |---------|---------|
 | `/brainstorm` | Explore requirements before implementation |
-| `/plan` | Create bite-sized implementation plan |
-| `/implement` | Execute plan with subagent orchestration |
+| `/backlog-development` | Create bite-sized backlog |
+| `/implement` | Execute backlog with subagent orchestration |
 | `/branch` | Create/switch feature branches with enforcement |
 | `/verify` | Run pre-completion verification |
 | `/workflow` | Manage enforcement state (skip/status/reset) |
@@ -44,14 +44,14 @@ This ecosystem provides three tiers of automation:
 
 | Agent | Role | When to Dispatch |
 |-------|------|------------------|
-| `code-implementer` | Execute implementation tasks | Per task in plan |
+| `code-implementer` | Execute implementation tasks | Per task in backlog |
 | `spec-reviewer` | Verify code matches requirements | After implementation |
 | `quality-reviewer` | Assess code quality and style | After spec approval |
 
 ## The Core Workflow
 
 ```
-User Request → /brainstorm → /branch → /plan → /implement → /verify → PR
+User Request → /brainstorm → /branch → /backlog-development → /implement → /verify → PR
 ```
 
 ### Workflow Details
@@ -65,7 +65,7 @@ User Request → /brainstorm → /branch → /plan → /implement → /verify �
    - Pattern: `feat/<issue>-<slug>` or `fix/<issue>-<slug>`
    - Never commit directly to main/master
 
-3. **Plan in Bite-Sized Tasks**: Each step is 2-5 minutes
+3. **Develop Backlogs in Bite-Sized Tasks**: Each step is 2-5 minutes
    - Exact file paths
    - Complete code (not "add validation")
    - Test commands with expected output
@@ -105,7 +105,7 @@ digraph ecosystem_flow {
 | Thought | Reality |
 |---------|---------|
 | "Let me just start coding" | Use `brainstorming` skill first |
-| "I'll figure it out as I go" | Use `writing-plans` skill first |
+| "I'll figure it out as I go" | Use `developing-backlogs` skill first |
 | "This is a quick fix" | Even quick fixes need TDD |
 | "Should work now" | Use `verification` skill first |
 | "I'll test later" | TDD means test FIRST |
@@ -129,14 +129,14 @@ The ecosystem **actively enforces** workflow discipline through blocking hooks:
 | Action | Blocked When | How to Proceed |
 |--------|--------------|----------------|
 | Write/Edit code | On main/master branch | Run `/branch` first |
-| Write/Edit code | In brainstorming phase | Complete `/branch` → `/plan` |
-| Write/Edit code | Branch created but no plan | Run `/plan` first |
+| Write/Edit code | In brainstorming phase | Complete `/branch` → `/backlog-development` |
+| Write/Edit code | Branch created but no backlog | Run `/backlog-development` first |
 | Git commit | Source files without tests staged | Stage test files or `/workflow skip` |
 
 ### Workflow Phases
 
 ```
-idle → brainstorming → branched → planned → implementing → verifying → idle
+idle → brainstorming → branched → backlog-ready → implementing → verifying → idle
        (blocks edits)   (blocks edits)   (allows edits)
 ```
 
@@ -158,7 +158,7 @@ When using `/implement` or orchestrating subagents:
 
 ```
 Parent Claude (Orchestrator):
-├── Reads plan once, extracts all tasks
+├── Reads backlog once, extracts all tasks
 ├── Creates TodoWrite with all tasks
 ├── For each task:
 │   ├── Prepare context packet

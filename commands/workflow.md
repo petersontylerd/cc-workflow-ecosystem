@@ -43,18 +43,18 @@ Bypass workflow enforcement for the current session.
 Show current workflow state.
 
 **Output includes:**
-- Current phase: idle | brainstorming | branched | planned | implementing | verifying
+- Current phase: idle | brainstorming | branched | backlog-ready | implementing | verifying
 - Current branch name
 - Whether skip mode is active
-- Plan path (if set)
+- Backlog path (if set)
 
 **Example output:**
 ```
 Workflow Status:
-  Phase: planned
+  Phase: backlog-ready
   Branch: feat/42-user-auth
   Skip mode: inactive
-  Plan: docs/plans/2025-01-15-user-auth.md
+  Backlog: docs/backlogs/2025-01-15-user-auth-backlog.md
 ```
 
 ### `/workflow reset`
@@ -83,23 +83,23 @@ Reset workflow state to idle.
 1. Read `$CLAUDE_SESSION_DIR/.workflow_phase` (default: "idle")
 2. Check for `$CLAUDE_SESSION_DIR/.workflow_skip` existence
 3. Run `git branch --show-current` for branch name
-4. Read `$CLAUDE_SESSION_DIR/.plan_path` if exists
+4. Read `$CLAUDE_SESSION_DIR/.backlog_path` if exists
 5. Format and output status
 
 ### For `/workflow reset`:
 
 1. Remove `$CLAUDE_SESSION_DIR/.workflow_phase`
 2. Remove `$CLAUDE_SESSION_DIR/.workflow_skip`
-3. Remove `$CLAUDE_SESSION_DIR/.plan_path`
+3. Remove `$CLAUDE_SESSION_DIR/.backlog_path`
 4. Output confirmation
 
 ## State Files
 
 | File | Purpose |
 |------|---------|
-| `.workflow_phase` | Current workflow phase (idle/brainstorming/branched/planned/implementing/verifying) |
+| `.workflow_phase` | Current workflow phase (idle/brainstorming/branched/backlog-ready/implementing/verifying) |
 | `.workflow_skip` | If exists, enforcement is bypassed |
-| `.plan_path` | Path to current implementation plan |
+| `.backlog_path` | Path to current backlog |
 | `.brainstorming_active` | Legacy marker (still used by brainstorm-mode-check) |
 
 All files stored in `$CLAUDE_SESSION_DIR` (session-scoped).
@@ -108,6 +108,6 @@ All files stored in `$CLAUDE_SESSION_DIR` (session-scoped).
 
 - `/brainstorm` - Enter brainstorming phase
 - `/branch` - Enter branched phase
-- `/plan` - Enter planned phase
+- `/backlog-development` - Enter backlog-ready phase
 - `/implement` - Enter implementing phase
 - `/verify` - Enter verifying phase

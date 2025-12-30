@@ -60,7 +60,7 @@ Claude will ask questions one at a time:
 **A:** "b) Common formats"
 
 After exploration, Claude presents the design and saves to:
-`docs/plans/2024-01-15-email-validation-design.md`
+`docs/designs/2024-01-15-email-validation-design.md`
 
 ## Step 3: Create Feature Branch
 
@@ -75,16 +75,16 @@ Claude:
 
 **Output:** "Created and switched to branch feat/45-email-validation"
 
-## Step 4: Create Implementation Plan
+## Step 4: Create Backlog
 
 ```
-/plan email-validation
+/backlog-development email-validation
 ```
 
-Claude creates a detailed plan:
+Claude creates a detailed backlog:
 
 ```markdown
-# Email Validation Implementation Plan
+# Email Validation Backlog
 
 **Goal:** Add client-side email validation to registration form.
 
@@ -137,12 +137,12 @@ Expected: PASS
 [Similar structure...]
 ```
 
-Saved to: `docs/plans/2024-01-15-email-validation-plan.md`
+Saved to: `docs/backlogs/2024-01-15-email-validation-backlog.md`
 
 ## Step 5: Implement with Subagents
 
 ```
-/implement docs/plans/2024-01-15-email-validation-plan.md
+/implement docs/backlogs/2024-01-15-email-validation-backlog.md
 ```
 
 Claude orchestrates the implementation:
@@ -309,7 +309,7 @@ Issue #45 auto-closes (if using "Closes #45" keywords). Feature is complete!
 | 1 | Create issue | Track the feature in your tracker |
 | 2 | `/brainstorm` | Explore requirements |
 | 3 | `/branch` | Create feature branch |
-| 4 | `/plan` | Create implementation plan |
+| 4 | `/backlog-development` | Create backlog |
 | 5 | `/implement` | Execute with subagents |
 | 6 | `/verify` | Pre-PR verification |
 | 7 | `/pr` | Generate PR description |
@@ -319,7 +319,7 @@ Issue #45 auto-closes (if using "Closes #45" keywords). Feature is complete!
 
 1. **Always start with an issue** - Traceability from the beginning
 2. **Brainstorm before coding** - Avoid rework from unclear requirements
-3. **Plan in small steps** - Each task is 2-5 minutes
+3. **Backlog in small steps** - Each task is 2-5 minutes
 4. **Let subagents handle reviews** - Two-stage review catches issues
 5. **Verify before claiming done** - Evidence, not assumptions
 6. **Link everything** - Branch → commits → PR → issue

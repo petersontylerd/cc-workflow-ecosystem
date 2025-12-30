@@ -21,7 +21,7 @@ if [[ -f "$MARKER_FILE" ]]; then
   cat <<'EOF'
 {
   "decision": "block",
-  "reason": "Write/Edit tools are blocked during brainstorming phase. Complete the design exploration and save to docs/plans/ before writing code. Use /plan when ready to proceed to implementation planning."
+  "reason": "Write/Edit tools are blocked during brainstorming phase. Complete the design exploration and save to docs/designs/ before writing code. Use /backlog-development when ready to proceed to backlog creation."
 }
 EOF
   exit 0

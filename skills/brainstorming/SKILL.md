@@ -21,8 +21,8 @@ This ensures:
 - Clear separation between exploration and execution
 
 The block is lifted when you:
-1. Save the design to `docs/plans/`
-2. Or invoke `/plan` to proceed to implementation planning
+1. Save the design to `docs/designs/`
+2. Or invoke `/backlog-development` to proceed to backlog creation
 
 ## The Process
 
@@ -89,7 +89,7 @@ Once approach is selected:
 
 Write validated design to:
 ```
-docs/plans/YYYY-MM-DD-<topic>-design.md
+docs/designs/YYYY-MM-DD-<topic>-design.md
 ```
 
 Commit the design document.
@@ -101,7 +101,7 @@ After design is complete, offer:
 "Design is complete and documented. Ready to proceed with implementation?
 
 Options:
-1. Create implementation plan with /plan command
+1. Create backlog with /backlog-development command
 2. Set up feature branch with /branch command
 3. Continue discussing/refining the design"
 ```

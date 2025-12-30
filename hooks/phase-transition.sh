@@ -20,15 +20,15 @@ MESSAGE=""
 case "$TOOL_INPUT" in
   *brainstorm*)
     NEW_PHASE="brainstorming"
-    MESSAGE="Entered brainstorming phase. Write/Edit blocked until /branch → /plan complete."
+    MESSAGE="Entered brainstorming phase. Write/Edit blocked until /branch → /backlog-development complete."
     ;;
   *git-workflow*|*branch*)
     NEW_PHASE="branched"
-    MESSAGE="Branch created. Now run /plan to create implementation plan."
+    MESSAGE="Branch created. Now run /backlog-development to create a backlog."
     ;;
-  *writing-plans*|*plan*)
-    NEW_PHASE="planned"
-    MESSAGE="Plan created. Ready for implementation via /implement or direct coding."
+  *developing-backlogs*|*backlog-development*)
+    NEW_PHASE="backlog-ready"
+    MESSAGE="Backlog created. Ready for implementation via /implement or direct coding."
     ;;
   *orchestrating*|*implement*)
     NEW_PHASE="implementing"

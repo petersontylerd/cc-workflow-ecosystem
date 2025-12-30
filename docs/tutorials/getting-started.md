@@ -6,8 +6,8 @@ Welcome to the Claude Code Workflow Ecosystem! This guide will help you understa
 
 The ecosystem provides a structured approach to development with:
 
-- **Skills**: Core competencies and disciplines (brainstorming, planning, verification)
-- **Commands**: User-invokable workflows (`/brainstorm`, `/plan`, `/implement`, `/verify`)
+- **Skills**: Core competencies and disciplines (brainstorming, backlog development, verification)
+- **Commands**: User-invokable workflows (`/brainstorm`, `/backlog-development`, `/implement`, `/verify`)
 - **Agents**: Specialized subagents for task delegation (code-implementer, spec-reviewer, quality-reviewer)
 
 ## The Core Workflow
@@ -15,12 +15,12 @@ The ecosystem provides a structured approach to development with:
 Every feature follows this flow:
 
 ```
-1. /brainstorm  →  Explore requirements and design
-2. /branch      →  Create feature branch
-3. /plan        →  Create bite-sized implementation plan
-4. /implement   →  Execute with subagent orchestration
-5. /verify      →  Run pre-completion verification
-6. /pr          →  Create pull request
+1. /brainstorm           →  Explore requirements and design
+2. /branch               →  Create feature branch
+3. /backlog-development  →  Create bite-sized backlog
+4. /implement            →  Execute with subagent orchestration
+5. /verify               →  Run pre-completion verification
+6. /pr                   →  Create pull request
 ```
 
 ## Quick Start
@@ -40,7 +40,7 @@ Claude: Uses /brainstorm to explore requirements
 After design is complete:
 
 Claude: Uses /branch to create feat/42-user-auth
-        Uses /plan to create detailed implementation plan
+        Uses /backlog-development to create detailed backlog
         Uses /implement to execute with subagent review
         Uses /verify to confirm everything works
 ```
@@ -51,8 +51,8 @@ Claude: Uses /branch to create feat/42-user-auth
 |---------|-------------|--------------|
 | `/brainstorm` | Starting ANY new work | Explores requirements through questions |
 | `/branch` | Before coding | Creates properly named feature branch |
-| `/plan` | After design is complete | Creates bite-sized implementation plan |
-| `/implement` | With a plan ready | Orchestrates subagents for execution |
+| `/backlog-development` | After design is complete | Creates bite-sized backlog |
+| `/implement` | With a backlog ready | Orchestrates subagents for execution |
 | `/verify` | Before claiming done | Runs verification checks |
 | `/workflow` | Managing enforcement | Skip, check status, or reset workflow state |
 
@@ -66,7 +66,7 @@ Skills are loaded automatically when relevant. You don't need to invoke them dir
 |-------|---------|
 | `using-ecosystem` | Introduces the ecosystem (auto-loaded on session start) |
 | `brainstorming` | Guides requirement exploration |
-| `writing-plans` | Creates detailed implementation plans |
+| `developing-backlogs` | Creates detailed backlogs |
 | `orchestrating-subagents` | Coordinates subagent execution |
 | `verification` | Ensures evidence-based completion |
 | `git-workflow` | Enforces feature branch discipline |
@@ -77,7 +77,7 @@ Agents are specialized subagents dispatched during `/implement`:
 
 | Agent | Role | Dispatched When |
 |-------|------|-----------------|
-| `code-implementer` | Executes tasks with TDD | Per task in plan |
+| `code-implementer` | Executes tasks with TDD | Per task in backlog |
 | `spec-reviewer` | Verifies requirements are met | After implementation |
 | `quality-reviewer` | Assesses code quality | After spec approval |
 
@@ -126,8 +126,8 @@ The ecosystem **actively blocks** violations:
 | Blocked Action | When | How to Proceed |
 |----------------|------|----------------|
 | Write/Edit code | On main/master | Run `/branch` first |
-| Write/Edit code | During brainstorming | Complete `/branch` → `/plan` |
-| Write/Edit code | No plan exists | Run `/plan` first |
+| Write/Edit code | During brainstorming | Complete `/branch` → `/backlog-development` |
+| Write/Edit code | No backlog exists | Run `/backlog-development` first |
 | Git commit | No test files staged | Stage tests with source |
 
 **Escape hatch**: `/workflow skip` bypasses enforcement (use sparingly).
@@ -153,7 +153,7 @@ Claude asks:
 - "What email formats should we accept?"
 - "What error messages should users see?"
 
-Design is documented in docs/plans/2024-01-15-email-validation-design.md
+Design is documented in docs/designs/2024-01-15-email-validation-design.md
 ```
 
 ### Step 2: Create Branch
@@ -166,9 +166,9 @@ Claude:
 - Confirms: "Created and switched to branch feat/45-email-validation"
 ```
 
-### Step 3: Create Plan
+### Step 3: Create Backlog
 ```
-/plan email-validation
+/backlog-development email-validation
 
 Claude creates:
 - Task 1: Write failing test for valid email
@@ -182,7 +182,7 @@ Each task has exact file paths, complete code, test commands.
 
 ### Step 4: Implement
 ```
-/implement docs/plans/2024-01-15-email-validation-plan.md
+/implement docs/backlogs/2024-01-15-email-validation-backlog.md
 
 Claude orchestrates:
 - Dispatches code-implementer for Task 1
@@ -238,8 +238,8 @@ The workflow enforcement hooks block edits in certain situations:
 | Block Message | Cause | Solution |
 |---------------|-------|----------|
 | "Cannot edit on main/master" | You're on the main branch | Run `/branch feat/<issue>-<slug>` |
-| "Still in brainstorming phase" | Brainstorming not complete | Run `/branch` then `/plan` |
-| "No implementation plan" | Branch exists but no plan | Run `/plan` |
+| "Still in brainstorming phase" | Brainstorming not complete | Run `/branch` then `/backlog-development` |
+| "No backlog" | Branch exists but no backlog | Run `/backlog-development` |
 | "TDD VIOLATION" | Committing source without tests | Stage test files too |
 
 **Quick bypass**: `/workflow skip` disables all enforcement for the session.
@@ -248,7 +248,7 @@ The workflow enforcement hooks block edits in certain situations:
 
 Skills are invoked based on context. Try being explicit:
 - "Let's brainstorm this feature first"
-- "Can we create an implementation plan?"
+- "Can we create a backlog?"
 
 ### "Subagent reviews keep finding issues"
 

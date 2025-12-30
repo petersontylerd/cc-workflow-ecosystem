@@ -23,7 +23,7 @@ All components of the workflow-ecosystem plugin have been validated:
 | `github-workflow` | PASS | Returns full skill content |
 | `orchestrating-subagents` | PASS | Returns full skill content |
 | `verification` | PASS | Returns full skill content |
-| `writing-plans` | PASS | Returns full skill content |
+| `developing-backlogs` | PASS | Returns full skill content |
 | `using-ecosystem` | PASS | Returns full skill content |
 
 ## Commands (via Skill tool with workflow-ecosystem: prefix)
@@ -34,7 +34,7 @@ All components of the workflow-ecosystem plugin have been validated:
 | `/branch` | PASS | Loads correctly, documents git workflow |
 | `/commit` | PASS | Loads correctly, documents atomic commits |
 | `/implement` | PASS | Loads correctly, documents subagent orchestration |
-| `/plan` | PASS | Loads correctly, documents plan format |
+| `/backlog-development` | PASS | Loads correctly, documents backlog format |
 | `/pr` | PASS | Loads correctly, documents PR creation |
 | `/verify` | PASS | Loads correctly, documents verification |
 

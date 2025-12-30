@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # PreToolUse hook: Enforce workflow phase sequence before code edits
-# Blocks Write/Edit until user has completed /branch and /plan phases
+# Blocks Write/Edit until user has completed /branch and /backlog-development phases
 
 set -euo pipefail
 
@@ -29,7 +29,7 @@ case "$PHASE" in
     cat <<'EOF'
 {
   "decision": "block",
-  "reason": "BLOCKED: Still in brainstorming phase. Complete workflow: /branch → /plan before editing code. Use /workflow skip to bypass (not recommended)."
+  "reason": "BLOCKED: Still in brainstorming phase. Complete workflow: /branch → /backlog-development before editing code. Use /workflow skip to bypass (not recommended)."
 }
 EOF
     ;;
@@ -37,7 +37,7 @@ EOF
     cat <<'EOF'
 {
   "decision": "block",
-  "reason": "BLOCKED: Branch created but no implementation plan. Run /plan to create a bite-sized plan before coding. Use /workflow skip to bypass (not recommended)."
+  "reason": "BLOCKED: Branch created but no backlog. Run /backlog-development to create a bite-sized backlog before coding. Use /workflow skip to bypass (not recommended)."
 }
 EOF
     ;;
@@ -46,12 +46,12 @@ EOF
     cat <<'EOF'
 {
   "hookSpecificOutput": {
-    "additionalContext": "WORKFLOW ADVISORY: No active workflow detected. Consider: /brainstorm → /branch → /plan → /implement for disciplined development."
+    "additionalContext": "WORKFLOW ADVISORY: No active workflow detected. Consider: /brainstorm → /branch → /backlog-development → /implement for disciplined development."
   }
 }
 EOF
     ;;
-  "planned"|"implementing"|"verifying")
+  "backlog-ready"|"implementing"|"verifying")
     # These phases allow editing
     echo '{}'
     ;;

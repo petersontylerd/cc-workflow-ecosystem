@@ -1,7 +1,7 @@
 {
   "name": "workflow-ecosystem",
-  "description": "Platform-agnostic development workflow with brainstorming, planning, implementation, and verification skills",
-  "version": "1.2.1",
+  "description": "Platform-agnostic development workflow with brainstorming, backlog-development, implementation, and verification skills",
+  "version": "1.3.0",
   "author": {
     "name": "petersontylerd",
     "email": "petersontylerd@example.com"
@@ -9,5 +9,5 @@
   "homepage": "https://github.com/petersontylerd/cc-workflow-ecosystem",
   "repository": "https://github.com/petersontylerd/cc-workflow-ecosystem",
   "license": "MIT",
-  "keywords": ["workflow", "tdd", "planning", "verification", "subagents", "brainstorming"]
+  "keywords": ["workflow", "tdd", "backlog-development", "verification", "subagents", "brainstorming"]
 }

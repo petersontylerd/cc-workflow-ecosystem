@@ -63,7 +63,7 @@
         ]
       },
       {
-        "matcher": "Skill.*(plan|writing-plans)",
+        "matcher": "Skill.*(backlog-development|developing-backlogs)",
         "hooks": [
           {
             "type": "command",

@@ -1,13 +1,13 @@
 ---
 name: orchestrating-subagents
-description: Use when executing implementation plans with multiple independent tasks
+description: Use when executing backlogs with multiple independent tasks
 ---
 
 # Orchestrating Subagents
 
 ## Overview
 
-Execute plans by dispatching fresh subagents per task with two-stage review: spec compliance first, then code quality.
+Execute backlogs by dispatching fresh subagents per task with two-stage review: spec compliance first, then code quality.
 
 **Core principle:** Fresh subagent per task + two-stage review = high quality, no context pollution.
 
@@ -15,11 +15,11 @@ Execute plans by dispatching fresh subagents per task with two-stage review: spe
 
 ```
 PARENT CLAUDE (Orchestrator)
-├── Reads plan ONCE, extracts ALL tasks with full text
+├── Reads backlog ONCE, extracts ALL tasks with full text
 ├── Creates TodoWrite with all tasks
 ├── For each task:
 │   ├── STEP 1: Prepare context packet
-│   │   ├── Task text (from plan)
+│   │   ├── Task text (from backlog)
 │   │   ├── Relevant file paths
 │   │   ├── Scene-setting context
 │   │   └── Success criteria
@@ -51,7 +51,7 @@ PARENT CLAUDE (Orchestrator)
 ## When to Use
 
 Use this skill when:
-- You have an implementation plan with multiple tasks
+- You have a backlog with multiple tasks
 - Tasks are mostly independent
 - You want automated quality gates between tasks
 
@@ -59,12 +59,12 @@ Use this skill when:
 
 ### Step 1: Prepare
 
-1. Read the implementation plan file ONCE
+1. Read the backlog file ONCE
 2. Extract ALL tasks with their full text
 3. Note any shared context (architecture, conventions)
 4. Create TodoWrite with all tasks
 
-**Important:** You read the plan. Subagents receive curated context, NOT the plan file.
+**Important:** You read the backlog. Subagents receive curated context, NOT the backlog file.
 
 ### Step 2: For Each Task
 
@@ -77,10 +77,10 @@ Use this skill when:
 [Scene-setting: where this fits in the project]
 
 ### Requirements
-[Full task text from plan]
+[Full task text from backlog]
 
 ### Files to Touch
-[List from plan]
+[List from backlog]
 
 ### Success Criteria
 [How we know it's done]
@@ -165,7 +165,7 @@ Test: [list]
 | Skip quality review | Code quality suffers |
 | Proceed with unfixed issues | Issues accumulate |
 | Dispatch multiple implementers in parallel | Conflicts occur |
-| Make subagent read plan file | Provide full text instead |
+| Make subagent read backlog file | Provide full text instead |
 | Ignore subagent questions | Implementation will be wrong |
 | Accept "close enough" | Spec reviewer found issues = not done |
 | Skip re-review after fixes | Don't know if fixes worked |
@@ -197,9 +197,9 @@ Test: [list]
 ## Example Execution
 
 ```
-Orchestrator: I'm executing the authentication plan.
+Orchestrator: I'm executing the authentication backlog.
 
-[Read plan: docs/plans/2024-01-15-auth-plan.md]
+[Read backlog: docs/backlogs/2024-01-15-auth-backlog.md]
 [Extract 4 tasks with full text]
 [Create TodoWrite: Task 1, Task 2, Task 3, Task 4]
 

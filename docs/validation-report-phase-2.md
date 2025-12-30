@@ -81,7 +81,7 @@ Phase 1 and Phase 2 implementation was validated with Option B (Full Validation)
 | /brainstorm | ✅ Pass | Phases well-defined, question templates included |
 | /verify | ✅ Pass | Iron law clear, verification patterns comprehensive |
 | /commit | ✅ Pass | Conventional commits format documented |
-| /plan | ✅ Pass | (verified via file review) |
+| /backlog-development | ✅ Pass | (verified via file review) |
 | /implement | ✅ Pass | (verified via file review) |
 | /pr | ✅ Pass | (verified via file review) |
 
@@ -91,7 +91,7 @@ Phase 1 and Phase 2 implementation was validated with Option B (Full Validation)
 |-------|-------|---------|-------|
 | using-ecosystem | 148 | ✅ Good | Core workflow documented |
 | brainstorming | 213 | ✅ Good | Added pushback handling |
-| writing-plans | 233 | ✅ Good | Bite-sized task format clear |
+| developing-backlogs | 233 | ✅ Good | Bite-sized task format clear |
 | orchestrating-subagents | 281 | ✅ Good | Context packet format defined |
 | verification | 258 | ✅ Good | Added time pressure handling |
 | git-workflow | 332 | ✅ Good | Added refusal guidance |

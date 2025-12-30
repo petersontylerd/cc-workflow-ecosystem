@@ -1,22 +1,22 @@
 ---
-name: writing-plans
+name: developing-backlogs
 description: "Use when you have a spec or requirements for a multi-step task, before touching code"
 ---
 
-# Writing Implementation Plans
+# Developing Backlogs
 
 ## Overview
 
-Write comprehensive implementation plans assuming the engineer has zero codebase context. Document everything needed: files to touch, exact code, test commands, expected outputs.
+Write comprehensive backlogs assuming the engineer has zero codebase context. Document everything needed: files to touch, exact code, test commands, expected outputs.
 
 **Core principle:** Each step is one action (2-5 minutes). Complete, precise, executable.
 
-## Plan Document Structure
+## Backlog Document Structure
 
-Every plan MUST start with this header:
+Every backlog MUST start with this header:
 
 ```markdown
-# [Feature Name] Implementation Plan
+# [Feature Name] Backlog
 
 **Goal:** [One sentence describing what this builds]
 
@@ -98,31 +98,31 @@ git commit -m "feat(scope): add specific feature"
 
 ### Exact File Paths
 ```
-✓ Create: src/components/LoginForm.tsx
-✗ Create: a login form component
+OK  Create: src/components/LoginForm.tsx
+BAD Create: a login form component
 ```
 
 ### Complete Code
 ```
-✓ export function validateEmail(email: string): boolean {
+OK  export function validateEmail(email: string): boolean {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
 
-✗ add email validation logic here
+BAD add email validation logic here
 ```
 
 ### Exact Commands with Expected Output
 ```
-✓ Run: npm test src/utils/validation.test.ts
+OK  Run: npm test src/utils/validation.test.ts
   Expected: PASS - 3 tests passed
 
-✗ Run the tests
+BAD Run the tests
 ```
 
-## Plan Template
+## Backlog Template
 
 ```markdown
-# [Feature] Implementation Plan
+# [Feature] Backlog
 
 **Goal:** [One sentence]
 
@@ -183,35 +183,35 @@ Expected: No errors
 Expected: No errors
 ```
 
-## After Writing the Plan
+## After Writing the Backlog
 
-Save the plan to:
+Save the backlog to:
 ```
-docs/plans/YYYY-MM-DD-<feature-name>-plan.md
+docs/backlogs/YYYY-MM-DD-<feature-name>-backlog.md
 ```
 
 Offer execution options:
 ```
-"Plan complete and saved. How would you like to proceed?
+"Backlog complete and saved. How would you like to proceed?
 
 1. **Subagent Execution** - I'll orchestrate code-implementer, spec-reviewer,
    and quality-reviewer for each task
 
-2. **Manual Execution** - Follow the plan step by step yourself
+2. **Manual Execution** - Follow the backlog step by step yourself
 
-3. **Review First** - Let's walk through the plan together before starting"
+3. **Review First** - Let's walk through the backlog together before starting"
 ```
 
-## Checklist Before Completing Plan
+## Checklist Before Completing Backlog
 
 - [ ] Every task is 2-5 minutes
 - [ ] All file paths are exact
 - [ ] All code is complete (no placeholders)
 - [ ] All commands have expected output
-- [ ] TDD cycle is followed (test → fail → implement → pass → commit)
+- [ ] TDD cycle is followed (test -> fail -> implement -> pass -> commit)
 - [ ] Final verification steps included
 - [ ] Prerequisites listed
-- [ ] Plan saved to docs/plans/
+- [ ] Backlog saved to docs/backlogs/
 
 ## Common Mistakes
 
@@ -223,22 +223,22 @@ Offer execution options:
 | One huge task | Break into 2-5 minute steps |
 | Skip test step | TDD is mandatory |
 
-## Plan Updates
+## Backlog Updates
 
-If a plan needs modification during execution:
+If a backlog needs modification during execution:
 
 1. **STOP** current task
-2. **Document** what changed and why in the plan file
+2. **Document** what changed and why in the backlog file
 3. **Mark** affected tasks with status:
    - `[COMPLETED]` - Done before change
    - `[OBSOLETE]` - No longer needed
    - `[MODIFIED]` - Updated requirements
    - `[NEW]` - Added tasks
-4. **Re-extract** tasks from updated plan
+4. **Re-extract** tasks from updated backlog
 5. **Update** TodoWrite to reflect new task list
 6. **Continue** from next incomplete task
 
-### Plan Update Example
+### Backlog Update Example
 
 ```markdown
 ## Task 3: Login validation [MODIFIED]

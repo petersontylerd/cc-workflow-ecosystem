@@ -14,7 +14,7 @@ touch "$MARKER_FILE"
 cat <<'EOF'
 {
   "hookSpecificOutput": {
-    "additionalContext": "BRAINSTORMING MODE ACTIVE: Write/Edit tools are now blocked until you save the design to docs/plans/ or invoke /plan. This ensures thorough design exploration before implementation."
+    "additionalContext": "BRAINSTORMING MODE ACTIVE: Write/Edit tools are now blocked until you save the design to docs/designs/ or invoke /backlog-development. This ensures thorough design exploration before implementation."
   }
 }
 EOF

@@ -1,23 +1,23 @@
 ---
-description: Create a bite-sized implementation plan with exact file paths, complete code, and test commands
+description: Create a bite-sized backlog with exact file paths, complete code, and test commands
 argument-hint: "[feature name or design document path]"
 ---
 
-# /plan Command
+# /backlog-development Command
 
-Create a detailed implementation plan from a design or requirements.
+Create a detailed backlog from a design or requirements.
 
 ## Usage
 
 ```
-/plan user-authentication
-/plan docs/plans/2024-01-15-auth-design.md
-/plan "add email validation to registration"
+/backlog-development user-authentication
+/backlog-development docs/designs/2024-01-15-auth-design.md
+/backlog-development "add email validation to registration"
 ```
 
 ## Workflow
 
-This command invokes the `writing-plans` skill.
+This command invokes the `developing-backlogs` skill.
 
 ### What Happens
 
@@ -27,13 +27,13 @@ This command invokes the `writing-plans` skill.
    - Exact file paths to create/modify
    - Complete code (no placeholders)
    - Test commands with expected output
-   - TDD cycle (test → fail → implement → pass → commit)
-4. **Save Plan**: Write to `docs/plans/YYYY-MM-DD-<feature>-plan.md`
+   - TDD cycle (test -> fail -> implement -> pass -> commit)
+4. **Save Backlog**: Write to `docs/backlogs/YYYY-MM-DD-<feature>-backlog.md`
 
 ### Output Format
 
 ```markdown
-# [Feature] Implementation Plan
+# [Feature] Backlog
 
 **Goal:** [One sentence]
 **Architecture:** [2-3 sentences]
@@ -71,20 +71,20 @@ Expected: PASS
 
 ### Next Steps
 
-After plan is complete:
+After backlog is complete:
 - `/implement` - Execute with subagent orchestration
-- Manual execution following the plan steps
+- Manual execution following the backlog steps
 
 ## Key Principles
 
 - **2-5 minutes per step** - Bite-sized and focused
 - **Complete code** - No "add validation here"
 - **Exact commands** - Include expected output
-- **TDD always** - Test → Fail → Implement → Pass → Commit
+- **TDD always** - Test -> Fail -> Implement -> Pass -> Commit
 
 ## Related Commands
 
-- `/brainstorm` - Explore design before planning
+- `/brainstorm` - Explore design before creating backlog
 - `/branch` - Create feature branch
-- `/implement` - Execute the plan
+- `/implement` - Execute the backlog
 - `/verify` - Validate implementation

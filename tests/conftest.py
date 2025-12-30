@@ -40,11 +40,11 @@ def expected_skills() -> list[str]:
     """Return list of expected skill names."""
     return [
         "brainstorming",
+        "developing-backlogs",
         "git-workflow",
         "orchestrating-subagents",
         "using-ecosystem",
         "verification",
-        "writing-plans",
     ]
 
 
@@ -52,11 +52,11 @@ def expected_skills() -> list[str]:
 def expected_commands() -> list[str]:
     """Return list of expected command names."""
     return [
+        "backlog-development",
         "brainstorm",
         "branch",
         "commit",
         "implement",
-        "plan",
         "pr",
         "verify",
         "workflow",

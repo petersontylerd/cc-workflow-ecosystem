@@ -22,8 +22,8 @@ This command invokes the `brainstorming` skill.
 ### Environment
 
 This command activates **read-only mode**. Write/Edit tools are blocked until:
-1. You save the design to `docs/plans/YYYY-MM-DD-<topic>-design.md`
-2. Or you invoke `/plan` to proceed to implementation planning
+1. You save the design to `docs/designs/YYYY-MM-DD-<topic>-design.md`
+2. Or you invoke `/backlog-development` to proceed to backlog creation
 
 This prevents premature implementation during the exploration phase.
 
@@ -37,7 +37,7 @@ This prevents premature implementation during the exploration phase.
    - Success criteria: How will we know it works?
 3. **Approach Exploration**: Propose 2-3 approaches with tradeoffs
 4. **Design Presentation**: Present design incrementally (200-300 words/section)
-5. **Documentation**: Save design to `docs/plans/YYYY-MM-DD-<topic>-design.md`
+5. **Documentation**: Save design to `docs/designs/YYYY-MM-DD-<topic>-design.md`
 
 ### Output
 
@@ -50,7 +50,7 @@ At the end, you'll have:
 ### Next Steps
 
 After brainstorming, you'll be offered:
-- `/plan` - Create bite-sized implementation plan
+- `/backlog-development` - Create bite-sized backlog
 - `/branch` - Create feature branch for development
 
 ## Key Principles
@@ -62,6 +62,6 @@ After brainstorming, you'll be offered:
 
 ## Related Commands
 
-- `/plan` - Create implementation plan from design
+- `/backlog-development` - Create backlog from design
 - `/branch` - Create feature branch
-- `/implement` - Execute plan with subagent orchestration
+- `/implement` - Execute backlog with subagent orchestration
