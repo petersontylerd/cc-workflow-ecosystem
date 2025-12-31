@@ -1,7 +1,7 @@
 {
   "name": "workflow-ecosystem",
   "description": "Platform-agnostic development workflow with brainstorming, backlog-development, implementation, and verification skills",
-  "version": "1.6.1",
+  "version": "1.7.1",
   "author": {
     "name": "petersontylerd",
     "email": "petersontylerd@example.com"
