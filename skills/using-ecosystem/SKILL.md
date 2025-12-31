@@ -36,6 +36,7 @@ These skills provide techniques and standards for specific situations:
 | Skill | When to Use |
 |-------|-------------|
 | `systematic-debugging` | When encountering bugs, test failures, or unexpected behavior. 4-phase root cause methodology. |
+| `angular-development` | When working with Angular projects. Standalone components, signals, state management detection, performance patterns. |
 | `python-development` | When working on Python projects. Standards for uv, ruff, mypy, pytest, type hints. |
 | `typescript-development` | When working with TypeScript. Strict mode, type patterns, error handling. |
 

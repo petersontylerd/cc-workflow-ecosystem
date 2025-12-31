@@ -39,6 +39,7 @@ def hooks_dir(plugin_root: Path) -> Path:
 def expected_skills() -> list[str]:
     """Return list of expected skill names."""
     return [
+        "angular-development",
         "brainstorming",
         "developing-backlogs",
         "git-workflow",
