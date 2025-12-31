@@ -45,6 +45,7 @@ def expected_skills() -> list[str]:
         "orchestrating-subagents",
         "using-ecosystem",
         "verification",
+        "workflow-management",
     ]
 
 

@@ -237,6 +237,48 @@ Before claiming ANY work is complete:
 - [ ] Each requirement verified individually
 - [ ] Git status clean (no uncommitted changes)
 
+## Example Verification Report
+
+Output should follow this structured format:
+
+```markdown
+## Verification Report
+
+### Tests
+✅ 47/47 tests passed
+
+### Linter
+✅ 0 errors, 0 warnings
+
+### Type Checker
+✅ No type errors
+
+### Build
+✅ Build successful (exit 0)
+
+### Requirements
+- [x] User can log in with email
+- [x] User can log in with Google
+- [x] Session persists across restarts
+
+### Code Quality
+✅ No TODO/FIXME in new code
+✅ No debug statements
+✅ All changes committed
+
+## Summary
+✅ All verifications passed. Ready for PR.
+```
+
+If any check fails, report it clearly:
+
+```markdown
+### Tests
+❌ 45/47 tests passed, 2 failed
+  - test_login_timeout: AssertionError
+  - test_session_expiry: Timeout
+```
+
 ## When to Apply
 
 **ALWAYS before:**

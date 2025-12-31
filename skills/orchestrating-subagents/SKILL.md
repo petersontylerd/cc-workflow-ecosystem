@@ -55,6 +55,16 @@ Use this skill when:
 - Tasks are mostly independent
 - You want automated quality gates between tasks
 
+## Subagent Roles
+
+| Agent | Role | Focus |
+|-------|------|-------|
+| `code-implementer` | Execute task | TDD, atomic commits |
+| `spec-reviewer` | Validate completeness | Requirements match |
+| `quality-reviewer` | Assess quality | Code standards |
+
+Each agent is dispatched fresh per task to avoid context pollution between tasks.
+
 ## The Process
 
 ### Step 1: Prepare

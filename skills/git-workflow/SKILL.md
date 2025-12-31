@@ -26,6 +26,25 @@ Feature branch development is MANDATORY. Never commit directly to main/master.
 <type>/<issue-number>-<short-description>
 ```
 
+### Branch Argument Parsing
+
+| Input | Interpreted As |
+|-------|----------------|
+| `feat/42-user-auth` | `feat/42-user-auth` |
+| `42-user-auth` | `feat/42-user-auth` (default type) |
+| `fix/123-bug` | `fix/123-bug` |
+| `chore/456-deps` | `chore/456-deps` |
+
+### Branch Error Handling
+
+| Error | Response |
+|-------|----------|
+| Already on target branch | "Already on branch `<name>`" |
+| Uncommitted changes | Offer resolution options (commit, stash, discard) |
+| Invalid branch name | Explain convention, ask for correction |
+| Branch already exists | Offer to switch or create new name |
+| Pull fails | Report error, suggest manual resolution |
+
 ### Types
 
 | Type | When to Use |
@@ -252,6 +271,26 @@ git diff --cached            # Review actual changes
 <run-linter>                 # Ensure code quality
 ```
 
+## Interactive Commit Mode
+
+When committing without a message argument:
+
+1. **Analyze staged changes** - Review files and their modifications
+2. **Suggest appropriate type** - Based on files changed (tests → `test`, docs → `docs`, etc.)
+3. **Propose commit message** - Draft a conventional commit message
+4. **Ask for confirmation** - Allow user to accept, edit, or reject
+
+This mode helps ensure commits follow conventions without requiring users to remember the exact format.
+
+### Scope Examples
+
+Optional component/area specifier:
+- `feat(auth): add OAuth2 login` - Feature in auth component
+- `fix(api): handle null response` - Fix in API layer
+- `test(validation): add email format tests` - Tests for validation
+- `refactor(utils): extract date formatting` - Refactoring utilities
+- `chore(deps): update lodash to 4.17.21` - Dependency update
+
 ## Pull Request Workflow
 
 ### Before Creating PR
@@ -268,9 +307,55 @@ git diff --cached            # Review actual changes
 git push -u origin <branch-name>
 ```
 
-Then create the PR via your git hosting platform's web interface with:
-- **Title**: `feat: description`
-- **Body**: Include summary, issue reference (Closes #issue), and test plan
+Then create the PR via your git hosting platform's web interface.
+
+### PR Description Template
+
+```markdown
+## Summary
+[2-3 sentences describing what this PR does]
+
+Closes #[issue-number]
+
+## Changes
+- [Bullet list of key changes]
+- [Grouped by component/area]
+
+## Test Plan
+- [ ] [Specific test case 1]
+- [ ] [Specific test case 2]
+- [ ] [Manual verification step]
+
+## Screenshots
+[If UI changes, include before/after]
+
+## Notes
+[Any additional context, breaking changes, or migration steps]
+```
+
+### Branch to Title Mapping
+
+| Branch | PR Title |
+|--------|----------|
+| `feat/42-user-auth` | `feat: Add user authentication` |
+| `fix/123-login-bug` | `fix: Resolve login timeout issue` |
+| `chore/456-deps` | `chore: Update dependencies` |
+
+### PR Options
+
+| Option | Effect |
+|--------|--------|
+| `--draft` | Mark PR as draft (not ready for review) |
+| `--reviewer @user` | Request specific reviewer |
+
+### PR Error Handling
+
+| Error | Response |
+|-------|----------|
+| Tests failing | "Tests must pass before PR. Run verification first." |
+| No commits | "No commits on branch. Nothing to PR." |
+| Already has PR | "PR #X already exists for this branch." |
+| Not on feature branch | "Switch to a feature branch first." |
 
 ## Recovery Patterns
 

@@ -47,34 +47,35 @@ class TestCommandLoading:
             assert "## Usage" in content, f"Missing '## Usage' in {command_name}"
             assert "```" in content, f"Missing code examples in {command_name}"
 
-    def test_all_commands_have_workflow_section(
+    def test_all_commands_reference_skill(
         self, plugin_root: Path, expected_commands: list[str]
     ) -> None:
-        """Each command should document its workflow."""
+        """Each command should reference a skill (thin wrapper pattern)."""
         commands_dir = plugin_root / "commands"
 
         for command_name in expected_commands:
             command_file = commands_dir / f"{command_name}.md"
             content = command_file.read_text()
 
-            assert "## Workflow" in content or "## What Happens" in content, (
-                f"Missing workflow documentation in {command_name}"
+            # Commands should reference a skill they delegate to
+            assert "skill" in content.lower(), (
+                f"Missing skill reference in {command_name}"
             )
 
     def test_all_commands_have_sufficient_content(
         self, plugin_root: Path, expected_commands: list[str]
     ) -> None:
-        """Each command should have meaningful content."""
+        """Each command should have meaningful content (thin wrappers ~200+ chars)."""
         commands_dir = plugin_root / "commands"
 
         for command_name in expected_commands:
             command_file = commands_dir / f"{command_name}.md"
             content = command_file.read_text()
 
-            # Commands should be reasonably documented
-            assert len(content) > 500, (
+            # Commands are thin wrappers - lower threshold than before
+            assert len(content) > 200, (
                 f"Command {command_name} has insufficient documentation "
-                f"({len(content)} chars, expected >500)"
+                f"({len(content)} chars, expected >200)"
             )
 
     def test_command_names_in_title(
