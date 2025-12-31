@@ -7,6 +7,8 @@ argument-hint: "[topic or feature description]"
 
 Start a collaborative exploration of requirements and design.
 
+**Note**: This command works best when invoked in plan mode (shift+tab twice). Claude Code will automatically use its built-in Explore and Plan agents for efficient codebase research.
+
 ## Usage
 
 ```

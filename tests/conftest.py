@@ -45,6 +45,7 @@ def expected_skills() -> list[str]:
         "git-workflow",
         "orchestrating-subagents",
         "python-development",
+        "subagent-state-management",
         "systematic-debugging",
         "typescript-development",
         "using-ecosystem",

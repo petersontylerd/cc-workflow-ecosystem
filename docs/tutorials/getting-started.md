@@ -68,6 +68,7 @@ Skills are loaded automatically when relevant. You don't need to invoke them dir
 | `brainstorming` | Guides requirement exploration |
 | `developing-backlogs` | Creates detailed backlogs |
 | `orchestrating-subagents` | Coordinates subagent execution |
+| `subagent-state-management` | State management for subagents (startup, recovery, handoffs) |
 | `verification` | Ensures evidence-based completion |
 | `git-workflow` | Enforces feature branch discipline |
 

@@ -18,11 +18,15 @@ PARENT CLAUDE (Orchestrator)
 ├── Reads backlog ONCE, extracts ALL tasks with full text
 ├── Creates TodoWrite with all tasks
 ├── For each task:
-│   ├── STEP 1: Prepare context packet
+│   ├── STEP 1: Prepare context packet (with Purpose, Failure Modes, Skills)
+│   │   ├── Purpose (WHY this task matters)
 │   │   ├── Task text (from backlog)
 │   │   ├── Relevant file paths
 │   │   ├── Scene-setting context
-│   │   └── Success criteria
+│   │   ├── Success criteria
+│   │   ├── Environment verification commands
+│   │   ├── Potential failure modes
+│   │   └── Required skills to consult
 │   │
 │   ├── STEP 2: Dispatch code-implementer
 │   │   └── Wait for completion or questions
@@ -57,11 +61,11 @@ Use this skill when:
 
 ## Subagent Roles
 
-| Agent | Role | Focus |
-|-------|------|-------|
-| `code-implementer` | Execute task | TDD, atomic commits |
-| `spec-reviewer` | Validate completeness | Requirements match |
-| `quality-reviewer` | Assess quality | Code standards |
+| Agent | Role | Focus | Key Skill Reference |
+|-------|------|-------|---------------------|
+| `code-implementer` | Execute task | TDD, atomic commits | `subagent-state-management` |
+| `spec-reviewer` | Validate completeness | Requirements match | `verification` |
+| `quality-reviewer` | Assess quality | Code standards | `verification` |
 
 Each agent is dispatched fresh per task to avoid context pollution between tasks.
 
@@ -73,6 +77,8 @@ Each agent is dispatched fresh per task to avoid context pollution between tasks
 2. Extract ALL tasks with their full text
 3. Note any shared context (architecture, conventions)
 4. Create TodoWrite with all tasks
+5. **Identify environment verification commands** (test suite, build, etc.)
+6. **Identify required skills for each task** (language skills, debugging, etc.)
 
 **Important:** You read the backlog. Subagents receive curated context, NOT the backlog file.
 
@@ -80,24 +86,7 @@ Each agent is dispatched fresh per task to avoid context pollution between tasks
 
 #### Dispatch code-implementer
 
-```markdown
-## Task: [Task Name]
-
-### Context
-[Scene-setting: where this fits in the project]
-
-### Requirements
-[Full task text from backlog]
-
-### Files to Touch
-[List from backlog]
-
-### Success Criteria
-[How we know it's done]
-
-### Notes
-[Any relevant conventions or patterns]
-```
+Provide a complete context packet (see format below).
 
 #### Handle Questions
 
@@ -110,7 +99,9 @@ If implementer asks questions:
 
 After implementation, dispatch spec-reviewer with:
 - Original task requirements
-- Git diff of changes
+- Purpose of the task
+- Implementer's completion report
+- Reference to git diff
 
 If spec-reviewer finds gaps:
 1. Dispatch implementer to fix gaps
@@ -122,6 +113,7 @@ If spec-reviewer finds gaps:
 After spec approval, dispatch quality-reviewer with:
 - Git diff of changes
 - Project conventions
+- Spec-reviewer's handoff notes
 
 If quality-reviewer finds issues:
 1. Dispatch implementer to fix issues
@@ -143,8 +135,14 @@ After all tasks complete:
 
 ## Context Packet Format
 
+The context packet is the primary way you communicate with subagents. A complete context packet ensures subagent success.
+
 ```markdown
 ## Task: [Name]
+
+### Purpose
+[WHY this task matters. What problem does it solve? What value does it enable?
+This helps the implementer make good decisions when facing trade-offs.]
 
 ### Context
 This is task [N] of [Total] in implementing [Feature].
@@ -152,7 +150,14 @@ Previous tasks completed: [List]
 This task builds on: [Dependencies]
 
 ### Requirements
-[FULL task text - not summarized]
+[FULL task text - not summarized. Copy verbatim from backlog.]
+
+### Environment Verification
+[Commands to run before starting to verify environment health]
+```bash
+pytest tests/ -x -q --tb=short
+npm run build
+```
 
 ### Files
 Create: [list]
@@ -160,12 +165,50 @@ Modify: [list]
 Test: [list]
 
 ### Success Criteria
-- [Specific criterion 1]
-- [Specific criterion 2]
+- [Specific, measurable criterion 1]
+- [Specific, measurable criterion 2]
+- [Specific, measurable criterion 3]
+
+### Potential Failure Modes
+[What could go wrong? Common pitfalls? Edge cases to watch for?]
+- [Failure mode 1]: [How to detect/prevent]
+- [Failure mode 2]: [How to detect/prevent]
+
+### Required Skills
+[Skills the agent should consult for this task]
+- `python-development` - Python patterns and tooling
+- `systematic-debugging` - If blocked on errors
+- `verification` - Before claiming completion
 
 ### Conventions
-[Relevant patterns to follow]
+[Relevant patterns to follow from the codebase]
+- [Convention 1]
+- [Convention 2]
+
+---
+This is a fresh task context. Previous task context does not apply.
 ```
+
+## Context Packet Checklist
+
+Before dispatching any subagent, verify your context packet includes:
+
+**Core Sections (Required):**
+- [ ] **Task header** (`## Task: [Name]`)
+- [ ] **Purpose** (WHY this task matters) ← NEW
+- [ ] **Context** (where this fits, dependencies)
+- [ ] **Requirements** (FULL task text, not summarized)
+- [ ] **Files to touch** (create, modify, test)
+- [ ] **Success criteria** (specific, measurable)
+
+**Enhanced Sections (Recommended):**
+- [ ] **Environment verification** (commands to check health) ← NEW
+- [ ] **Potential failure modes** (what could go wrong) ← NEW
+- [ ] **Required skills** (which skills to consult) ← NEW
+- [ ] **Conventions** (coding style, patterns if applicable)
+- [ ] **Fresh task marker** ("This is a fresh task context.")
+
+**Incomplete context = poor subagent performance.**
 
 ## Red Flags - STOP
 
@@ -179,6 +222,9 @@ Test: [list]
 | Ignore subagent questions | Implementation will be wrong |
 | Accept "close enough" | Spec reviewer found issues = not done |
 | Skip re-review after fixes | Don't know if fixes worked |
+| Omit Purpose section | Implementer makes poor trade-offs |
+| Omit Failure Modes | Preventable errors occur |
+| Omit Required Skills | Agent doesn't use available guidance |
 
 ## Review Loop Pattern
 
@@ -215,7 +261,7 @@ Orchestrator: I'm executing the authentication backlog.
 
 Task 1: User model with password hashing
 [Mark in_progress in TodoWrite]
-[Prepare context packet]
+[Prepare context packet with Purpose, Failure Modes, Skills]
 [Dispatch code-implementer]
 
 Implementer: "Should I use bcrypt or argon2 for hashing?"
@@ -226,11 +272,11 @@ Orchestrator: "Use argon2 - it's already in our dependencies."
 
 Implementer: "Completed. Created User model, added tests, committed."
 
-[Dispatch spec-reviewer]
+[Dispatch spec-reviewer with requirements + implementer report]
 
 Spec-reviewer: "✅ Matches spec. All requirements met."
 
-[Dispatch quality-reviewer]
+[Dispatch quality-reviewer with spec-reviewer handoff]
 
 Quality-reviewer: "✅ Approved. Good patterns, clean code."
 
@@ -238,7 +284,7 @@ Quality-reviewer: "✅ Approved. Good patterns, clean code."
 
 Task 2: Login endpoint
 [Mark in_progress]
-[Dispatch code-implementer with context]
+[Dispatch code-implementer with full context packet]
 
 Implementer: "Completed login endpoint implementation."
 
@@ -279,9 +325,12 @@ Quality-reviewer: "✅ Approved."
 1. **You are the orchestrator** - You maintain context, subagents execute
 2. **Fresh subagent per task** - No context pollution between tasks
 3. **Curated context** - Subagents receive exactly what they need
-4. **Two-stage review** - Spec compliance before code quality
-5. **Review loops** - Issues found = fix = re-review
-6. **Sequential execution** - One task at a time, avoid conflicts
+4. **Purpose-driven** - Every task explains WHY, not just WHAT
+5. **Failure-aware** - Anticipate problems, provide guidance
+6. **Skill-enabled** - Point agents to relevant skills
+7. **Two-stage review** - Spec compliance before code quality
+8. **Review loops** - Issues found = fix = re-review
+9. **Sequential execution** - One task at a time, avoid conflicts
 
 ## Mandatory Task Tool Usage
 
@@ -290,29 +339,40 @@ You MUST use the Task tool to dispatch each subagent. This is not optional.
 ### Dispatch Checklist
 
 For each task, verify you have:
-- [ ] Dispatched code-implementer via Task tool
-- [ ] Received and reviewed completion report
-- [ ] Dispatched spec-reviewer via Task tool
+- [ ] Dispatched code-implementer via Task tool with complete context packet
+- [ ] Received and reviewed completion report (with verification evidence)
+- [ ] Dispatched spec-reviewer via Task tool with requirements + implementer report
 - [ ] Received approval OR fixed gaps and re-dispatched
-- [ ] Dispatched quality-reviewer via Task tool
+- [ ] Dispatched quality-reviewer via Task tool with spec-reviewer handoff
 - [ ] Received approval OR fixed issues and re-dispatched
 - [ ] Updated TodoWrite to mark task complete
 
 **Violation:** Implementing code yourself instead of dispatching code-implementer is a workflow violation. The orchestrator orchestrates; subagents implement.
 
-## Context Packet Checklist
+## Handoff Quality
 
-Before dispatching any subagent, verify your context packet includes:
+Good handoffs between agents prevent wasted work and confusion.
 
-- [ ] **Task header** (`## Task: [Name]`)
-- [ ] **Context section** (where this fits, dependencies)
-- [ ] **Requirements** (FULL task text, not summarized)
-- [ ] **Files to touch** (create, modify, test)
-- [ ] **Success criteria** (specific, measurable)
-- [ ] **Conventions** (coding style, patterns if applicable)
-- [ ] **Fresh task marker** ("This is a fresh task context.")
+### Implementer → Spec-Reviewer
 
-**Incomplete context = poor subagent performance.**
+Provide:
+- Original requirements (from context packet)
+- Implementer's completion report
+- Reference to changes (git diff)
+
+### Spec-Reviewer → Quality-Reviewer
+
+Spec-reviewer should include in their report:
+- What was verified
+- Focus areas for quality review
+- What NOT to re-check
+
+### Quality-Reviewer → Orchestrator
+
+Quality-reviewer should include:
+- Approval status
+- Technical debt assessment
+- Any recommendations
 
 ## Integration
 
@@ -321,4 +381,7 @@ After orchestration completes:
 - Use `/verify` command for final validation
 - Use `/pr` command to create pull request
 
-**REQUIRED BACKGROUND:** Understand `developing-backlogs` for backlog format and `using-ecosystem` for workflow context.
+**REQUIRED BACKGROUND:**
+- Understand `developing-backlogs` for backlog format
+- Understand `using-ecosystem` for workflow context
+- Understand `subagent-state-management` for agent operational patterns

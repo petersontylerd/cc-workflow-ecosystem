@@ -70,6 +70,7 @@ Or enable auto-updates through `/plugin` → Marketplaces → workflow-ecosystem
 | `brainstorming` | Pre-implementation requirement exploration |
 | `developing-backlogs` | Bite-sized task backlog creation with exact code |
 | `orchestrating-subagents` | Multi-agent coordination pattern |
+| `subagent-state-management` | Session startup rituals, state recovery, handoff protocols |
 | `verification` | Evidence-based completion discipline |
 | `git-workflow` | Branch and commit enforcement |
 

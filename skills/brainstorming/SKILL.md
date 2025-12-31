@@ -11,6 +11,28 @@ Help turn ideas into fully formed designs through collaborative dialogue.
 
 **Core principle:** Understand completely before implementing anything.
 
+## Working in Plan Mode
+
+Brainstorming is designed to work harmoniously with Claude Code's **built-in plan mode subagents**:
+
+### Use Claude Code's Built-in Agents
+
+| Agent | How to Use |
+|-------|------------|
+| **Explore** | Launch via Task tool with `subagent_type=Explore` for codebase research |
+| **Plan** | Launch via Task tool with `subagent_type=Plan` for architecture design |
+
+**DO NOT** use custom agents (like `code-implementer`, `spec-reviewer`, `quality-reviewer`) during brainstorming. Those are for the implementation phase only.
+
+### Standard Plan Mode Flow
+
+1. **Explore the codebase** - Launch Explore agents to understand existing patterns
+2. **Ask clarifying questions** - One at a time, as described below
+3. **Design approaches** - Use Plan agents if needed for complex architecture
+4. **Document the design** - Save to `docs/designs/`
+
+This ensures efficient context management and leverages Claude Code's optimized research capabilities.
+
 ## Environment Enforcement
 
 **Brainstorming is enforced in read-only mode.** Write/Edit tools are blocked while brainstorming is active.

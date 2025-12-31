@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # PreToolCall hook: Validate context packet for subagent dispatch
 # Checks that Task tool calls include required context sections
+# Provides warnings (not blocks) per user preference
 
 set -euo pipefail
 
@@ -26,31 +27,66 @@ if ! echo "$TOOL_INPUT" | grep -qE '(code-implementer|spec-reviewer|quality-revi
 fi
 
 # Check for required context packet sections in the prompt
-MISSING_SECTIONS=""
+MISSING_CORE=""
+MISSING_ENHANCED=""
 
+# Core sections (highly recommended)
 if ! echo "$TOOL_INPUT" | grep -qiE '(##\s*Task:|Task:|### Task)'; then
-  MISSING_SECTIONS="${MISSING_SECTIONS}Task header, "
+  MISSING_CORE="${MISSING_CORE}Task header, "
 fi
 
 if ! echo "$TOOL_INPUT" | grep -qiE '(##\s*Context|### Context|context:)'; then
-  MISSING_SECTIONS="${MISSING_SECTIONS}Context section, "
+  MISSING_CORE="${MISSING_CORE}Context section, "
 fi
 
 if ! echo "$TOOL_INPUT" | grep -qiE '(##\s*Requirements|### Requirements|requirements:)'; then
-  MISSING_SECTIONS="${MISSING_SECTIONS}Requirements section, "
+  MISSING_CORE="${MISSING_CORE}Requirements section, "
 fi
 
 if ! echo "$TOOL_INPUT" | grep -qiE '(success criteria|##\s*Success|### Success)'; then
-  MISSING_SECTIONS="${MISSING_SECTIONS}Success Criteria, "
+  MISSING_CORE="${MISSING_CORE}Success Criteria, "
 fi
 
-if [[ -n "$MISSING_SECTIONS" ]]; then
-  # Remove trailing comma and space
-  MISSING_SECTIONS="${MISSING_SECTIONS%, }"
+# Enhanced sections (recommended for better subagent performance)
+if ! echo "$TOOL_INPUT" | grep -qiE '(##\s*Purpose|### Purpose|purpose:)'; then
+  MISSING_ENHANCED="${MISSING_ENHANCED}Purpose (WHY task matters), "
+fi
+
+if ! echo "$TOOL_INPUT" | grep -qiE '(environment|verification|##\s*Environment|### Environment)'; then
+  MISSING_ENHANCED="${MISSING_ENHANCED}Environment Verification, "
+fi
+
+if ! echo "$TOOL_INPUT" | grep -qiE '(failure mode|potential failure|##\s*Failure|### Failure|what could go wrong)'; then
+  MISSING_ENHANCED="${MISSING_ENHANCED}Potential Failure Modes, "
+fi
+
+if ! echo "$TOOL_INPUT" | grep -qiE '(required skill|##\s*Skills|### Skills|skill.*consult)'; then
+  MISSING_ENHANCED="${MISSING_ENHANCED}Required Skills, "
+fi
+
+# Build warning message
+WARNING_MSG=""
+
+if [[ -n "$MISSING_CORE" ]]; then
+  MISSING_CORE="${MISSING_CORE%, }"
+  WARNING_MSG="CONTEXT PACKET WARNING: Missing core sections: ${MISSING_CORE}. "
+fi
+
+if [[ -n "$MISSING_ENHANCED" ]]; then
+  MISSING_ENHANCED="${MISSING_ENHANCED%, }"
+  if [[ -n "$WARNING_MSG" ]]; then
+    WARNING_MSG="${WARNING_MSG}Also missing enhanced sections: ${MISSING_ENHANCED}. "
+  else
+    WARNING_MSG="CONTEXT PACKET SUGGESTION: Consider adding enhanced sections: ${MISSING_ENHANCED}. "
+  fi
+fi
+
+if [[ -n "$WARNING_MSG" ]]; then
+  WARNING_MSG="${WARNING_MSG}Per orchestrating-subagents skill, complete context packets improve subagent performance. See skills/orchestrating-subagents/SKILL.md for the full format."
   cat <<EOF
 {
   "hookSpecificOutput": {
-    "additionalContext": "CONTEXT PACKET WARNING: Subagent dispatch may be missing required sections: ${MISSING_SECTIONS}. Per orchestrating-subagents skill, each subagent needs complete context to perform well. Consider adding missing sections before dispatching."
+    "additionalContext": "${WARNING_MSG}"
   }
 }
 EOF
