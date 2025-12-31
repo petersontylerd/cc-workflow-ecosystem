@@ -8,7 +8,7 @@
     {
       "name": "workflow-ecosystem",
       "source": "./",
-      "version": "1.11.0",
+      "version": "1.11.1",
       "description": "Platform-agnostic development workflow with brainstorming, backlog-development, implementation, and verification skills"
     }
   ]
