@@ -6,7 +6,6 @@ This directory contains visual, file-by-file illustrations of how the workflow e
 
 | Document | Description |
 |----------|-------------|
-| [Beginner Pattern](./beginner-pattern.md) | First-time user with guided workflow |
 | [Intermediate Pattern](./intermediate-pattern.md) | Full automation with subagent orchestration |
 | [Expert Pattern](./expert-pattern.md) | Power user customization and escape hatches |
 | [File Reference Matrix](./file-reference-matrix.md) | Complete inventory of all files and their roles |
@@ -20,15 +19,15 @@ The plugin enforces a state machine that guides users through a disciplined deve
 ```mermaid
 stateDiagram-v2
     [*] --> idle : Session Start
-    idle --> brainstorming : /brainstorm
-    brainstorming --> branched : /branch
-    branched --> backlog_ready : /backlog-development
+    idle --> branched : /branch
+    branched --> brainstorming : /brainstorm (plan mode)
+    brainstorming --> backlog_ready : /backlog-development (plan mode)
     backlog_ready --> implementing : /implement
     implementing --> verifying : /verify
     verifying --> [*] : PR merged
 
-    note right of brainstorming : Write/Edit BLOCKED
     note right of branched : Write/Edit BLOCKED
+    note right of brainstorming : Write/Edit BLOCKED
     note right of backlog_ready : Write/Edit ALLOWED
 ```
 
@@ -110,21 +109,18 @@ The ecosystem provides three tiers of automation, each building on the previous:
 | `spec-reviewer` | Requirements compliance | `/implement` orchestrator |
 | `quality-reviewer` | Code quality assessment | `/implement` orchestrator |
 
-### Hooks (12 scripts + 1 config)
+### Hooks (9 scripts + 1 config)
 
 | Hook Script | Type | Purpose |
 |-------------|------|---------|
 | `hooks.json` | Config | Defines all hook triggers |
 | `session-start.sh` | SessionStart | Injects `using-ecosystem` skill |
 | `main-branch-protection.sh` | PreToolUse | **BLOCKS** edits on main/master |
-| `workflow-phase-check.sh` | PreToolUse | **BLOCKS** edits before backlog |
-| `brainstorm-mode-check.sh` | PreToolUse | **BLOCKS** edits during brainstorm |
+| `workflow-phase-check.sh` | PreToolUse | **BLOCKS** edits before backlog-ready phase |
 | `tdd-precommit-check.sh` | PreToolUse | **BLOCKS** commits without tests |
 | `verify-before-commit.sh` | PreToolUse | Reminds about verification |
 | `validate-task-description.sh` | PreToolUse | Validates subagent task descriptions |
 | `phase-transition.sh` | PostToolUse | Updates workflow phase |
-| `brainstorm-start.sh` | PostToolUse | Sets brainstorming marker |
-| `brainstorm-end.sh` | PostToolUse | Clears brainstorming marker |
 | `workflow-skip-set.sh` | PostToolUse | Sets enforcement skip |
 | `run-hook.cmd` | Wrapper | Cross-platform execution |
 
@@ -138,7 +134,6 @@ The plugin tracks workflow state using files in `$CLAUDE_SESSION_DIR`:
 |------|---------|------------|---------|
 | `.workflow_phase` | Current phase | `phase-transition.sh` | `workflow-phase-check.sh` |
 | `.workflow_skip` | Bypass enforcement | `workflow-skip-set.sh` | All blocking hooks |
-| `.brainstorming_active` | Brainstorm mode | `brainstorm-start.sh` | `brainstorm-mode-check.sh` |
 | `.backlog_path` | Current backlog | Commands | Skills |
 
 ---
@@ -150,9 +145,8 @@ The plugin tracks workflow state using files in `$CLAUDE_SESSION_DIR`:
 | Action | Condition | Hook |
 |--------|-----------|------|
 | Write/Edit | On main/master branch | `main-branch-protection.sh` |
-| Write/Edit | During brainstorming phase | `workflow-phase-check.sh` |
-| Write/Edit | After branch but before backlog | `workflow-phase-check.sh` |
-| Write/Edit | While brainstorming active | `brainstorm-mode-check.sh` |
+| Write/Edit | In `branched` phase (before /brainstorm) | `workflow-phase-check.sh` |
+| Write/Edit | In `brainstorming` phase (before /backlog-development) | `workflow-phase-check.sh` |
 | Git commit | Source files without tests | `tdd-precommit-check.sh` |
 
 ### Escape Hatch
@@ -207,13 +201,10 @@ hooks/                   # Enforcement scripts
 ├── session-start.sh
 ├── main-branch-protection.sh
 ├── workflow-phase-check.sh
-├── brainstorm-mode-check.sh
 ├── tdd-precommit-check.sh
 ├── verify-before-commit.sh
 ├── validate-task-description.sh
 ├── phase-transition.sh
-├── brainstorm-start.sh
-├── brainstorm-end.sh
 └── workflow-skip-set.sh
 ```
 
@@ -233,4 +224,4 @@ Each pattern document follows this structure:
    - ASCII diagrams for simple inline traces
 4. **Files Referenced** - Summary of all files touched in the pattern
 
-Start with [Beginner Pattern](./beginner-pattern.md) to understand the core workflow, then progress to [Intermediate](./intermediate-pattern.md) and [Expert](./expert-pattern.md) patterns.
+Start with [Intermediate Pattern](./intermediate-pattern.md) to understand the full automation workflow, then progress to [Expert](./expert-pattern.md) for power user customization.

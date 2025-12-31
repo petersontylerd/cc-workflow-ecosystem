@@ -44,7 +44,7 @@ WORKFLOW ENFORCEMENT SKIPPED: All checks bypassed for this session.
 Show current workflow state.
 
 **Output includes:**
-- Current phase: idle | brainstorming | branched | backlog-ready | implementing | verifying
+- Current phase: idle | branched | brainstorming | backlog-ready | implementing | verifying
 - Current branch name
 - Whether skip mode is active
 - Backlog path (if set)
@@ -89,27 +89,26 @@ Reset workflow state to idle.
 
 | File | Purpose |
 |------|---------|
-| `.workflow_phase` | Current workflow phase (idle/brainstorming/branched/backlog-ready/implementing/verifying) |
+| `.workflow_phase` | Current workflow phase (idle/branched/brainstorming/backlog-ready/implementing/verifying) |
 | `.workflow_skip` | If exists, enforcement is bypassed |
 | `.backlog_path` | Path to current backlog |
-| `.brainstorming_active` | Legacy marker (still used by brainstorm-mode-check) |
 
 All files stored in `$CLAUDE_SESSION_DIR` (session-scoped).
 
 ## Workflow Phases
 
 ```
-idle → brainstorming → branched → backlog-ready → implementing → verifying → idle
-       (blocks edits)   (blocks edits)   (allows edits)
+idle → branched → brainstorming → backlog-ready → implementing → verifying → idle
+       (blocks)    (blocks)        (allows edits)
 ```
 
 ### Phase Transitions
 
 | From | To | Triggered By |
 |------|-----|--------------|
-| idle | brainstorming | `/brainstorm` command |
-| brainstorming | branched | `/branch` command |
-| branched | backlog-ready | `/backlog-development` command |
+| idle | branched | `/branch` command |
+| branched | brainstorming | `/brainstorm` command |
+| brainstorming | backlog-ready | `/backlog-development` command |
 | backlog-ready | implementing | `/implement` command |
 | implementing | verifying | `/verify` command |
 | verifying | idle | PR created or reset |

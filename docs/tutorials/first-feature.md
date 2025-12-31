@@ -35,9 +35,22 @@ Add client-side email validation to the registration form.
 
 **Output:** Issue #45 created in your tracker.
 
-## Step 2: Brainstorm the Design
+## Step 2: Create Feature Branch
 
-Use `/brainstorm` to explore requirements:
+```
+/branch feat/45-email-validation
+```
+
+Claude:
+1. Checks working tree is clean
+2. Pulls latest main
+3. Creates branch `feat/45-email-validation`
+
+**Output:** "Created and switched to branch feat/45-email-validation"
+
+## Step 3: Brainstorm the Design (Plan Mode)
+
+Use `/brainstorm` in plan mode (shift+tab twice) to explore requirements:
 
 ```
 /brainstorm email validation for issue #45
@@ -62,20 +75,11 @@ Claude will ask questions one at a time:
 After exploration, Claude presents the design and saves to:
 `docs/designs/2024-01-15-email-validation-design.md`
 
-## Step 3: Create Feature Branch
+**Claude STOPS here** - Review the design document before proceeding.
 
-```
-/branch feat/45-email-validation
-```
+## Step 4: Create Backlog (Plan Mode)
 
-Claude:
-1. Checks working tree is clean
-2. Pulls latest main
-3. Creates branch `feat/45-email-validation`
-
-**Output:** "Created and switched to branch feat/45-email-validation"
-
-## Step 4: Create Backlog
+Use `/backlog-development` in plan mode (shift+tab twice):
 
 ```
 /backlog-development email-validation
@@ -138,6 +142,8 @@ Expected: PASS
 ```
 
 Saved to: `docs/backlogs/2024-01-15-email-validation-backlog.md`
+
+**Claude STOPS here** - Review the backlog document before proceeding.
 
 ## Step 5: Implement with Subagents
 
@@ -307,9 +313,9 @@ Issue #45 auto-closes (if using "Closes #45" keywords). Feature is complete!
 | Step | Command | Purpose |
 |------|---------|---------|
 | 1 | Create issue | Track the feature in your tracker |
-| 2 | `/brainstorm` | Explore requirements |
-| 3 | `/branch` | Create feature branch |
-| 4 | `/backlog-development` | Create backlog |
+| 2 | `/branch` | Create feature branch |
+| 3 | `/brainstorm` (plan mode) | Explore requirements, write design doc |
+| 4 | `/backlog-development` (plan mode) | Create backlog, write backlog doc |
 | 5 | `/implement` | Execute with subagents |
 | 6 | `/verify` | Pre-PR verification |
 | 7 | `/pr` | Generate PR description |
@@ -318,10 +324,11 @@ Issue #45 auto-closes (if using "Closes #45" keywords). Feature is complete!
 ## Key Takeaways
 
 1. **Always start with an issue** - Traceability from the beginning
-2. **Brainstorm before coding** - Avoid rework from unclear requirements
-3. **Backlog in small steps** - Each task is 2-5 minutes
-4. **Let subagents handle reviews** - Two-stage review catches issues
-5. **Verify before claiming done** - Evidence, not assumptions
-6. **Link everything** - Branch → commits → PR → issue
+2. **Branch first, then brainstorm** - Feature branch before design work
+3. **Use plan mode for design phases** - `/brainstorm` and `/backlog-development` write docs and STOP
+4. **Review before proceeding** - Check design and backlog docs before implementation
+5. **Let subagents handle reviews** - Two-stage review catches issues
+6. **Verify before claiming done** - Evidence, not assumptions
+7. **Link everything** - Branch → commits → PR → issue
 
 This workflow ensures high-quality, well-documented, traceable development every time.

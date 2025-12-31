@@ -101,13 +101,13 @@ Or enable auto-updates through `/plugin` → Marketplaces → workflow-ecosystem
 User Request
     |
     v
-/brainstorm           ->  Explore requirements (one question at a time)
-    |
-    v
 /branch               ->  Create feat/<issue>-<slug> branch
     |
     v
-/backlog-development  ->  Create bite-sized tasks with exact code
+/brainstorm           ->  Explore requirements (plan mode, writes to docs/designs/)
+    |
+    v
+/backlog-development  ->  Create bite-sized tasks (plan mode, writes to docs/backlogs/)
     |
     v
 /implement            ->  For each task:
@@ -170,12 +170,9 @@ workflow-ecosystem/
 │   ├── run-hook.cmd             # Cross-platform hook runner
 │   ├── session-start.sh         # Inject ecosystem context on startup
 │   ├── main-branch-protection.sh # BLOCKS Write/Edit on main/master
-│   ├── workflow-phase-check.sh  # BLOCKS Write/Edit without backlog
+│   ├── workflow-phase-check.sh  # BLOCKS Write/Edit before backlog-ready phase
 │   ├── phase-transition.sh      # Updates workflow phase on skill completion
 │   ├── workflow-skip-set.sh     # Sets skip marker for bypass
-│   ├── brainstorm-mode-check.sh # Block Write/Edit during brainstorming
-│   ├── brainstorm-start.sh      # Set brainstorming state
-│   ├── brainstorm-end.sh        # Clear brainstorming state
 │   ├── verify-before-commit.sh  # Pre-commit verification reminder
 │   ├── validate-task-description.sh # Validate subagent task descriptions
 │   └── tdd-precommit-check.sh   # BLOCKS commits without tests
@@ -192,7 +189,6 @@ workflow-ecosystem/
 For detailed workflow illustrations with file-by-file traces:
 
 - [Workflow Guides](docs/workflow-guides/README.md) - Visual documentation of usage patterns
-  - [Beginner Pattern](docs/workflow-guides/beginner-pattern.md) - First-time user journey
   - [Intermediate Pattern](docs/workflow-guides/intermediate-pattern.md) - Full automation with subagents
   - [Expert Pattern](docs/workflow-guides/expert-pattern.md) - Power user customization
   - [File Reference Matrix](docs/workflow-guides/file-reference-matrix.md) - Complete file inventory

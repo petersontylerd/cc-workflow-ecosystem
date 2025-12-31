@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # PreToolUse hook: Enforce workflow phase sequence before code edits
-# Blocks Write/Edit until user has completed /branch and /backlog-development phases
+# Workflow order: /branch → /brainstorm (plan mode) → /backlog-development (plan mode) → /implement → /verify
+# Blocks Write/Edit until user has completed backlog-ready phase
 
 set -euo pipefail
 
@@ -25,19 +26,19 @@ PHASE_FILE="${SESSION_DIR}/.workflow_phase"
 PHASE=$(cat "$PHASE_FILE" 2>/dev/null || echo "idle")
 
 case "$PHASE" in
-  "brainstorming")
-    cat <<'EOF'
-{
-  "decision": "block",
-  "reason": "BLOCKED: Still in brainstorming phase. Complete workflow: /branch → /backlog-development before editing code. Use /workflow skip to bypass (not recommended)."
-}
-EOF
-    ;;
   "branched")
     cat <<'EOF'
 {
   "decision": "block",
-  "reason": "BLOCKED: Branch created but no backlog. Run /backlog-development to create a bite-sized backlog before coding. Use /workflow skip to bypass (not recommended)."
+  "reason": "BLOCKED: Branch created but design not complete. Run /brainstorm (in plan mode) then /backlog-development before coding. Use /workflow skip to bypass (not recommended)."
+}
+EOF
+    ;;
+  "brainstorming")
+    cat <<'EOF'
+{
+  "decision": "block",
+  "reason": "BLOCKED: Brainstorming complete but no backlog. Run /backlog-development (in plan mode) to create a bite-sized backlog before coding. Use /workflow skip to bypass (not recommended)."
 }
 EOF
     ;;
@@ -46,7 +47,7 @@ EOF
     cat <<'EOF'
 {
   "hookSpecificOutput": {
-    "additionalContext": "WORKFLOW ADVISORY: No active workflow detected. Consider: /brainstorm → /branch → /backlog-development → /implement for disciplined development."
+    "additionalContext": "WORKFLOW ADVISORY: No active workflow detected. Consider: /branch → /brainstorm → /backlog-development → /implement for disciplined development."
   }
 }
 EOF

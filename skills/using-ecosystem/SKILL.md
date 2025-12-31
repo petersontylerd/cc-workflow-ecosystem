@@ -62,24 +62,24 @@ These skills provide techniques and standards for specific situations:
 ## The Core Workflow
 
 ```
-User Request → /brainstorm → /branch → /backlog-development → /implement → /verify → PR
+/branch → /brainstorm (plan mode) → /backlog-development (plan mode) → /implement → /verify → PR
 ```
 
 ### Workflow Details
 
-1. **Brainstorm First**: Before ANY implementation, explore requirements
-   - One question at a time
-   - Propose 2-3 approaches with tradeoffs
-   - Validate design incrementally
-
-2. **Branch Enforcement**: Always work on feature branches
+1. **Branch First**: Create feature branch before any design work
    - Pattern: `feat/<issue>-<slug>` or `fix/<issue>-<slug>`
    - Never commit directly to main/master
 
-3. **Develop Backlogs in Bite-Sized Tasks**: Each step is 2-5 minutes
-   - Exact file paths
-   - Complete code (not "add validation")
-   - Test commands with expected output
+2. **Brainstorm in Plan Mode**: Explore requirements (shift+tab twice first)
+   - One question at a time
+   - Writes to `docs/designs/`
+   - **STOPS after writing design** - does NOT proceed
+
+3. **Backlog in Plan Mode**: Create bite-sized tasks (shift+tab twice first)
+   - Exact file paths, complete code, test commands
+   - Writes to `docs/backlogs/`
+   - **STOPS after writing backlog** - does NOT proceed
 
 4. **Implement with Subagents**: For each task:
    - Dispatch `code-implementer` (follows TDD)
@@ -141,15 +141,15 @@ The ecosystem **actively enforces** workflow discipline through blocking hooks:
 | Action | Blocked When | How to Proceed |
 |--------|--------------|----------------|
 | Write/Edit code | On main/master branch | Run `/branch` first |
-| Write/Edit code | In brainstorming phase | Complete `/branch` → `/backlog-development` |
-| Write/Edit code | Branch created but no backlog | Run `/backlog-development` first |
+| Write/Edit code | Branch created but no design | Run `/brainstorm` (plan mode) first |
+| Write/Edit code | Design done but no backlog | Run `/backlog-development` (plan mode) first |
 | Git commit | Source files without tests staged | Stage test files or `/workflow skip` |
 
 ### Workflow Phases
 
 ```
-idle → brainstorming → branched → backlog-ready → implementing → verifying → idle
-       (blocks edits)   (blocks edits)   (allows edits)
+idle → branched → brainstorming → backlog-ready → implementing → verifying → idle
+       (blocks)    (blocks)        (allows edits)
 ```
 
 ### Escape Hatch

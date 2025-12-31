@@ -11,6 +11,17 @@ Write comprehensive backlogs assuming the engineer has zero codebase context. Do
 
 **Core principle:** Each step is one action (2-5 minutes). Complete, precise, executable.
 
+## Plan Mode Requirement
+
+**This skill MUST be run in plan mode** (shift+tab twice before invoking `/backlog-development`).
+
+Plan mode ensures:
+- Thorough codebase exploration before defining tasks
+- Complete code in each task (no placeholders)
+- No premature implementation
+
+After completing the backlog and saving to `docs/backlogs/`, this skill **STOPS** - it does NOT proceed to implementation. The user must explicitly invoke `/implement` to continue.
+
 ## Backlog Document Structure
 
 Every backlog MUST start with this header:
@@ -190,17 +201,24 @@ Save the backlog to:
 docs/backlogs/YYYY-MM-DD-<feature-name>-backlog.md
 ```
 
-Offer execution options:
+### STOP - Do Not Proceed
+
+**After writing the backlog document, you MUST STOP.**
+
 ```
-"Backlog complete and saved. How would you like to proceed?
+"Backlog complete and saved to docs/backlogs/YYYY-MM-DD-<feature-name>-backlog.md.
 
-1. **Subagent Execution** - I'll orchestrate code-implementer, spec-reviewer,
-   and quality-reviewer for each task
-
-2. **Manual Execution** - Follow the backlog step by step yourself
-
-3. **Review First** - Let's walk through the backlog together before starting"
+Please review the backlog document. When ready to proceed:
+- Run /implement for subagent orchestration
+- Or implement manually following the backlog steps"
 ```
+
+**DO NOT:**
+- Offer to start implementing immediately
+- Automatically dispatch subagents
+- Proceed to the next phase without explicit user action
+
+The user must explicitly invoke the next command when they are ready.
 
 ## Checklist Before Completing Backlog
 
@@ -257,3 +275,15 @@ Backlogs are written for an engineer who:
 - Cannot fill in gaps or make assumptions
 
 Every detail matters. Lack of specificity indicates insufficient understanding of the task.
+
+---
+
+## Critical: Plan Mode and Output Only
+
+**This skill MUST be run in plan mode** (shift+tab twice before invoking).
+
+**After completing the backlog:**
+1. Write the backlog document to `docs/backlogs/YYYY-MM-DD-<feature>-backlog.md`
+2. **STOP** - Do not proceed to implementation
+3. Let the user review and approve the backlog
+4. User will invoke `/implement` when ready

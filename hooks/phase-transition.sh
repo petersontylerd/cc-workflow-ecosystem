@@ -17,18 +17,19 @@ MESSAGE=""
 
 # Determine new phase based on skill invoked
 # Match skill names from the Skill tool input
+# Workflow order: /branch → /brainstorm (plan mode) → /backlog-development (plan mode) → /implement → /verify
 case "$TOOL_INPUT" in
-  *brainstorm*)
-    NEW_PHASE="brainstorming"
-    MESSAGE="Entered brainstorming phase. Write/Edit blocked until /branch → /backlog-development complete."
-    ;;
   *git-workflow*|*branch*)
     NEW_PHASE="branched"
-    MESSAGE="Branch created. Now run /backlog-development to create a backlog."
+    MESSAGE="Branch created. Ready for /brainstorm (use plan mode)."
+    ;;
+  *brainstorm*)
+    NEW_PHASE="brainstorming"
+    MESSAGE="Brainstorming complete. Ready for /backlog-development (use plan mode)."
     ;;
   *developing-backlogs*|*backlog-development*)
     NEW_PHASE="backlog-ready"
-    MESSAGE="Backlog created. Ready for implementation via /implement or direct coding."
+    MESSAGE="Backlog ready. Proceed with /implement or manual implementation."
     ;;
   *orchestrating*|*implement*)
     NEW_PHASE="implementing"

@@ -83,9 +83,6 @@ def expected_agents() -> list[str]:
 def expected_hooks() -> list[str]:
     """Return list of expected hook script names."""
     return [
-        "brainstorm-end.sh",
-        "brainstorm-mode-check.sh",
-        "brainstorm-start.sh",
         "main-branch-protection.sh",
         "phase-transition.sh",
         "run-hook.cmd",

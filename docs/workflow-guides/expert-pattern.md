@@ -43,49 +43,11 @@ hooks/hooks.json → hooks/session-start.sh → skills/using-ecosystem/SKILL.md
 | State File | Value |
 |------------|-------|
 | `.workflow_phase` | Not created yet (idle) |
-| `.brainstorming_active` | Not created |
 | `.workflow_skip` | Not created |
 
 ---
 
-### Phase 2: Brainstorm (`/brainstorm`)
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant ClaudeCode
-    participant Command as brainstorm.md
-    participant Skill as brainstorming/SKILL.md
-    participant Hook as hooks.json
-    participant PostHook as brainstorm-start.sh
-    participant StateDir as $SESSION_DIR
-
-    User->>ClaudeCode: /brainstorm add validation
-    ClaudeCode->>Command: Load command
-    Command->>Skill: "Use brainstorming skill"
-    ClaudeCode->>Skill: Load skill via Skill tool
-    Skill-->>ClaudeCode: One question at a time process
-    ClaudeCode->>Hook: PostToolUse (Skill.*brainstorming)
-    Hook->>PostHook: Execute brainstorm-start.sh
-    PostHook->>StateDir: Create .brainstorming_active
-    PostHook-->>ClaudeCode: "Write/Edit now blocked"
-```
-
-**Files Activated:**
-```
-commands/brainstorm.md → skills/brainstorming/SKILL.md
-PostToolUse: hooks/hooks.json → hooks/brainstorm-start.sh
-```
-
-| State File | Value |
-|------------|-------|
-| `.workflow_phase` | `brainstorming` |
-| `.brainstorming_active` | Created (blocks Write/Edit) |
-| `.workflow_skip` | Not created |
-
----
-
-### Phase 3: Create Branch (`/branch`)
+### Phase 2: Create Branch (`/branch`)
 
 ```mermaid
 sequenceDiagram
@@ -116,12 +78,50 @@ PostToolUse: hooks/hooks.json → hooks/phase-transition.sh
 | State File | Value |
 |------------|-------|
 | `.workflow_phase` | `branched` |
-| `.brainstorming_active` | Still exists (Write/Edit still blocked!) |
+| `.workflow_skip` | Not created |
+
+---
+
+### Phase 3: Brainstorm (`/brainstorm`)
+
+> **Tip**: This command works best in plan mode (shift+tab twice) for efficient codebase research with Explore/Plan agents.
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant ClaudeCode
+    participant Command as brainstorm.md
+    participant Skill as brainstorming/SKILL.md
+    participant Hook as hooks.json
+    participant PostHook as phase-transition.sh
+    participant StateDir as $SESSION_DIR
+
+    User->>ClaudeCode: /brainstorm add validation
+    ClaudeCode->>Command: Load command
+    Command->>Skill: "Use brainstorming skill"
+    ClaudeCode->>Skill: Load skill via Skill tool
+    Skill-->>ClaudeCode: One question at a time process
+    ClaudeCode->>Hook: PostToolUse (Skill.*brainstorming)
+    Hook->>PostHook: Execute phase-transition.sh
+    PostHook-->>ClaudeCode: "Write/Edit now blocked"
+```
+
+**Files Activated:**
+```
+commands/brainstorm.md → skills/brainstorming/SKILL.md
+PostToolUse: hooks/hooks.json → hooks/phase-transition.sh
+```
+
+| State File | Value |
+|------------|-------|
+| `.workflow_phase` | `brainstorming` |
 | `.workflow_skip` | Not created |
 
 ---
 
 ### Phase 4: Create Backlog (`/backlog-development`)
+
+> **Tip**: Also benefits from plan mode—creating backlogs with exact file paths and complete code requires codebase exploration.
 
 ```mermaid
 sequenceDiagram
@@ -130,7 +130,7 @@ sequenceDiagram
     participant Command as backlog-development.md
     participant Skill as developing-backlogs/SKILL.md
     participant Hook as hooks.json
-    participant EndHook as brainstorm-end.sh
+    participant EndHook as phase-transition.sh
     participant TransHook as phase-transition.sh
     participant StateDir as $SESSION_DIR
 
@@ -141,8 +141,7 @@ sequenceDiagram
     Skill-->>ClaudeCode: Create backlog with TDD tasks
 
     ClaudeCode->>Hook: PostToolUse (Skill.*backlog-development)
-    Hook->>EndHook: Execute brainstorm-end.sh
-    EndHook->>StateDir: Delete .brainstorming_active
+    Hook->>EndHook: Execute phase-transition.sh
 
     Hook->>TransHook: Execute phase-transition.sh
     TransHook->>StateDir: Write "backlog-ready" to .workflow_phase
@@ -151,13 +150,12 @@ sequenceDiagram
 **Files Activated:**
 ```
 commands/backlog-development.md → skills/developing-backlogs/SKILL.md
-PostToolUse: hooks/brainstorm-end.sh, hooks/phase-transition.sh
+PostToolUse: hooks/phase-transition.sh, hooks/phase-transition.sh
 ```
 
 | State File | Value |
 |------------|-------|
 | `.workflow_phase` | `backlog-ready` |
-| `.brainstorming_active` | **Deleted** (Write/Edit now ALLOWED!) |
 | `.workflow_skip` | Not created |
 
 ---
@@ -209,7 +207,6 @@ Language Skills: skills/python-development/SKILL.md, skills/typescript-developme
 | State File | Value |
 |------------|-------|
 | `.workflow_phase` | `implementing` |
-| `.brainstorming_active` | Deleted |
 | `.workflow_skip` | Not created |
 
 ---
@@ -295,7 +292,7 @@ Experts know when strict workflow enforcement is counterproductive and can bypas
 
 | Scenario | Standard Workflow | Expert Approach |
 |----------|------------------|-----------------|
-| Quick hotfix | Full brainstorm → branch → backlog | `/workflow skip` → direct fix |
+| Quick hotfix | Full branch → brainstorm → backlog | `/workflow skip` → direct fix |
 | Exploration/learning | Blocked by enforcement | `/workflow skip` → experiment freely |
 | Documentation-only changes | Blocked by TDD | `/workflow skip` → write docs |
 | Known-good pattern | Full planning | `/workflow skip` → apply pattern |
@@ -733,9 +730,8 @@ This expert pattern is self-contained with complete file references.
 - [x] `hooks/session-start.sh` - Inject ecosystem context
 - [x] `hooks/main-branch-protection.sh` - **BLOCKS** edits on main/master
 - [x] `hooks/workflow-phase-check.sh` - **BLOCKS** edits before backlog
-- [x] `hooks/brainstorm-mode-check.sh` - **BLOCKS** edits during brainstorm
-- [x] `hooks/brainstorm-start.sh` - Set brainstorming marker
-- [x] `hooks/brainstorm-end.sh` - Clear brainstorming marker
+- [x] `hooks/phase-transition.sh` - Set brainstorming marker
+- [x] `hooks/phase-transition.sh` - Clear brainstorming marker
 - [x] `hooks/phase-transition.sh` - Update workflow phase
 - [x] `hooks/tdd-precommit-check.sh` - **BLOCKS** commits without tests
 - [x] `hooks/verify-before-commit.sh` - Verification reminder

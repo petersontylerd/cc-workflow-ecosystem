@@ -7,6 +7,9 @@ argument-hint: "[feature name or design document path]"
 
 Create a detailed backlog from a design or requirements.
 
+**IMPORTANT**: This command MUST be run in plan mode (shift+tab twice).
+After writing the backlog document, this command will STOP and NOT proceed to implementation.
+
 ## Usage
 
 ```

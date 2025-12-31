@@ -13,7 +13,7 @@ A user familiar with the workflow uses **full automation** with subagent orchest
 ## Command Sequence
 
 ```
-/brainstorm → /branch → /backlog-development → /implement → /verify → /pr
+/branch → /brainstorm (plan mode) → /backlog-development (plan mode) → /implement → /verify → /pr
 ```
 
 ---
@@ -84,126 +84,13 @@ User starts session
 | State File | Value |
 |------------|-------|
 | `.workflow_phase` | Not created yet (idle) |
-| `.brainstorming_active` | Not created |
 | `.workflow_skip` | Not created |
 
 ---
 
-## Phase 2: Brainstorm (`/brainstorm`)
+## Phase 2: Create Branch (`/branch`)
 
-User types `/brainstorm` to explore requirements before implementation.
-
-### What Happens
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant ClaudeCode
-    participant Command as brainstorm.md
-    participant Skill as brainstorming/SKILL.md
-    participant Hook as hooks.json
-    participant PostHook as brainstorm-start.sh
-    participant StateDir as $SESSION_DIR
-
-    User->>ClaudeCode: /brainstorm add validation
-    ClaudeCode->>Command: Load command
-    Command->>Skill: "Use brainstorming skill"
-    ClaudeCode->>Skill: Load skill via Skill tool
-    Skill-->>ClaudeCode: One question at a time process
-    ClaudeCode->>Hook: PostToolUse (Skill.*brainstorming)
-    Hook->>PostHook: Execute brainstorm-start.sh
-    PostHook->>StateDir: Create .brainstorming_active
-    PostHook-->>ClaudeCode: "Write/Edit now blocked"
-```
-
-### Files Activated
-
-```
-User types: /brainstorm add validation
-     │
-     ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│ commands/brainstorm.md (lines 1-21)                                 │
-│                                                                     │
-│   Line 2: description: "Explore requirements and design..."        │
-│   Line 20: "Use the **brainstorming** skill..."                     │
-│                                                                     │
-│   This command is a thin wrapper - it tells Claude to invoke        │
-│   the brainstorming skill.                                          │
-└─────────────────────────────────────────────────────────────────────┘
-     │
-     ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│ skills/brainstorming/SKILL.md (lines 1-252)                         │
-│                                                                     │
-│   Line 12: "Core principle: Understand completely before            │
-│             implementing anything."                                 │
-│   Lines 51-71: Phase 2 - Explore Requirements                       │
-│     - Ask questions one at a time                                   │
-│     - Prefer multiple choice                                        │
-│   Lines 72-98: Phase 3 - Propose 2-3 Approaches                     │
-│   Lines 100-106: Phase 4 - Present Design Incrementally             │
-│   Lines 112-117: Save to docs/designs/YYYY-MM-DD-<topic>-design.md  │
-└─────────────────────────────────────────────────────────────────────┘
-     │
-     ▼ PostToolUse hook fires (matcher: Skill.*brainstorming)
-┌─────────────────────────────────────────────────────────────────────┐
-│ hooks/hooks.json (lines 56-63)                                      │
-│                                                                     │
-│   "PostToolUse": [                                                  │
-│     {                                                               │
-│       "matcher": "Skill.*brainstorming",                            │
-│       "hooks": [                                                    │
-│         { "command": "brainstorm-start.sh" }                        │
-│       ]                                                             │
-│     }                                                               │
-│   ]                                                                 │
-└─────────────────────────────────────────────────────────────────────┘
-     │
-     ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│ hooks/brainstorm-start.sh (lines 1-22)                              │
-│                                                                     │
-│   Lines 6-8: Create session directory if needed                     │
-│   Line 12: touch "$MARKER_FILE" (.brainstorming_active)             │
-│   Lines 14-20: Output "BRAINSTORMING MODE ACTIVE: Write/Edit        │
-│                tools are now blocked..."                            │
-└─────────────────────────────────────────────────────────────────────┘
-```
-
-### What If User Tries to Write/Edit Now?
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant ClaudeCode
-    participant Hook as hooks.json
-    participant Check as brainstorm-mode-check.sh
-    participant StateDir as $SESSION_DIR
-
-    User->>ClaudeCode: Attempt to Write code
-    ClaudeCode->>Hook: PreToolUse (Write)
-    Hook->>Check: Execute brainstorm-mode-check.sh
-    Check->>StateDir: Check .brainstorming_active
-    Check-->>ClaudeCode: {"decision": "block", "reason": "..."}
-    ClaudeCode-->>User: BLOCKED: Still in brainstorming
-```
-
-The hook `brainstorm-mode-check.sh` reads the `.brainstorming_active` marker and returns a block decision.
-
-### State After Phase 2
-
-| State File | Value |
-|------------|-------|
-| `.workflow_phase` | `brainstorming` (via phase-transition.sh) |
-| `.brainstorming_active` | Created (blocks Write/Edit) |
-| `.workflow_skip` | Not created |
-
----
-
-## Phase 3: Create Branch (`/branch`)
-
-User types `/branch feat/42-add-validation` to create a feature branch.
+User types `/branch feat/42-add-validation` to create a feature branch. **This is the first step** - always branch before designing.
 
 ### What Happens
 
@@ -251,7 +138,7 @@ User types: /branch feat/42-add-validation
      │
      ▼ PostToolUse hook fires (matcher: Skill.*(git-workflow|branch))
 ┌─────────────────────────────────────────────────────────────────────┐
-│ hooks/hooks.json (lines 74-81)                                      │
+│ hooks/hooks.json (lines 70-77)                                      │
 │                                                                     │
 │   {                                                                 │
 │     "matcher": "Skill.*(git-workflow|branch)",                      │
@@ -265,27 +152,119 @@ User types: /branch feat/42-add-validation
 ┌─────────────────────────────────────────────────────────────────────┐
 │ hooks/phase-transition.sh (lines 1-58)                              │
 │                                                                     │
-│   Lines 20-41: Case statement matching skill invoked                │
-│   Lines 25-27: *git-workflow*|*branch* → NEW_PHASE="branched"       │
+│   Lines 20-24: *git-workflow*|*branch* → NEW_PHASE="branched"       │
 │   Lines 44-52: Write phase to .workflow_phase, output message       │
 └─────────────────────────────────────────────────────────────────────┘
 ```
+
+### State After Phase 2
+
+| State File | Value |
+|------------|-------|
+| `.workflow_phase` | `branched` |
+| `.workflow_skip` | Not created |
+
+**Note**: Write/Edit is blocked in the `branched` phase. User must complete `/brainstorm` next.
+
+---
+
+## Phase 3: Brainstorm (`/brainstorm`)
+
+User types `/brainstorm` to explore requirements before implementation.
+
+> **IMPORTANT**: This command MUST be run in plan mode (shift+tab twice). After writing the design document, the skill will STOP and NOT proceed to implementation.
+
+### What Happens
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant ClaudeCode
+    participant Command as brainstorm.md
+    participant Skill as brainstorming/SKILL.md
+    participant Hook as hooks.json
+    participant PostHook as phase-transition.sh
+    participant StateDir as $SESSION_DIR
+
+    User->>ClaudeCode: /brainstorm add validation
+    ClaudeCode->>Command: Load command
+    Command->>Skill: "Use brainstorming skill"
+    ClaudeCode->>Skill: Load skill via Skill tool
+    Skill-->>ClaudeCode: One question at a time process
+    Skill-->>ClaudeCode: Write design to docs/designs/
+    Skill-->>ClaudeCode: STOP - do not proceed
+    ClaudeCode->>Hook: PostToolUse (Skill.*brainstorming)
+    Hook->>PostHook: Execute phase-transition.sh
+    PostHook->>StateDir: Write "brainstorming" to .workflow_phase
+```
+
+### Files Activated
+
+```
+User types: /brainstorm add validation (in plan mode)
+     │
+     ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│ commands/brainstorm.md (lines 1-21)                                 │
+│                                                                     │
+│   Line 2: description: "Explore requirements and design..."        │
+│   Line 10-11: IMPORTANT: MUST run in plan mode                      │
+│   Line 20: "Use the **brainstorming** skill..."                     │
+└─────────────────────────────────────────────────────────────────────┘
+     │
+     ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│ skills/brainstorming/SKILL.md                                       │
+│                                                                     │
+│   Core principle: Understand completely before implementing         │
+│   - Ask questions one at a time                                     │
+│   - Propose 2-3 approaches                                          │
+│   - Present design incrementally                                    │
+│   - Save to docs/designs/YYYY-MM-DD-<topic>-design.md               │
+│   - STOP after writing design - do NOT proceed                      │
+└─────────────────────────────────────────────────────────────────────┘
+     │
+     ▼ PostToolUse hook fires (matcher: Skill.*brainstorming)
+┌─────────────────────────────────────────────────────────────────────┐
+│ hooks/hooks.json (lines 52-59)                                      │
+│                                                                     │
+│   {                                                                 │
+│     "matcher": "Skill.*brainstorming",                              │
+│     "hooks": [                                                      │
+│       { "command": "phase-transition.sh" }                          │
+│     ]                                                               │
+│   }                                                                 │
+└─────────────────────────────────────────────────────────────────────┘
+     │
+     ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│ hooks/phase-transition.sh (lines 26-28)                             │
+│                                                                     │
+│   *brainstorm* → NEW_PHASE="brainstorming"                          │
+│   Message: "Ready for /backlog-development (use plan mode)."        │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### What If User Tries to Write/Edit Now?
+
+Write/Edit is still blocked because the phase is `brainstorming` (not yet `backlog-ready`). The `workflow-phase-check.sh` hook checks the `.workflow_phase` file and blocks accordingly.
 
 ### State After Phase 3
 
 | State File | Value |
 |------------|-------|
-| `.workflow_phase` | `branched` |
-| `.brainstorming_active` | Still exists (Write/Edit still blocked!) |
+| `.workflow_phase` | `brainstorming` |
 | `.workflow_skip` | Not created |
 
-**Note**: Write/Edit is STILL blocked in the `branched` phase because the user hasn't created a backlog yet.
+**Note**: Write/Edit is STILL blocked in the `brainstorming` phase because the user hasn't created a backlog yet.
 
 ---
 
 ## Phase 4: Create Backlog (`/backlog-development`)
 
 User types `/backlog-development add-validation` to create a bite-sized backlog.
+
+> **IMPORTANT**: This command MUST be run in plan mode (shift+tab twice). After writing the backlog document, the skill will STOP and NOT proceed to implementation.
 
 ### What Happens
 
@@ -296,8 +275,7 @@ sequenceDiagram
     participant Command as backlog-development.md
     participant Skill as developing-backlogs/SKILL.md
     participant Hook as hooks.json
-    participant EndHook as brainstorm-end.sh
-    participant TransHook as phase-transition.sh
+    participant PostHook as phase-transition.sh
     participant StateDir as $SESSION_DIR
 
     User->>ClaudeCode: /backlog-development add-validation
@@ -305,25 +283,25 @@ sequenceDiagram
     Command->>Skill: "Use developing-backlogs skill"
     ClaudeCode->>Skill: Load skill
     Skill-->>ClaudeCode: Create backlog with TDD tasks
+    Skill-->>ClaudeCode: Write backlog to docs/backlogs/
+    Skill-->>ClaudeCode: STOP - do not proceed
 
     ClaudeCode->>Hook: PostToolUse (Skill.*backlog-development)
-    Hook->>EndHook: Execute brainstorm-end.sh
-    EndHook->>StateDir: Delete .brainstorming_active
-
-    Hook->>TransHook: Execute phase-transition.sh
-    TransHook->>StateDir: Write "backlog-ready" to .workflow_phase
+    Hook->>PostHook: Execute phase-transition.sh
+    PostHook->>StateDir: Write "backlog-ready" to .workflow_phase
 ```
 
 ### Files Activated
 
 ```
-User types: /backlog-development add-validation
+User types: /backlog-development add-validation (in plan mode)
      │
      ▼
 ┌─────────────────────────────────────────────────────────────────────┐
 │ commands/backlog-development.md (lines 1-19)                        │
 │                                                                     │
 │   Line 2: description: "Create a bite-sized backlog..."            │
+│   Line 10-11: IMPORTANT: MUST run in plan mode                      │
 │   Line 18: "Use the **developing-backlogs** skill..."               │
 └─────────────────────────────────────────────────────────────────────┘
      │
@@ -338,32 +316,24 @@ User types: /backlog-development add-validation
 │   - TDD cycle: test → fail → implement → pass → commit              │
 │                                                                     │
 │   Saves to: docs/backlogs/YYYY-MM-DD-<feature>-backlog.md           │
+│   STOPS after writing backlog - does NOT proceed                    │
 └─────────────────────────────────────────────────────────────────────┘
      │
      ▼ PostToolUse hook fires (matcher: Skill.*(backlog-development|developing-backlogs))
 ┌─────────────────────────────────────────────────────────────────────┐
-│ hooks/hooks.json (lines 65-72)                                      │
+│ hooks/hooks.json (lines 61-68)                                      │
 │                                                                     │
 │   {                                                                 │
 │     "matcher": "Skill.*(backlog-development|developing-backlogs)",  │
 │     "hooks": [                                                      │
-│       { "command": "brainstorm-end.sh" }                            │
+│       { "command": "phase-transition.sh" }                          │
 │     ]                                                               │
 │   }                                                                 │
 └─────────────────────────────────────────────────────────────────────┘
      │
      ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│ hooks/brainstorm-end.sh (lines 1-25)                                │
-│                                                                     │
-│   Lines 6-8: Check session directory                                │
-│   Lines 10-11: If .brainstorming_active exists, delete it           │
-│   Lines 12-18: Output "BRAINSTORMING MODE ENDED..."                 │
-└─────────────────────────────────────────────────────────────────────┘
-     │
-     ▼ Also fires phase-transition.sh (same pattern)
-┌─────────────────────────────────────────────────────────────────────┐
-│ hooks/phase-transition.sh (lines 29-31)                             │
+│ hooks/phase-transition.sh (lines 30-32)                             │
 │                                                                     │
 │   *developing-backlogs*|*backlog-development* → "backlog-ready"     │
 │   Writes "backlog-ready" to .workflow_phase                         │
@@ -375,7 +345,6 @@ User types: /backlog-development add-validation
 | State File | Value |
 |------------|-------|
 | `.workflow_phase` | `backlog-ready` |
-| `.brainstorming_active` | **Deleted** (Write/Edit now ALLOWED!) |
 | `.workflow_skip` | Not created |
 
 **Now Write/Edit tools are unblocked** because the phase is `backlog-ready`.
@@ -878,17 +847,6 @@ flowchart TD
         S1 --> S2 --> S3 --> S4
     end
 
-    subgraph Brainstorm
-        B1[/brainstorm]
-        B2[brainstorm.md]
-        B3[brainstorming/SKILL.md]
-        B4[brainstorm-start.sh]
-        B5[phase-transition.sh]
-        B1 --> B2 --> B3
-        B3 --> B4
-        B3 --> B5
-    end
-
     subgraph Branch
         BR1[/branch]
         BR2[branch.md]
@@ -897,15 +855,20 @@ flowchart TD
         BR1 --> BR2 --> BR3 --> BR4
     end
 
+    subgraph Brainstorm
+        B1[/brainstorm plan mode]
+        B2[brainstorm.md]
+        B3[brainstorming/SKILL.md]
+        B4[phase-transition.sh]
+        B1 --> B2 --> B3 --> B4
+    end
+
     subgraph Backlog
-        BK1[/backlog-development]
+        BK1[/backlog-development plan mode]
         BK2[backlog-development.md]
         BK3[developing-backlogs/SKILL.md]
-        BK4[brainstorm-end.sh]
-        BK5[phase-transition.sh]
-        BK1 --> BK2 --> BK3
-        BK3 --> BK4
-        BK3 --> BK5
+        BK4[phase-transition.sh]
+        BK1 --> BK2 --> BK3 --> BK4
     end
 
     subgraph Implement
@@ -945,7 +908,7 @@ flowchart TD
         P1 --> P2 --> P3 --> P4
     end
 
-    SessionStart --> Brainstorm --> Branch --> Backlog --> Implement --> Verify --> PR
+    SessionStart --> Branch --> Brainstorm --> Backlog --> Implement --> Verify --> PR
 ```
 
 ---
@@ -981,15 +944,12 @@ flowchart TD
 - [x] `agents/spec-reviewer.md` **NEW**
 - [x] `agents/quality-reviewer.md` **NEW**
 
-### Hooks (13 of 13)
+### Hooks (10 of 10)
 - [x] `hooks/hooks.json`
 - [x] `hooks/run-hook.cmd`
 - [x] `hooks/session-start.sh`
 - [x] `hooks/main-branch-protection.sh`
 - [x] `hooks/workflow-phase-check.sh`
-- [x] `hooks/brainstorm-mode-check.sh`
-- [x] `hooks/brainstorm-start.sh`
-- [x] `hooks/brainstorm-end.sh`
 - [x] `hooks/phase-transition.sh`
 - [x] `hooks/tdd-precommit-check.sh`
 - [x] `hooks/verify-before-commit.sh`

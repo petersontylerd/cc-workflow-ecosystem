@@ -12,13 +12,13 @@ This document provides a complete inventory of all files in the workflow ecosyst
 | Commands | 8 | 8 | 100% |
 | Skills | 12 | 12 | 100% |
 | Agents | 3 | 3 | 100% |
-| Hooks | 13 | 13 | 100% |
+| Hooks | 10 | 10 | 100% |
 | Scripts | 2 | 2 | 100% |
 | Templates | 1 | 1 | 100% |
 | Tests | 8 | 8 | 100% |
 | Documentation | 12 | 12 | 100% |
 | Config | 6 | 6 | 100% |
-| **Total** | **67** | **67** | **100%** |
+| **Total** | **64** | **64** | **100%** |
 
 ---
 
@@ -26,10 +26,10 @@ This document provides a complete inventory of all files in the workflow ecosyst
 
 ### Plugin Configuration (2 files)
 
-| File | Beginner | Intermediate | Expert | Purpose |
-|------|:--------:|:------------:|:------:|---------|
-| `.claude-plugin/plugin.json` | | | [x] | Plugin manifest (name, version, lists components) |
-| `.claude-plugin/marketplace.json` | | | [x] | Marketplace metadata (description, author) |
+| File | Intermediate | Expert | Purpose |
+|------|:------------:|:------:|---------|
+| `.claude-plugin/plugin.json` | | [x] | Plugin manifest (name, version, lists components) |
+| `.claude-plugin/marketplace.json` | | [x] | Marketplace metadata (description, author) |
 
 **Notes**: These files are primarily referenced in the release process (Expert pattern). They define what the plugin exposes to Claude Code.
 
@@ -37,82 +37,79 @@ This document provides a complete inventory of all files in the workflow ecosyst
 
 ### Commands (8 files)
 
-| File | Beginner | Intermediate | Expert | Purpose |
-|------|:--------:|:------------:|:------:|---------|
-| `commands/brainstorm.md` | [x] | [x] | | Entry point for requirements exploration |
-| `commands/branch.md` | [x] | [x] | | Entry point for branch creation |
-| `commands/backlog-development.md` | [x] | [x] | | Entry point for backlog creation |
-| `commands/implement.md` | | [x] | [x] | Entry point for subagent orchestration |
-| `commands/verify.md` | [x] | [x] | | Entry point for pre-completion verification |
-| `commands/commit.md` | [x] | [x] | | Entry point for atomic commits |
-| `commands/pr.md` | | [x] | | Entry point for pull request creation |
-| `commands/workflow.md` | | | [x] | Entry point for workflow state management |
+| File | Intermediate | Expert | Purpose |
+|------|:------------:|:------:|---------|
+| `commands/brainstorm.md` | [x] | | Entry point for requirements exploration |
+| `commands/branch.md` | [x] | | Entry point for branch creation |
+| `commands/backlog-development.md` | [x] | | Entry point for backlog creation |
+| `commands/implement.md` | [x] | [x] | Entry point for subagent orchestration |
+| `commands/verify.md` | [x] | | Entry point for pre-completion verification |
+| `commands/commit.md` | [x] | | Entry point for atomic commits |
+| `commands/pr.md` | [x] | | Entry point for pull request creation |
+| `commands/workflow.md` | | [x] | Entry point for workflow state management |
 
-**Coverage**: All 8 commands are referenced across the three patterns.
+**Coverage**: All 8 commands are referenced across both patterns.
 
 ---
 
 ### Skills (12 files)
 
-| File | Beginner | Intermediate | Expert | Purpose |
-|------|:--------:|:------------:|:------:|---------|
-| `skills/using-ecosystem/SKILL.md` | [x] | [x] | [x] | Ecosystem orientation (auto-injected) |
-| `skills/brainstorming/SKILL.md` | [x] | [x] | | Requirements exploration discipline |
-| `skills/developing-backlogs/SKILL.md` | [x] | [x] | | Backlog creation discipline |
-| `skills/orchestrating-subagents/SKILL.md` | | [x] | [x] | Subagent dispatch patterns |
-| `skills/verification/SKILL.md` | [x] | [x] | [x] | Evidence-based completion |
-| `skills/git-workflow/SKILL.md` | [x] | [x] | | Branch/commit/PR discipline |
-| `skills/workflow-management/SKILL.md` | | | [x] | State management operations |
-| `skills/subagent-state-management/SKILL.md` | | [x] | [x] | Subagent startup/handoff patterns |
-| `skills/systematic-debugging/SKILL.md` | | [x] | [x] | Debugging methodology |
-| `skills/python-development/SKILL.md` | | [x] | | Python coding standards |
-| `skills/typescript-development/SKILL.md` | | | [x] | TypeScript coding standards |
-| `skills/angular-development/SKILL.md` | | | [x] | Angular coding standards |
+| File | Intermediate | Expert | Purpose |
+|------|:------------:|:------:|---------|
+| `skills/using-ecosystem/SKILL.md` | [x] | [x] | Ecosystem orientation (auto-injected) |
+| `skills/brainstorming/SKILL.md` | [x] | | Requirements exploration discipline |
+| `skills/developing-backlogs/SKILL.md` | [x] | | Backlog creation discipline |
+| `skills/orchestrating-subagents/SKILL.md` | [x] | [x] | Subagent dispatch patterns |
+| `skills/verification/SKILL.md` | [x] | [x] | Evidence-based completion |
+| `skills/git-workflow/SKILL.md` | [x] | | Branch/commit/PR discipline |
+| `skills/workflow-management/SKILL.md` | | [x] | State management operations |
+| `skills/subagent-state-management/SKILL.md` | [x] | [x] | Subagent startup/handoff patterns |
+| `skills/systematic-debugging/SKILL.md` | [x] | [x] | Debugging methodology |
+| `skills/python-development/SKILL.md` | [x] | | Python coding standards |
+| `skills/typescript-development/SKILL.md` | | [x] | TypeScript coding standards |
+| `skills/angular-development/SKILL.md` | | [x] | Angular coding standards |
 
-**Coverage**: All 12 skills are referenced across the three patterns.
+**Coverage**: All 12 skills are referenced across both patterns.
 
 ---
 
 ### Agents (3 files)
 
-| File | Beginner | Intermediate | Expert | Purpose |
-|------|:--------:|:------------:|:------:|---------|
-| `agents/code-implementer.md` | | [x] | [x] | TDD implementation executor |
-| `agents/spec-reviewer.md` | | [x] | [x] | Requirements compliance reviewer |
-| `agents/quality-reviewer.md` | | [x] | [x] | Code quality assessor |
+| File | Intermediate | Expert | Purpose |
+|------|:------------:|:------:|---------|
+| `agents/code-implementer.md` | [x] | [x] | TDD implementation executor |
+| `agents/spec-reviewer.md` | [x] | [x] | Requirements compliance reviewer |
+| `agents/quality-reviewer.md` | [x] | [x] | Code quality assessor |
 
-**Notes**: Agents are only used in automated workflows (Intermediate and Expert patterns). Beginner pattern uses manual implementation.
+**Notes**: Agents are used in automated workflows (both Intermediate and Expert patterns).
 
 ---
 
-### Hooks (13 files)
+### Hooks (10 files)
 
-| File | Beginner | Intermediate | Expert | Purpose |
-|------|:--------:|:------------:|:------:|---------|
-| `hooks/hooks.json` | [x] | [x] | [x] | Hook configuration (defines all triggers) |
-| `hooks/run-hook.cmd` | [x] | [x] | [x] | Cross-platform hook execution wrapper |
-| `hooks/session-start.sh` | [x] | [x] | [x] | Injects `using-ecosystem` skill on startup |
-| `hooks/main-branch-protection.sh` | [x] | [x] | [x] | **BLOCKS** edits on main/master branch |
-| `hooks/workflow-phase-check.sh` | [x] | [x] | [x] | **BLOCKS** edits before backlog phase |
-| `hooks/brainstorm-mode-check.sh` | [x] | [x] | | **BLOCKS** edits during brainstorming |
-| `hooks/brainstorm-start.sh` | [x] | [x] | | Sets `.brainstorming_active` marker |
-| `hooks/brainstorm-end.sh` | [x] | [x] | | Clears `.brainstorming_active` marker |
-| `hooks/phase-transition.sh` | [x] | [x] | [x] | Updates `.workflow_phase` on skill completion |
-| `hooks/tdd-precommit-check.sh` | [x] | [x] | [x] | **BLOCKS** commits without test files |
-| `hooks/verify-before-commit.sh` | [x] | [x] | | Reminds about verification before commit |
-| `hooks/validate-task-description.sh` | | [x] | [x] | Validates subagent task descriptions |
-| `hooks/workflow-skip-set.sh` | | | [x] | Sets `.workflow_skip` marker for escape hatch |
+| File | Intermediate | Expert | Purpose |
+|------|:------------:|:------:|---------|
+| `hooks/hooks.json` | [x] | [x] | Hook configuration (defines all triggers) |
+| `hooks/run-hook.cmd` | [x] | [x] | Cross-platform hook execution wrapper |
+| `hooks/session-start.sh` | [x] | [x] | Injects `using-ecosystem` skill on startup |
+| `hooks/main-branch-protection.sh` | [x] | [x] | **BLOCKS** edits on main/master branch |
+| `hooks/workflow-phase-check.sh` | [x] | [x] | **BLOCKS** edits before backlog-ready phase |
+| `hooks/phase-transition.sh` | [x] | [x] | Updates `.workflow_phase` on skill completion |
+| `hooks/tdd-precommit-check.sh` | [x] | [x] | **BLOCKS** commits without test files |
+| `hooks/verify-before-commit.sh` | [x] | | Reminds about verification before commit |
+| `hooks/validate-task-description.sh` | [x] | [x] | Validates subagent task descriptions |
+| `hooks/workflow-skip-set.sh` | | [x] | Sets `.workflow_skip` marker for escape hatch |
 
-**Coverage**: All 13 hooks are referenced across the three patterns.
+**Coverage**: All 10 hooks are referenced across both patterns.
 
 ---
 
 ### Scripts (2 files)
 
-| File | Beginner | Intermediate | Expert | Purpose |
-|------|:--------:|:------------:|:------:|---------|
-| `scripts/release.sh` | | | [x] | Version bump, commit, and tag creation |
-| `scripts/pre-push-version-check.sh` | | | [x] | Validates version sync before push |
+| File | Intermediate | Expert | Purpose |
+|------|:------------:|:------:|---------|
+| `scripts/release.sh` | | [x] | Version bump, commit, and tag creation |
+| `scripts/pre-push-version-check.sh` | | [x] | Validates version sync before push |
 
 **Notes**: Scripts are developer tools for plugin maintainers, only relevant in Expert pattern.
 
@@ -120,9 +117,9 @@ This document provides a complete inventory of all files in the workflow ecosyst
 
 ### Templates (1 file)
 
-| File | Beginner | Intermediate | Expert | Purpose |
-|------|:--------:|:------------:|:------:|---------|
-| `templates/pr-description.md` | | [x] | | Pull request template |
+| File | Intermediate | Expert | Purpose |
+|------|:------------:|:------:|---------|
+| `templates/pr-description.md` | [x] | | Pull request template |
 
 **Coverage**: Template is referenced in Intermediate pattern for PR creation.
 
@@ -206,7 +203,7 @@ The following files exist in the repository but are **not triggered** by the wor
 
 ### Workflow-Triggered Files
 
-The following 39 files are **actively triggered** during workflow execution:
+The following 36 files are **actively triggered** during workflow execution:
 
 | Category | Count | Files |
 |----------|-------|-------|
@@ -214,7 +211,7 @@ The following 39 files are **actively triggered** during workflow execution:
 | Commands | 8 | All 8 commands |
 | Skills | 12 | All 12 skills |
 | Agents | 3 | All 3 agents |
-| Hooks | 13 | All 13 hooks |
+| Hooks | 10 | All 10 hooks |
 | Scripts | 2 | release.sh, pre-push-version-check.sh |
 | Templates | 1 | pr-description.md |
 
@@ -259,22 +256,20 @@ skills/<name>/SKILL.md
 |------|------------|---------|
 | `.workflow_phase` | `phase-transition.sh` | `workflow-phase-check.sh` |
 | `.workflow_skip` | `workflow-skip-set.sh` | All blocking hooks |
-| `.brainstorming_active` | `brainstorm-start.sh` | `brainstorm-mode-check.sh` |
 | `.backlog_path` | Commands | Skills, agents |
 
 ---
 
 ## Conclusion
 
-**All 67 files in the repository are accounted for:**
+**All 64 files in the repository are accounted for:**
 
-- **39 workflow-triggered files**: Actively participate in the workflow
+- **36 workflow-triggered files**: Actively participate in the workflow
 - **28 supporting files**: Infrastructure, tests, documentation, configuration
 
 **All core plugin components (commands, skills, agents, hooks) are referenced in at least one usage pattern**, demonstrating complete coverage of the workflow ecosystem.
 
-The three-tier documentation (Beginner, Intermediate, Expert) provides self-contained guides at different complexity levels:
-- **Beginner**: Manual implementation workflow with core commands and enforcement hooks
+The two-tier documentation (Intermediate, Expert) provides self-contained guides at different complexity levels:
 - **Intermediate**: Full subagent orchestration with code-implementer, spec-reviewer, and quality-reviewer
 - **Expert**: Advanced features including escape hatches, language skills, and release process
 

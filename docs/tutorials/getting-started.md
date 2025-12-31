@@ -15,13 +15,15 @@ The ecosystem provides a structured approach to development with:
 Every feature follows this flow:
 
 ```
-1. /brainstorm           →  Explore requirements and design
-2. /branch               →  Create feature branch
-3. /backlog-development  →  Create bite-sized backlog
+1. /branch               →  Create feature branch
+2. /brainstorm           →  Explore requirements (plan mode, writes to docs/designs/)
+3. /backlog-development  →  Create bite-sized backlog (plan mode, writes to docs/backlogs/)
 4. /implement            →  Execute with subagent orchestration
 5. /verify               →  Run pre-completion verification
 6. /pr                   →  Create pull request
 ```
+
+**Note:** `/brainstorm` and `/backlog-development` should be run in plan mode (shift+tab twice). They write design/backlog documents and STOP - they do not proceed to implementation.
 
 ## Quick Start
 
@@ -32,16 +34,22 @@ When you have an idea for a feature:
 ```
 User: "I want to add user authentication"
 
-Claude: Uses /brainstorm to explore requirements
+Claude: Uses /branch to create feat/42-user-auth
+
+Claude: Uses /brainstorm (in plan mode) to explore requirements
         - What type of authentication?
         - Which providers?
         - Session handling?
+        → Writes design to docs/designs/ and STOPS
 
-After design is complete:
+After user reviews design:
 
-Claude: Uses /branch to create feat/42-user-auth
-        Uses /backlog-development to create detailed backlog
-        Uses /implement to execute with subagent review
+Claude: Uses /backlog-development (in plan mode) to create detailed backlog
+        → Writes backlog to docs/backlogs/ and STOPS
+
+After user reviews backlog:
+
+Claude: Uses /implement to execute with subagent review
         Uses /verify to confirm everything works
 ```
 
@@ -127,8 +135,8 @@ The ecosystem **actively blocks** violations:
 | Blocked Action | When | How to Proceed |
 |----------------|------|----------------|
 | Write/Edit code | On main/master | Run `/branch` first |
-| Write/Edit code | During brainstorming | Complete `/branch` → `/backlog-development` |
-| Write/Edit code | No backlog exists | Run `/backlog-development` first |
+| Write/Edit code | Branch created, no design | Run `/brainstorm` (plan mode) first |
+| Write/Edit code | Design complete, no backlog | Run `/backlog-development` (plan mode) first |
 | Git commit | No test files staged | Stage tests with source |
 
 **Escape hatch**: `/workflow skip` bypasses enforcement (use sparingly).
@@ -145,19 +153,7 @@ All tests pass after commit
 
 Let's walk through adding email validation:
 
-### Step 1: Brainstorm
-```
-/brainstorm email validation for registration
-
-Claude asks:
-- "Where should validation run? Client-side, server-side, or both?"
-- "What email formats should we accept?"
-- "What error messages should users see?"
-
-Design is documented in docs/designs/2024-01-15-email-validation-design.md
-```
-
-### Step 2: Create Branch
+### Step 1: Create Branch
 ```
 /branch feat/45-email-validation
 
@@ -167,7 +163,20 @@ Claude:
 - Confirms: "Created and switched to branch feat/45-email-validation"
 ```
 
-### Step 3: Create Backlog
+### Step 2: Brainstorm (Plan Mode)
+```
+/brainstorm email validation for registration
+
+Claude asks (one at a time):
+- "Where should validation run? Client-side, server-side, or both?"
+- "What email formats should we accept?"
+- "What error messages should users see?"
+
+Design is documented in docs/designs/2024-01-15-email-validation-design.md
+Claude STOPS here - user reviews the design before proceeding.
+```
+
+### Step 3: Create Backlog (Plan Mode)
 ```
 /backlog-development email-validation
 
@@ -179,6 +188,8 @@ Claude creates:
 - Task 5: Integrate with registration form
 
 Each task has exact file paths, complete code, test commands.
+Backlog saved to docs/backlogs/2024-01-15-email-validation-backlog.md
+Claude STOPS here - user reviews the backlog before proceeding.
 ```
 
 ### Step 4: Implement
@@ -219,14 +230,17 @@ Claude:
 ## Tips for Success
 
 ### Do:
-- Use `/brainstorm` before implementing anything
-- Break work into small, testable pieces
+- Run `/branch` first to create a feature branch
+- Use `/brainstorm` (plan mode) before implementing anything
+- Use `/backlog-development` (plan mode) to create detailed tasks
+- Review design and backlog documents before proceeding
 - Let the verification skill guide completion claims
 - Follow the TDD cycle for every feature
 
 ### Don't:
 - Skip brainstorming for "simple" features
 - Commit directly to main
+- Proceed to implementation without reviewing design/backlog
 - Claim work is done without running verification
 - Trust subagent success reports without checking
 
@@ -239,8 +253,8 @@ The workflow enforcement hooks block edits in certain situations:
 | Block Message | Cause | Solution |
 |---------------|-------|----------|
 | "Cannot edit on main/master" | You're on the main branch | Run `/branch feat/<issue>-<slug>` |
-| "Still in brainstorming phase" | Brainstorming not complete | Run `/branch` then `/backlog-development` |
-| "No backlog" | Branch exists but no backlog | Run `/backlog-development` |
+| "Branch created but design not complete" | In branched phase | Run `/brainstorm` (plan mode) |
+| "Brainstorming complete but no backlog" | In brainstorming phase | Run `/backlog-development` (plan mode) |
 | "TDD VIOLATION" | Committing source without tests | Stage test files too |
 
 **Quick bypass**: `/workflow skip` disables all enforcement for the session.

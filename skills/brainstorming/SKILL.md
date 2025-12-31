@@ -33,18 +33,16 @@ Brainstorming is designed to work harmoniously with Claude Code's **built-in pla
 
 This ensures efficient context management and leverages Claude Code's optimized research capabilities.
 
-## Environment Enforcement
+## Plan Mode Requirement
 
-**Brainstorming is enforced in read-only mode.** Write/Edit tools are blocked while brainstorming is active.
+**This skill MUST be run in plan mode** (shift+tab twice before invoking `/brainstorm`).
 
-This ensures:
+Plan mode ensures:
 - No premature code suggestions
 - Design documentation before implementation
 - Clear separation between exploration and execution
 
-The block is lifted when you:
-1. Save the design to `docs/designs/`
-2. Or invoke `/backlog-development` to proceed to backlog creation
+After completing the design and saving to `docs/designs/`, this skill **STOPS** - it does NOT proceed to implementation. The user must explicitly invoke `/backlog-development` to continue.
 
 ## The Process
 
@@ -114,19 +112,23 @@ Write validated design to:
 docs/designs/YYYY-MM-DD-<topic>-design.md
 ```
 
-Commit the design document.
+### STOP - Do Not Proceed
 
-### Implementation Path
+**After writing the design document, you MUST STOP.**
 
-After design is complete, offer:
 ```
-"Design is complete and documented. Ready to proceed with implementation?
+"Design is complete and saved to docs/designs/YYYY-MM-DD-<topic>-design.md.
 
-Options:
-1. Create backlog with /backlog-development command
-2. Set up feature branch with /branch command
-3. Continue discussing/refining the design"
+Please review the design document. When ready to proceed:
+- Run /backlog-development (in plan mode) to create implementation tasks"
 ```
+
+**DO NOT:**
+- Offer to start implementing
+- Offer to create a backlog automatically
+- Proceed to the next phase without explicit user action
+
+The user must explicitly invoke the next command when they are ready.
 
 ## Key Principles
 
@@ -249,3 +251,15 @@ d) Specific providers (please list)"
 ## Remember
 
 You are a design facilitator. Your job is to help the user think through their idea completely before any code is written. Invest time now to save time later.
+
+---
+
+## Critical: Plan Mode and Output Only
+
+**This skill MUST be run in plan mode** (shift+tab twice before invoking).
+
+**After completing the design:**
+1. Write the design document to `docs/designs/YYYY-MM-DD-<topic>-design.md`
+2. **STOP** - Do not proceed to implementation
+3. Let the user review and approve the design
+4. User will invoke `/backlog-development` when ready
