@@ -18,7 +18,7 @@ PARENT CLAUDE (Orchestrator)
 ├── Reads backlog ONCE, extracts ALL tasks with full text
 ├── Creates TodoWrite with all tasks
 ├── For each task:
-│   ├── STEP 1: Prepare context packet (with Purpose, Failure Modes, Skills)
+│   ├── STEP 1: Prepare task description (with Purpose, Failure Modes, Skills)
 │   │   ├── Purpose (WHY this task matters)
 │   │   ├── Task text (from backlog)
 │   │   ├── Relevant file paths
@@ -86,7 +86,7 @@ Each agent is dispatched fresh per task to avoid context pollution between tasks
 
 #### Dispatch code-implementer
 
-Provide a complete context packet (see format below).
+Provide a complete task description (see format below).
 
 #### Handle Questions
 
@@ -133,9 +133,9 @@ After all tasks complete:
 2. Address any cross-cutting issues
 3. Proceed to /verify and /pr
 
-## Context Packet Format
+## Task Description Format
 
-The context packet is the primary way you communicate with subagents. A complete context packet ensures subagent success.
+The task description is the primary way you communicate with subagents. A complete task description ensures subagent success.
 
 ```markdown
 ## Task: [Name]
@@ -189,9 +189,9 @@ Test: [list]
 This is a fresh task context. Previous task context does not apply.
 ```
 
-## Context Packet Checklist
+## Task Description Checklist
 
-Before dispatching any subagent, verify your context packet includes:
+Before dispatching any subagent, verify your task description includes:
 
 **Core Sections (Required):**
 - [ ] **Task header** (`## Task: [Name]`)
@@ -208,7 +208,7 @@ Before dispatching any subagent, verify your context packet includes:
 - [ ] **Conventions** (coding style, patterns if applicable)
 - [ ] **Fresh task marker** ("This is a fresh task context.")
 
-**Incomplete context = poor subagent performance.**
+**Incomplete task description = poor subagent performance.**
 
 ## Red Flags - STOP
 
@@ -261,7 +261,7 @@ Orchestrator: I'm executing the authentication backlog.
 
 Task 1: User model with password hashing
 [Mark in_progress in TodoWrite]
-[Prepare context packet with Purpose, Failure Modes, Skills]
+[Prepare task description with Purpose, Failure Modes, Skills]
 [Dispatch code-implementer]
 
 Implementer: "Should I use bcrypt or argon2 for hashing?"
@@ -284,7 +284,7 @@ Quality-reviewer: "✅ Approved. Good patterns, clean code."
 
 Task 2: Login endpoint
 [Mark in_progress]
-[Dispatch code-implementer with full context packet]
+[Dispatch code-implementer with full task description]
 
 Implementer: "Completed login endpoint implementation."
 
@@ -339,7 +339,7 @@ You MUST use the Task tool to dispatch each subagent. This is not optional.
 ### Dispatch Checklist
 
 For each task, verify you have:
-- [ ] Dispatched code-implementer via Task tool with complete context packet
+- [ ] Dispatched code-implementer via Task tool with complete task description
 - [ ] Received and reviewed completion report (with verification evidence)
 - [ ] Dispatched spec-reviewer via Task tool with requirements + implementer report
 - [ ] Received approval OR fixed gaps and re-dispatched
@@ -356,7 +356,7 @@ Good handoffs between agents prevent wasted work and confusion.
 ### Implementer → Spec-Reviewer
 
 Provide:
-- Original requirements (from context packet)
+- Original requirements (from task description)
 - Implementer's completion report
 - Reference to changes (git diff)
 

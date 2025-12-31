@@ -91,7 +91,7 @@ def expected_hooks() -> list[str]:
         "run-hook.cmd",
         "session-start.sh",
         "tdd-precommit-check.sh",
-        "validate-context-packet.sh",
+        "validate-task-description.sh",
         "verify-before-commit.sh",
         "workflow-phase-check.sh",
         "workflow-skip-set.sh",

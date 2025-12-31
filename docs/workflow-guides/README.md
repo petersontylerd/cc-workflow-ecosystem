@@ -121,7 +121,7 @@ The ecosystem provides three tiers of automation, each building on the previous:
 | `brainstorm-mode-check.sh` | PreToolUse | **BLOCKS** edits during brainstorm |
 | `tdd-precommit-check.sh` | PreToolUse | **BLOCKS** commits without tests |
 | `verify-before-commit.sh` | PreToolUse | Reminds about verification |
-| `validate-context-packet.sh` | PreToolUse | Validates subagent context |
+| `validate-task-description.sh` | PreToolUse | Validates subagent task descriptions |
 | `phase-transition.sh` | PostToolUse | Updates workflow phase |
 | `brainstorm-start.sh` | PostToolUse | Sets brainstorming marker |
 | `brainstorm-end.sh` | PostToolUse | Clears brainstorming marker |
@@ -210,7 +210,7 @@ hooks/                   # Enforcement scripts
 ├── brainstorm-mode-check.sh
 ├── tdd-precommit-check.sh
 ├── verify-before-commit.sh
-├── validate-context-packet.sh
+├── validate-task-description.sh
 ├── phase-transition.sh
 ├── brainstorm-start.sh
 ├── brainstorm-end.sh

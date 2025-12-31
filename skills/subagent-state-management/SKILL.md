@@ -25,7 +25,7 @@ git status              # Working tree should be clean or expected
 git log -3 --oneline    # Understand recent context
 ```
 
-If environment verification commands are provided in your context packet, run those first:
+If environment verification commands are provided in your task description, run those first:
 
 ```bash
 # Example: Run quick smoke test
@@ -42,7 +42,7 @@ Understand your position in the workflow:
 2. **Dependencies**: What must be true for this task to succeed?
 3. **Purpose**: WHY does this task matter? What problem does it solve?
 
-Read the Context and Purpose sections of your context packet carefully.
+Read the Context and Purpose sections of your task description carefully.
 
 ### 3. Scope Confirmation
 
@@ -128,7 +128,7 @@ git status
 1. **Read git log**: What commits were made? What's the story?
 2. **Check uncommitted changes**: Is there work in progress?
 3. **Verify tests pass**: Is the codebase healthy?
-4. **Re-read context packet**: What was the original task?
+4. **Re-read task description**: What was the original task?
 5. **Identify current position**: Where in the task are we?
 
 ### Resuming Interrupted Work
@@ -259,9 +259,9 @@ Subagents must be efficient with context to maximize performance.
 - Implementation details the next agent doesn't need
 - Long debug logs (summarize instead)
 
-### Context Packet Consumption
+### Task Description Consumption
 
-When you receive a context packet:
+When you receive a task description:
 
 1. **Read fully first**: Don't skim
 2. **Extract key info**: Requirements, success criteria, conventions
@@ -289,7 +289,7 @@ git diff HEAD~1 -U5  # 5 lines of context
 
 | If You Notice... | Then... |
 |------------------|---------|
-| Context packet missing sections | Ask orchestrator for complete context |
+| Task description missing sections | Ask orchestrator for complete context |
 | Environment verification fails | Report immediately, don't proceed |
 | Requirements are ambiguous | Ask for clarification, don't assume |
 | Unsure about scope | Ask, don't expand |

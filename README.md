@@ -177,7 +177,7 @@ workflow-ecosystem/
 │   ├── brainstorm-start.sh      # Set brainstorming state
 │   ├── brainstorm-end.sh        # Clear brainstorming state
 │   ├── verify-before-commit.sh  # Pre-commit verification reminder
-│   ├── validate-context-packet.sh # Validate subagent context
+│   ├── validate-task-description.sh # Validate subagent task descriptions
 │   └── tdd-precommit-check.sh   # BLOCKS commits without tests
 ├── skills/                       # Core competencies
 ├── commands/                     # User-invokable workflows

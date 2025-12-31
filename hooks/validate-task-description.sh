@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# PreToolCall hook: Validate context packet for subagent dispatch
+# PreToolCall hook: Validate task description for subagent dispatch
 # Checks that Task tool calls include required context sections
 # Provides warnings (not blocks) per user preference
 
@@ -26,7 +26,7 @@ if ! echo "$TOOL_INPUT" | grep -qE '(code-implementer|spec-reviewer|quality-revi
   exit 0
 fi
 
-# Check for required context packet sections in the prompt
+# Check for required task description sections in the prompt
 MISSING_CORE=""
 MISSING_ENHANCED=""
 
@@ -69,7 +69,7 @@ WARNING_MSG=""
 
 if [[ -n "$MISSING_CORE" ]]; then
   MISSING_CORE="${MISSING_CORE%, }"
-  WARNING_MSG="CONTEXT PACKET WARNING: Missing core sections: ${MISSING_CORE}. "
+  WARNING_MSG="TASK DESCRIPTION WARNING: Missing core sections: ${MISSING_CORE}. "
 fi
 
 if [[ -n "$MISSING_ENHANCED" ]]; then
@@ -77,12 +77,12 @@ if [[ -n "$MISSING_ENHANCED" ]]; then
   if [[ -n "$WARNING_MSG" ]]; then
     WARNING_MSG="${WARNING_MSG}Also missing enhanced sections: ${MISSING_ENHANCED}. "
   else
-    WARNING_MSG="CONTEXT PACKET SUGGESTION: Consider adding enhanced sections: ${MISSING_ENHANCED}. "
+    WARNING_MSG="TASK DESCRIPTION SUGGESTION: Consider adding enhanced sections: ${MISSING_ENHANCED}. "
   fi
 fi
 
 if [[ -n "$WARNING_MSG" ]]; then
-  WARNING_MSG="${WARNING_MSG}Per orchestrating-subagents skill, complete context packets improve subagent performance. See skills/orchestrating-subagents/SKILL.md for the full format."
+  WARNING_MSG="${WARNING_MSG}Per orchestrating-subagents skill, complete task descriptions improve subagent performance. See skills/orchestrating-subagents/SKILL.md for the full format."
   cat <<EOF
 {
   "hookSpecificOutput": {

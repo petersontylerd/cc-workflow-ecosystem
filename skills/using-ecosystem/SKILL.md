@@ -173,7 +173,7 @@ Parent Claude (Orchestrator):
 ├── Reads backlog once, extracts all tasks
 ├── Creates TodoWrite with all tasks
 ├── For each task:
-│   ├── Prepare context packet
+│   ├── Prepare task description
 │   ├── Dispatch code-implementer
 │   ├── Handle questions if any
 │   ├── Dispatch spec-reviewer
@@ -184,7 +184,7 @@ Parent Claude (Orchestrator):
 └── Final review after all tasks
 ```
 
-**Key**: Parent maintains context, subagents receive curated context packets.
+**Key**: Parent maintains context, subagents receive curated task descriptions.
 
 ## Getting Help
 

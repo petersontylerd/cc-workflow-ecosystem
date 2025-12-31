@@ -100,7 +100,7 @@ This document provides a complete inventory of all files in the workflow ecosyst
 | `hooks/phase-transition.sh` | [x] | [x] | [x] | Updates `.workflow_phase` on skill completion |
 | `hooks/tdd-precommit-check.sh` | [x] | [x] | [x] | **BLOCKS** commits without test files |
 | `hooks/verify-before-commit.sh` | [x] | [x] | | Reminds about verification before commit |
-| `hooks/validate-context-packet.sh` | | [x] | [x] | Validates subagent context packets |
+| `hooks/validate-task-description.sh` | | [x] | [x] | Validates subagent task descriptions |
 | `hooks/workflow-skip-set.sh` | | | [x] | Sets `.workflow_skip` marker for escape hatch |
 
 **Coverage**: All 13 hooks are referenced across the three patterns.
@@ -222,7 +222,7 @@ The following 39 files are **actively triggered** during workflow execution:
 
 1. **Test files**: Currently tests only validate structure. Consider adding runtime tests that verify hooks behave correctly.
 
-2. **Language skills**: `python-development`, `typescript-development`, and `angular-development` are only referenced in context packets. They could be auto-invoked based on file extensions in the project.
+2. **Language skills**: `python-development`, `typescript-development`, and `angular-development` are only referenced in task descriptions. They could be auto-invoked based on file extensions in the project.
 
 ---
 
@@ -250,7 +250,7 @@ skills/<name>/SKILL.md
         │
         └── PreToolUse hook fires (matcher: Task.*)
             ▼
-            hooks/validate-context-packet.sh
+            hooks/validate-task-description.sh
 ```
 
 ### Session State Files
@@ -273,9 +273,9 @@ skills/<name>/SKILL.md
 
 **All core plugin components (commands, skills, agents, hooks) are referenced in at least one usage pattern**, demonstrating complete coverage of the workflow ecosystem.
 
-The three-tier documentation (Beginner, Intermediate, Expert) provides progressive disclosure:
-- Beginner: 15 core files for basic workflow
-- Intermediate: 35 files including subagent orchestration
-- Expert: 39 files including escape hatches and release process
+The three-tier documentation (Beginner, Intermediate, Expert) provides self-contained guides at different complexity levels:
+- **Beginner**: Manual implementation workflow with core commands and enforcement hooks
+- **Intermediate**: Full subagent orchestration with code-implementer, spec-reviewer, and quality-reviewer
+- **Expert**: Advanced features including escape hatches, language skills, and release process
 
-All files serve a documented purpose.
+Each pattern document is fully self-contained with complete file traces and Mermaid diagrams—no cross-referencing required.

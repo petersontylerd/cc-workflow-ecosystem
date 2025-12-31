@@ -34,9 +34,9 @@ npm run build  # or equivalent
 
 **If environment is unhealthy:** Fix issues before proceeding. Subagents building on a broken foundation will fail.
 
-### Context Packet Preparation
+### Task Description Preparation
 
-For each task, prepare a complete context packet. Use the **orchestrating-subagents** skill for the full format.
+For each task, prepare a complete task description. Use the **orchestrating-subagents** skill for the full format.
 
 Required sections:
 - **Purpose**: WHY this task matters
@@ -70,7 +70,7 @@ The flow is:
 1. Read backlog once, extract all tasks
 2. Create TodoWrite with all tasks
 3. For each task:
-   - Prepare complete context packet
+   - Prepare complete task description
    - Dispatch `code-implementer`
    - Dispatch `spec-reviewer`
    - Dispatch `quality-reviewer`
@@ -81,7 +81,7 @@ The flow is:
 
 ## Key Reminders
 
-- **Purpose in every context packet**: Helps agents make good trade-off decisions
+- **Purpose in every task description**: Helps agents make good trade-off decisions
 - **Failure modes**: Anticipate problems, guide agents to avoid them
 - **Skills references**: Point agents to available guidance
 - **Evidence-based completion**: Require verification output, not assertions

@@ -6,10 +6,284 @@ A power user understands the workflow deeply and uses advanced features:
 - **Escape hatches** to bypass enforcement when appropriate
 - **Direct skill invocation** for precise control
 - **Language-specific skills** for project-appropriate patterns
-- **Custom context packets** for optimal subagent performance
+- **Custom task descriptions** for optimal subagent performance
 - **Release scripts** for plugin maintenance
 
-This pattern covers the remaining files not used in beginner or intermediate patterns, and demonstrates when and how experts deviate from the standard workflow.
+This pattern covers advanced workflow features and demonstrates when and how experts deviate from the standard workflow while maintaining the complete workflow reference inline.
+
+---
+
+## Complete Workflow Reference (Phases 1-7)
+
+Experts know the full workflow and can reference any phase. This section provides the complete file traces for quick reference.
+
+### Phase 1: Session Start
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant ClaudeCode
+    participant Hook as hooks.json
+    participant Script as session-start.sh
+    participant Skill as using-ecosystem/SKILL.md
+
+    User->>ClaudeCode: Start new session
+    ClaudeCode->>Hook: SessionStart event
+    Hook->>Script: Execute session-start.sh
+    Script->>Skill: Read SKILL.md content
+    Script-->>ClaudeCode: Return additionalContext
+    ClaudeCode-->>User: Context injected silently
+```
+
+**Files Activated:**
+```
+hooks/hooks.json → hooks/session-start.sh → skills/using-ecosystem/SKILL.md
+```
+
+| State File | Value |
+|------------|-------|
+| `.workflow_phase` | Not created yet (idle) |
+| `.brainstorming_active` | Not created |
+| `.workflow_skip` | Not created |
+
+---
+
+### Phase 2: Brainstorm (`/brainstorm`)
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant ClaudeCode
+    participant Command as brainstorm.md
+    participant Skill as brainstorming/SKILL.md
+    participant Hook as hooks.json
+    participant PostHook as brainstorm-start.sh
+    participant StateDir as $SESSION_DIR
+
+    User->>ClaudeCode: /brainstorm add validation
+    ClaudeCode->>Command: Load command
+    Command->>Skill: "Use brainstorming skill"
+    ClaudeCode->>Skill: Load skill via Skill tool
+    Skill-->>ClaudeCode: One question at a time process
+    ClaudeCode->>Hook: PostToolUse (Skill.*brainstorming)
+    Hook->>PostHook: Execute brainstorm-start.sh
+    PostHook->>StateDir: Create .brainstorming_active
+    PostHook-->>ClaudeCode: "Write/Edit now blocked"
+```
+
+**Files Activated:**
+```
+commands/brainstorm.md → skills/brainstorming/SKILL.md
+PostToolUse: hooks/hooks.json → hooks/brainstorm-start.sh
+```
+
+| State File | Value |
+|------------|-------|
+| `.workflow_phase` | `brainstorming` |
+| `.brainstorming_active` | Created (blocks Write/Edit) |
+| `.workflow_skip` | Not created |
+
+---
+
+### Phase 3: Create Branch (`/branch`)
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant ClaudeCode
+    participant Command as branch.md
+    participant Skill as git-workflow/SKILL.md
+    participant Hook as hooks.json
+    participant PostHook as phase-transition.sh
+    participant StateDir as $SESSION_DIR
+
+    User->>ClaudeCode: /branch feat/42-add-validation
+    ClaudeCode->>Command: Load command
+    Command->>Skill: "Use git-workflow skill"
+    ClaudeCode->>Skill: Load skill
+    Skill-->>ClaudeCode: Create branch from main
+    ClaudeCode->>Hook: PostToolUse (Skill.*branch)
+    Hook->>PostHook: Execute phase-transition.sh
+    PostHook->>StateDir: Write "branched" to .workflow_phase
+```
+
+**Files Activated:**
+```
+commands/branch.md → skills/git-workflow/SKILL.md
+PostToolUse: hooks/hooks.json → hooks/phase-transition.sh
+```
+
+| State File | Value |
+|------------|-------|
+| `.workflow_phase` | `branched` |
+| `.brainstorming_active` | Still exists (Write/Edit still blocked!) |
+| `.workflow_skip` | Not created |
+
+---
+
+### Phase 4: Create Backlog (`/backlog-development`)
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant ClaudeCode
+    participant Command as backlog-development.md
+    participant Skill as developing-backlogs/SKILL.md
+    participant Hook as hooks.json
+    participant EndHook as brainstorm-end.sh
+    participant TransHook as phase-transition.sh
+    participant StateDir as $SESSION_DIR
+
+    User->>ClaudeCode: /backlog-development add-validation
+    ClaudeCode->>Command: Load command
+    Command->>Skill: "Use developing-backlogs skill"
+    ClaudeCode->>Skill: Load skill
+    Skill-->>ClaudeCode: Create backlog with TDD tasks
+
+    ClaudeCode->>Hook: PostToolUse (Skill.*backlog-development)
+    Hook->>EndHook: Execute brainstorm-end.sh
+    EndHook->>StateDir: Delete .brainstorming_active
+
+    Hook->>TransHook: Execute phase-transition.sh
+    TransHook->>StateDir: Write "backlog-ready" to .workflow_phase
+```
+
+**Files Activated:**
+```
+commands/backlog-development.md → skills/developing-backlogs/SKILL.md
+PostToolUse: hooks/brainstorm-end.sh, hooks/phase-transition.sh
+```
+
+| State File | Value |
+|------------|-------|
+| `.workflow_phase` | `backlog-ready` |
+| `.brainstorming_active` | **Deleted** (Write/Edit now ALLOWED!) |
+| `.workflow_skip` | Not created |
+
+---
+
+### Phase 5: Implement (`/implement`)
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Orchestrator as Parent Claude
+    participant Hook as hooks.json
+    participant Task as Task Tool
+    participant Impl as code-implementer
+    participant Spec as spec-reviewer
+    participant Quality as quality-reviewer
+
+    User->>Orchestrator: /implement
+    Orchestrator->>Orchestrator: Read backlog, extract tasks
+    Orchestrator->>Orchestrator: Create TodoWrite
+
+    loop For each task
+        Orchestrator->>Hook: PreToolUse (Task)
+        Hook->>Hook: validate-task-description.sh
+        Orchestrator->>Task: Dispatch code-implementer
+        Task->>Impl: Execute with task description
+        Impl-->>Orchestrator: Completion report
+
+        Orchestrator->>Task: Dispatch spec-reviewer
+        Task->>Spec: Requirements + implementer report
+        Spec-->>Orchestrator: APPROVED or GAPS
+
+        Orchestrator->>Task: Dispatch quality-reviewer
+        Task->>Quality: Diff + spec-reviewer handoff
+        Quality-->>Orchestrator: APPROVED or ISSUES
+    end
+
+    Orchestrator->>User: All tasks complete
+```
+
+**Files Activated:**
+```
+commands/implement.md → skills/orchestrating-subagents/SKILL.md
+PreToolUse: hooks/validate-task-description.sh
+Agents: agents/code-implementer.md, agents/spec-reviewer.md, agents/quality-reviewer.md
+Agent Skills: skills/subagent-state-management/SKILL.md, skills/systematic-debugging/SKILL.md
+Language Skills: skills/python-development/SKILL.md, skills/typescript-development/SKILL.md
+```
+
+| State File | Value |
+|------------|-------|
+| `.workflow_phase` | `implementing` |
+| `.brainstorming_active` | Deleted |
+| `.workflow_skip` | Not created |
+
+---
+
+### Phase 6: Verify (`/verify`)
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant ClaudeCode
+    participant Command as verify.md
+    participant Skill as verification/SKILL.md
+    participant Hook as phase-transition.sh
+
+    User->>ClaudeCode: /verify
+    ClaudeCode->>Command: Load command
+    Command->>Skill: "Use verification skill"
+    ClaudeCode->>Skill: THE IRON LAW - No claims without evidence
+    Skill-->>ClaudeCode: Run tests, linter, type checker, build
+    ClaudeCode->>Hook: PostToolUse
+    Hook-->>ClaudeCode: Phase → "verifying"
+```
+
+**Files Activated:**
+```
+commands/verify.md → skills/verification/SKILL.md
+PostToolUse: hooks/phase-transition.sh
+```
+
+| State File | Value |
+|------------|-------|
+| `.workflow_phase` | `verifying` |
+
+---
+
+### Phase 7: Commit and PR (`/commit`, `/pr`)
+
+**Commit Flow:**
+```mermaid
+sequenceDiagram
+    participant User
+    participant ClaudeCode
+    participant Hook as hooks.json
+    participant Verify as verify-before-commit.sh
+    participant TDD as tdd-precommit-check.sh
+    participant Command as commit.md
+    participant Skill as git-workflow/SKILL.md
+
+    User->>ClaudeCode: /commit feat: add validation
+    ClaudeCode->>Command: Load command
+    Command->>Skill: "Use git-workflow skill"
+
+    ClaudeCode->>Hook: PreToolUse (Bash: git commit)
+    Hook->>Verify: Execute verify-before-commit.sh
+    Verify-->>ClaudeCode: REMINDER: Ensure /verify run
+
+    Hook->>TDD: Execute tdd-precommit-check.sh
+    TDD-->>ClaudeCode: {} (tests staged, allow)
+
+    ClaudeCode->>Skill: Execute commit
+    Skill-->>User: Commit created
+```
+
+**PR Flow:**
+```
+commands/pr.md → skills/git-workflow/SKILL.md → templates/pr-description.md
+```
+
+**Files Activated:**
+```
+commands/commit.md, commands/pr.md → skills/git-workflow/SKILL.md
+PreToolUse: hooks/verify-before-commit.sh, hooks/tdd-precommit-check.sh
+Template: templates/pr-description.md
+```
 
 ---
 
@@ -180,7 +454,7 @@ Expert works on Angular project
 
 ### When to Invoke Language Skills
 
-Experts invoke language skills in context packets for subagents:
+Experts invoke language skills in task descriptions for subagents:
 
 ```markdown
 ### Required Skills
@@ -309,11 +583,11 @@ Expert dispatches custom subagent
 
 ---
 
-## Custom Context Packets
+## Custom Task Descriptions
 
-Experts craft optimized context packets for specific situations.
+Experts craft optimized task descriptions for specific situations.
 
-### Enhanced Context Packet
+### Enhanced Task Description
 
 From `orchestrating-subagents/SKILL.md` lines 136-211, experts include all enhanced sections:
 
@@ -392,11 +666,11 @@ User: "There's a typo in the error message, quick fix needed"
 ### Example 2: TypeScript Project with Angular
 
 ```bash
-# Expert invokes language skills in context packet
+# Expert invokes language skills in task description
 
 User: "Implement a new dashboard component"
 
-# Expert prepares context packet with:
+# Expert prepares task description with:
 ### Required Skills
 - `typescript-development` - Strict mode, explicit types
 - `angular-development` - Signals, OnPush, modern control flow
@@ -420,36 +694,64 @@ git push origin master --tags
 
 ---
 
-## Summary: Files Referenced in Expert Pattern
+## Summary: All Files Referenced
 
-### Commands (1 of 8)
-- [x] `commands/workflow.md` **NEW**
+This expert pattern is self-contained with complete file references.
 
-(Other 7 commands covered in Beginner and Intermediate patterns)
+### Commands (8 of 8)
+- [x] `commands/brainstorm.md` - Requirements exploration
+- [x] `commands/branch.md` - Feature branch creation
+- [x] `commands/backlog-development.md` - Backlog creation
+- [x] `commands/implement.md` - Subagent orchestration
+- [x] `commands/verify.md` - Pre-completion verification
+- [x] `commands/commit.md` - Atomic commits
+- [x] `commands/pr.md` - Pull request creation
+- [x] `commands/workflow.md` - Enforcement management (skip/status/reset)
 
-### Skills (3 of 12 - language skills)
-- [x] `skills/workflow-management/SKILL.md` **NEW**
-- [x] `skills/typescript-development/SKILL.md` **NEW**
-- [x] `skills/angular-development/SKILL.md` **NEW**
+### Skills (12 of 12)
+- [x] `skills/using-ecosystem/SKILL.md` - Ecosystem orientation
+- [x] `skills/brainstorming/SKILL.md` - Requirements exploration
+- [x] `skills/developing-backlogs/SKILL.md` - Backlog creation
+- [x] `skills/orchestrating-subagents/SKILL.md` - Subagent dispatch
+- [x] `skills/verification/SKILL.md` - Evidence-based completion
+- [x] `skills/git-workflow/SKILL.md` - Branch/commit/PR
+- [x] `skills/workflow-management/SKILL.md` - State management
+- [x] `skills/subagent-state-management/SKILL.md` - Agent startup/handoff
+- [x] `skills/systematic-debugging/SKILL.md` - Debugging methodology
+- [x] `skills/python-development/SKILL.md` - Python standards
+- [x] `skills/typescript-development/SKILL.md` - TypeScript patterns
+- [x] `skills/angular-development/SKILL.md` - Angular patterns
 
-(Other 9 skills covered in Beginner and Intermediate patterns)
+### Agents (3 of 3)
+- [x] `agents/code-implementer.md` - TDD implementation
+- [x] `agents/spec-reviewer.md` - Requirements compliance
+- [x] `agents/quality-reviewer.md` - Code quality assessment
 
-### Hooks (1 of 13)
-- [x] `hooks/workflow-skip-set.sh` **NEW**
+### Hooks (13 of 13)
+- [x] `hooks/hooks.json` - Hook configuration
+- [x] `hooks/run-hook.cmd` - Cross-platform execution
+- [x] `hooks/session-start.sh` - Inject ecosystem context
+- [x] `hooks/main-branch-protection.sh` - **BLOCKS** edits on main/master
+- [x] `hooks/workflow-phase-check.sh` - **BLOCKS** edits before backlog
+- [x] `hooks/brainstorm-mode-check.sh` - **BLOCKS** edits during brainstorm
+- [x] `hooks/brainstorm-start.sh` - Set brainstorming marker
+- [x] `hooks/brainstorm-end.sh` - Clear brainstorming marker
+- [x] `hooks/phase-transition.sh` - Update workflow phase
+- [x] `hooks/tdd-precommit-check.sh` - **BLOCKS** commits without tests
+- [x] `hooks/verify-before-commit.sh` - Verification reminder
+- [x] `hooks/validate-task-description.sh` - Validate task descriptions
+- [x] `hooks/workflow-skip-set.sh` - Set skip marker
 
-(Other 12 hooks covered in Beginner and Intermediate patterns)
+### Templates (1 of 1)
+- [x] `templates/pr-description.md` - PR template
 
 ### Scripts (2 of 2)
-- [x] `scripts/release.sh` **NEW**
-- [x] `scripts/pre-push-version-check.sh` **NEW**
-
-### Templates (0 of 1)
-
-(Template covered in Intermediate pattern)
+- [x] `scripts/release.sh` - Version bump and tag
+- [x] `scripts/pre-push-version-check.sh` - Version sync validation
 
 ### Plugin Config (2 of 2)
-- [x] `.claude-plugin/plugin.json` **NEW** (referenced in release flow)
-- [x] `.claude-plugin/marketplace.json` **NEW** (referenced in release flow)
+- [x] `.claude-plugin/plugin.json` - Plugin manifest
+- [x] `.claude-plugin/marketplace.json` - Marketplace metadata
 
 ---
 
@@ -457,9 +759,9 @@ git push origin master --tags
 
 1. **Know when to skip**: `/workflow skip` is powerful but comes with responsibility.
 
-2. **Language skills matter**: Include appropriate language skills in context packets for project-specific patterns.
+2. **Language skills matter**: Include appropriate language skills in task descriptions for project-specific patterns.
 
-3. **Complete context packets**: Enhanced sections (Purpose, Failure Modes, Skills) significantly improve subagent performance.
+3. **Complete task descriptions**: Enhanced sections (Purpose, Failure Modes, Skills) significantly improve subagent performance.
 
 4. **Maintain the plugin**: Use `release.sh` for version management and understand pre-push validation.
 
@@ -471,16 +773,16 @@ git push origin master --tags
 
 ## Complete File Coverage
 
-With the Expert Pattern, all core plugin files have been referenced:
+All 41 core plugin files are referenced in this pattern:
 
-| Category | Beginner | Intermediate | Expert | Total |
-|----------|----------|--------------|--------|-------|
-| Commands | 5 | 7 | 8 | 8/8 |
-| Skills | 6 | 9 | 12 | 12/12 |
-| Agents | 0 | 3 | 3 | 3/3 |
-| Hooks | 11 | 12 | 13 | 13/13 |
-| Templates | 0 | 1 | 1 | 1/1 |
-| Scripts | 0 | 0 | 2 | 2/2 |
-| Plugin Config | 0 | 0 | 2 | 2/2 |
+| Category | Count |
+|----------|-------|
+| Commands | 8/8 |
+| Skills | 12/12 |
+| Agents | 3/3 |
+| Hooks | 13/13 |
+| Templates | 1/1 |
+| Scripts | 2/2 |
+| Plugin Config | 2/2 |
 
 See [file-reference-matrix.md](./file-reference-matrix.md) for the complete matrix and analysis.

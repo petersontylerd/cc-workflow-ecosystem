@@ -641,7 +641,7 @@ User types: /commit feat: add validation
 - [x] `hooks/phase-transition.sh`
 - [x] `hooks/tdd-precommit-check.sh`
 - [x] `hooks/verify-before-commit.sh`
-- [ ] `hooks/validate-context-packet.sh` (Intermediate pattern)
+- [ ] `hooks/validate-task-description.sh` (Intermediate pattern)
 - [ ] `hooks/workflow-skip-set.sh` (Expert pattern)
 
 ### State Files Used

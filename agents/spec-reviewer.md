@@ -21,7 +21,7 @@ Compare completed implementation against the original requirements and identify:
 
 ### From the Orchestrator
 
-Your context packet should include:
+Your task description should include:
 - Original task requirements (full text)
 - Success criteria
 - Purpose of the task

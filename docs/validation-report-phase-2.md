@@ -81,7 +81,7 @@ Phase 1 and Phase 2 implementation was validated with Option B (Full Validation)
 | using-ecosystem | 148 | ✅ Good | Core workflow documented |
 | brainstorming | 213 | ✅ Good | Added pushback handling |
 | developing-backlogs | 233 | ✅ Good | Bite-sized task format clear |
-| orchestrating-subagents | 281 | ✅ Good | Context packet format defined |
+| orchestrating-subagents | 281 | ✅ Good | Task description format defined |
 | verification | 258 | ✅ Good | Added time pressure handling |
 | git-workflow | 332 | ✅ Good | Added refusal guidance |
 

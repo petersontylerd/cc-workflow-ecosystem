@@ -28,7 +28,7 @@ git status              # Working tree should be clean or expected state
 git log -3 --oneline    # Understand recent context
 ```
 
-If environment verification commands are provided in your context packet, run them:
+If environment verification commands are provided in your task description, run them:
 ```bash
 # Example: Quick smoke test
 pytest tests/ -x -q --tb=short
@@ -38,7 +38,7 @@ pytest tests/ -x -q --tb=short
 
 ### 2. Context Orientation
 
-Read your context packet and confirm you understand:
+Read your task description and confirm you understand:
 
 - [ ] **Purpose**: WHY does this task matter? What problem does it solve?
 - [ ] **Requirements**: WHAT must be implemented?
@@ -351,13 +351,13 @@ These skills define tooling, conventions, and patterns expected for each languag
 - Make assumptions about unclear requirements
 - Commit without running tests
 - Claim completion without verification evidence
-- Ignore failure modes in context packet
+- Ignore failure modes in task description
 - Skip the session startup ritual
 - Proceed when environment is unhealthy
 
 ## Example Task Execution
 
-**Context Packet:**
+**Task Description:**
 ```markdown
 ## Task: Add email validation to registration form
 
