@@ -1,6 +1,6 @@
 ---
 name: using-ecosystem
-description: Use when starting any conversation - establishes how to find and use the workflow ecosystem including skills, commands, and agents
+description: Provides orientation to the workflow ecosystem's three-tier automation (skills, commands, agents) and skill invocation rules. Use when starting any conversation, when unsure which skill applies, or when needing to understand workflow phases and enforcement.
 ---
 
 <EXTREMELY-IMPORTANT>
@@ -21,13 +21,13 @@ This ecosystem provides three tiers of automation:
 
 ## Available Skills
 
-| Skill | When to Use |
+| Skill | Description |
 |-------|-------------|
-| `brainstorming` | Before any creative or implementation work |
-| `developing-backlogs` | When spec/requirements exist, before touching code |
-| `orchestrating-subagents` | When executing multi-task backlogs with subagent delegation |
-| `verification` | Before claiming work is complete or making success claims |
-| `git-workflow` | When creating branches, commits, or managing version control |
+| `brainstorming` | Facilitates collaborative design through structured dialogue. Use before creative/implementation work. |
+| `developing-backlogs` | Creates comprehensive backlogs with bite-sized tasks and TDD commands. Use when planning features. |
+| `orchestrating-subagents` | Executes backlogs with fresh subagents and two-stage review. Use for multi-task implementation. |
+| `verification` | Enforces evidence-before-claims discipline. Use before claiming completion or success. |
+| `git-workflow` | Enforces feature branch workflow with atomic commits. Use for all version control operations. |
 
 ## Available Commands
 

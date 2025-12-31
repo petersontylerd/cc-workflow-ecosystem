@@ -1,6 +1,6 @@
 ---
 name: brainstorming
-description: "Use when starting any creative or implementation work - before writing any code"
+description: Facilitates collaborative design through structured question-answer dialogue. Use when starting any creative or implementation work, when requirements are unclear, when exploring new features, or before writing any code to ensure complete understanding.
 ---
 
 # Brainstorming Ideas Into Designs

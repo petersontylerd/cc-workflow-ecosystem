@@ -1,6 +1,6 @@
 ---
 name: orchestrating-subagents
-description: Use when executing backlogs with multiple independent tasks
+description: Executes backlogs by dispatching fresh subagents per task with two-stage review (spec compliance then code quality). Use when executing backlogs with multiple independent tasks, when implementing with Task tool delegation, or when quality gates between tasks are needed.
 ---
 
 # Orchestrating Subagents
@@ -317,6 +317,8 @@ Before dispatching any subagent, verify your context packet includes:
 ## Integration
 
 After orchestration completes:
-- Use `verification` skill for pre-completion checks
+- **REQUIRED:** Use `verification` skill for pre-completion checks
 - Use `/verify` command for final validation
 - Use `/pr` command to create pull request
+
+**REQUIRED BACKGROUND:** Understand `developing-backlogs` for backlog format and `using-ecosystem` for workflow context.

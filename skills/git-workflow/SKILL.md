@@ -1,6 +1,6 @@
 ---
 name: git-workflow
-description: Use when creating branches, making commits, or managing version control - enforces feature branch workflow and atomic commits
+description: Enforces feature branch workflow with atomic commits and conventional commit messages. Use when creating branches, making commits, managing version control, preparing PRs, or recovering from git mistakes. Never allows commits to main/master.
 ---
 
 # Git Workflow

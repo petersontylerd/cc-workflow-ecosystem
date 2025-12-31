@@ -1,6 +1,6 @@
 ---
 name: workflow-management
-description: Manage workflow enforcement state (skip, status, reset)
+description: Manages workflow enforcement state including bypassing checks, checking current phase, and resetting to idle. Use when needing to skip enforcement for quick fixes, when checking current workflow status, or when resetting after completing work.
 ---
 
 # Workflow State Management
@@ -116,8 +116,11 @@ idle → brainstorming → branched → backlog-ready → implementing → verif
 
 ## Related Skills
 
+**SEE ALSO:** These skills work together in the workflow ecosystem:
 - `brainstorming` - Enter brainstorming phase
 - `git-workflow` - Branch and commit management
 - `developing-backlogs` - Create implementation backlogs
 - `orchestrating-subagents` - Execute backlogs with subagents
 - `verification` - Pre-completion verification
+
+**REQUIRED BACKGROUND:** Understand `using-ecosystem` for full workflow context.

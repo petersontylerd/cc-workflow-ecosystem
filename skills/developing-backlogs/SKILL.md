@@ -1,6 +1,6 @@
 ---
 name: developing-backlogs
-description: "Use when you have a spec or requirements for a multi-step task, before touching code"
+description: Creates comprehensive backlog documents with bite-sized tasks (2-5 min each), exact file paths, complete code, and TDD test commands. Use when spec or requirements exist for a multi-step task, before touching code, or when planning feature implementation.
 ---
 
 # Developing Backlogs
@@ -251,9 +251,9 @@ If a backlog needs modification during execution:
 
 ## Remember
 
-You are writing for an engineer who:
+Backlogs are written for an engineer who:
 - Has never seen this codebase
 - Will execute tasks exactly as written
 - Cannot fill in gaps or make assumptions
 
-Every detail matters. If you can't be specific, you don't understand the task well enough.
+Every detail matters. Lack of specificity indicates insufficient understanding of the task.

@@ -1,6 +1,6 @@
 ---
 name: verification
-description: Use when about to claim work is complete, fixed, or passing
+description: Enforces evidence-before-claims discipline with fresh verification output. Use when about to claim work is complete, before expressing satisfaction or success, before committing or creating PRs, or when tempted to say "should work" or "probably fixed".
 ---
 
 # Verification Before Completion

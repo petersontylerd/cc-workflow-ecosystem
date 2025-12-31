@@ -37,7 +37,9 @@ build/
 
 # Claude Code
 CLAUDE.md
+MASTER_CLAUDE.md
 .claude/
+.mcp.json
 
 # Tooling artifacts
 .codex/
