@@ -10,6 +10,13 @@ YELLOW='\033[1;33m'
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
+# Skip version validation for feature branches (only enforce on main/master)
+CURRENT_BRANCH=$(git branch --show-current)
+if [[ "$CURRENT_BRANCH" != "main" && "$CURRENT_BRANCH" != "master" ]]; then
+  echo -e "${GREEN}✓${NC} Feature branch '$CURRENT_BRANCH' - skipping version validation"
+  exit 0
+fi
+
 echo "Running version validation..."
 
 # 1. Check that plugin.json and marketplace.json versions match
