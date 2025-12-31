@@ -29,6 +29,16 @@ This ecosystem provides three tiers of automation:
 | `verification` | Enforces evidence-before-claims discipline. Use before claiming completion or success. |
 | `git-workflow` | Enforces feature branch workflow with atomic commits. Use for all version control operations. |
 
+## Reference Skills
+
+These skills provide techniques and standards for specific situations:
+
+| Skill | When to Use |
+|-------|-------------|
+| `systematic-debugging` | When encountering bugs, test failures, or unexpected behavior. 4-phase root cause methodology. |
+| `python-development` | When working on Python projects. Standards for uv, ruff, mypy, pytest, type hints. |
+| `typescript-development` | When working with TypeScript. Strict mode, type patterns, error handling. |
+
 ## Available Commands
 
 | Command | Purpose |
@@ -110,6 +120,7 @@ digraph ecosystem_flow {
 | "Should work now" | Use `verification` skill first |
 | "I'll test later" | TDD means test FIRST |
 | "Let me commit to main" | Use `git-workflow` - feature branch required |
+| "Let me try this fix" | Use `systematic-debugging` - investigate root cause first |
 
 ## Quality Disciplines
 

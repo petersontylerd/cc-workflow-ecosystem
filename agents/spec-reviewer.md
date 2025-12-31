@@ -127,6 +127,17 @@ Core requirements met, but scope has expanded. Review with orchestrator.
 - [ ] No over-implementation
 - [ ] Changes are focused on the task
 
+## Language Standards Reference
+
+When verifying implementation correctness, consult the appropriate language skill:
+
+| Project Type | Skill to Consult |
+|--------------|------------------|
+| Python | `python-development` - expected tooling, type hints, patterns |
+| TypeScript | `typescript-development` - type patterns, strict mode compliance |
+
+These skills define what "correctly implemented" means for each language.
+
 ## What NOT to Do
 
 - Review code quality (that's quality-reviewer's job)

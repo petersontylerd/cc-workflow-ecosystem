@@ -85,12 +85,21 @@ Report back with:
 
 ### When You Encounter Issues
 
-Report back with:
+**Before reporting an issue**, use the `systematic-debugging` skill to investigate:
+1. Read error messages carefully
+2. Reproduce consistently
+3. Form and test one hypothesis at a time
+4. Find root cause before attempting fixes
+
+If still blocked after systematic investigation, report back with:
 ```
 ## Issue Encountered: [Task Name]
 
 ### Problem
 [Description of what went wrong]
+
+### Investigation
+[What you learned from systematic debugging]
 
 ### What I Tried
 [Steps taken]
@@ -101,6 +110,17 @@ Report back with:
 ### Recommendation
 [Your suggested path forward]
 ```
+
+## Language Standards
+
+Consult the appropriate language skill for project-specific standards:
+
+| Project Type | Skill to Consult |
+|--------------|------------------|
+| Python | `python-development` - uv, ruff, mypy, pytest, type hints |
+| TypeScript | `typescript-development` - strict mode, type patterns |
+
+These skills define tooling, conventions, and patterns expected for each language.
 
 ## Quality Standards
 
