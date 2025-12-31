@@ -187,6 +187,16 @@ workflow-ecosystem/
 └── README.md
 ```
 
+## Documentation
+
+For detailed workflow illustrations with file-by-file traces:
+
+- [Workflow Guides](docs/workflow-guides/README.md) - Visual documentation of usage patterns
+  - [Beginner Pattern](docs/workflow-guides/beginner-pattern.md) - First-time user journey
+  - [Intermediate Pattern](docs/workflow-guides/intermediate-pattern.md) - Full automation with subagents
+  - [Expert Pattern](docs/workflow-guides/expert-pattern.md) - Power user customization
+  - [File Reference Matrix](docs/workflow-guides/file-reference-matrix.md) - Complete file inventory
+
 ## License
 
 MIT License - see [LICENSE](LICENSE) for details.

@@ -20,7 +20,6 @@ Phase 1 and Phase 2 implementation was validated with Option B (Full Validation)
 | Issue | Severity | Status |
 |-------|----------|--------|
 | hooks.json in wrong location | Critical | ✅ Fixed |
-| decision-record.md template missing | High | ✅ Fixed |
 | Skills lacked pressure resistance guidance | High | ✅ Fixed |
 
 ### Issue Details
@@ -35,17 +34,7 @@ Phase 1 and Phase 2 implementation was validated with Option B (Full Validation)
 
 **Commit:** 7a29d4f
 
-#### 2. Missing decision-record.md Template (High)
-
-**Problem:** Phase 2 plan specified `decision-record.md` template but it was not created
-
-**Impact:** ADR workflow incomplete
-
-**Fix:** Created `.claude/templates/decision-record.md` with ADR template and guidelines
-
-**Commit:** 7a29d4f
-
-#### 3. Skills Lacked Pressure Resistance (High)
+#### 2. Skills Lacked Pressure Resistance (High)
 
 **Problem:** Skills defined correct behavior but didn't address pushback scenarios
 
@@ -126,7 +115,6 @@ Created 15 pressure test scenarios covering:
 | File | Action |
 |------|--------|
 | `.claude/hooks.json` | Moved from hooks/ subdirectory |
-| `.claude/templates/decision-record.md` | Created |
 | `.claude/skills/brainstorming/SKILL.md` | Added pushback handling |
 | `.claude/skills/git-workflow/SKILL.md` | Added refusal guidance |
 | `.claude/skills/verification/SKILL.md` | Added time pressure handling |
