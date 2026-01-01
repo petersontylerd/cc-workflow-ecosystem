@@ -12,13 +12,13 @@ This document provides a complete inventory of all files in the workflow ecosyst
 | Commands | 8 | 8 | 100% |
 | Skills | 12 | 12 | 100% |
 | Agents | 3 | 3 | 100% |
-| Hooks | 12 | 12 | 100% |
+| Hooks | 18 | 18 | 100% |
 | Scripts | 2 | 2 | 100% |
 | Templates | 1 | 1 | 100% |
 | Tests | 8 | 8 | 100% |
-| Documentation | 12 | 12 | 100% |
-| Config | 6 | 6 | 100% |
-| **Total** | **66** | **66** | **100%** |
+| Documentation | 8 | 8 | 100% |
+| Config | 5 | 5 | 100% |
+| **Total** | **69** | **69** | **100%** |
 
 ---
 
@@ -85,24 +85,30 @@ This document provides a complete inventory of all files in the workflow ecosyst
 
 ---
 
-### Hooks (12 files)
+### Hooks (18 files)
 
 | File | Intermediate | Expert | Purpose |
 |------|:------------:|:------:|---------|
 | `hooks/hooks.json` | [x] | [x] | Hook configuration (defines all triggers) |
 | `hooks/run-hook.cmd` | [x] | [x] | Cross-platform hook execution wrapper |
-| `hooks/session-start.sh` | [x] | [x] | Injects `using-ecosystem` skill on startup |
+| `hooks/session-start.sh` | [x] | [x] | Injects `using-ecosystem` skill on startup, auto-detects feature branch |
 | `hooks/main-branch-protection.sh` | [x] | [x] | **BLOCKS** edits on main/master branch |
 | `hooks/workflow-phase-check.sh` | [x] | [x] | **BLOCKS** edits before backlog-ready phase |
-| `hooks/phase-transition.sh` | [x] | [x] | Updates `.workflow_phase` on skill completion |
-| `hooks/tdd-precommit-check.sh` | [x] | [x] | **BLOCKS** commits without test files |
+| `hooks/phase-transition.sh` | [x] | [x] | Updates `.workflow_phase` on skill completion, resets state on /branch |
+| `hooks/tdd-precommit-check.sh` | [x] | [x] | **BLOCKS** commits without test files, detects trivial tests |
 | `hooks/verify-before-commit.sh` | [x] | | Reminds about verification before commit |
 | `hooks/validate-task-description.sh` | [x] | [x] | Validates subagent task descriptions |
 | `hooks/workflow-skip-set.sh` | | [x] | Sets `.workflow_skip` marker for escape hatch |
-| `hooks/subagent-dispatch-tracker.sh` | [x] | [x] | Tracks subagent dispatches during `/implement` |
-| `hooks/subagent-review-check.sh` | [x] | [x] | **WARNS** if task completed without reviewers |
+| `hooks/subagent-dispatch-tracker.sh` | [x] | [x] | Tracks subagent dispatches, detects fix cycles |
+| `hooks/subagent-review-check.sh` | [x] | [x] | **WARNS** if task completed without reviewers or re-review |
+| `hooks/backlog-task-counter.sh` | [x] | [x] | Counts tasks at /implement, warns on large backlogs |
+| `hooks/verify-task-count.sh` | [x] | [x] | Compares completed vs expected tasks at /verify |
+| `hooks/backlog-lint.sh` | [x] | | Scans backlogs for placeholders and missing test commands |
+| `hooks/implementer-evidence-check.sh` | [x] | [x] | Validates completion reports contain evidence |
+| `hooks/brainstorm-phase-start.sh` | [x] | | Sets phase when brainstorming skill starts |
+| `hooks/brainstorm-exit-plan-mode.sh` | [x] | | Phase transition after ExitPlanMode |
 
-**Coverage**: All 12 hooks are referenced across both patterns.
+**Coverage**: All 18 hooks are referenced across both patterns.
 
 ---
 
@@ -153,7 +159,7 @@ This document provides a complete inventory of all files in the workflow ecosyst
 
 ---
 
-### Documentation (12 files)
+### Documentation (8 files)
 
 | File | Referenced In | Purpose |
 |------|---------------|---------|
@@ -163,18 +169,14 @@ This document provides a complete inventory of all files in the workflow ecosyst
 | `LICENSE` | Matrix only | MIT license |
 | `docs/tutorials/getting-started.md` | Matrix only | User onboarding tutorial |
 | `docs/tutorials/first-feature.md` | Matrix only | First feature walkthrough |
-| `docs/publishing-to-marketplace.md` | Matrix only | Marketplace publishing guide |
 | `docs/skill-pressure-scenarios.md` | Matrix only | Skill testing scenarios |
-| `docs/smoke-test-results.md` | Matrix only | Manual test results |
-| `docs/validation-report-phase-2.md` | Matrix only | Phase 2 validation report |
-| `docs/designs/2025-12-27-phase3-cicd-design.md` | Matrix only | CI/CD design document |
 | `docs/workflow-guides/README.md` | Matrix only | Workflow guide index (this directory) |
 
 **Notes**: Documentation files are standalone references. They don't trigger other files in the workflow.
 
 ---
 
-### Configuration (6 files)
+### Configuration (5 files)
 
 | File | Referenced In | Purpose |
 |------|---------------|---------|
@@ -198,14 +200,14 @@ The following files exist in the repository but are **not triggered** by the wor
 |----------|-------|--------|
 | Tests | 8 files | Validate structure, don't execute at runtime |
 | Test Schemas | 2 files | Schema definitions for test validation |
-| Documentation | 12 files | Reference material, not workflow components |
-| Configuration | 6 files | Development environment, not runtime |
+| Documentation | 8 files | Reference material, not workflow components |
+| Configuration | 5 files | Development environment, not runtime |
 
-**Total**: 28 files are supporting infrastructure, not workflow-triggered components.
+**Total**: 23 files are supporting infrastructure, not workflow-triggered components.
 
 ### Workflow-Triggered Files
 
-The following 38 files are **actively triggered** during workflow execution:
+The following 46 files are **actively triggered** during workflow execution:
 
 | Category | Count | Files |
 |----------|-------|-------|
@@ -213,7 +215,7 @@ The following 38 files are **actively triggered** during workflow execution:
 | Commands | 8 | All 8 commands |
 | Skills | 12 | All 12 skills |
 | Agents | 3 | All 3 agents |
-| Hooks | 12 | All 12 hooks |
+| Hooks | 18 | All 18 hooks |
 | Scripts | 2 | release.sh, pre-push-version-check.sh |
 | Templates | 1 | pr-description.md |
 
@@ -256,19 +258,21 @@ skills/<name>/SKILL.md
 
 | File | Created By | Read By |
 |------|------------|---------|
-| `.workflow_phase` | `phase-transition.sh` | `workflow-phase-check.sh`, `subagent-dispatch-tracker.sh`, `subagent-review-check.sh` |
+| `.workflow_phase` | `phase-transition.sh`, `session-start.sh` | `workflow-phase-check.sh`, `subagent-dispatch-tracker.sh`, `subagent-review-check.sh` |
 | `.workflow_skip` | `workflow-skip-set.sh` | All blocking hooks |
-| `.backlog_path` | Commands | Skills, agents |
+| `.backlog_path` | `backlog-task-counter.sh` | Skills, agents, `verify-task-count.sh` |
 | `.subagent_dispatch` | `subagent-dispatch-tracker.sh` | `subagent-review-check.sh` |
+| `.expected_task_count` | `backlog-task-counter.sh` | `verify-task-count.sh` |
+| `.needs_refix` | `subagent-dispatch-tracker.sh` | `subagent-review-check.sh` |
 
 ---
 
 ## Conclusion
 
-**All 66 files in the repository are accounted for:**
+**All 69 files in the repository are accounted for:**
 
-- **38 workflow-triggered files**: Actively participate in the workflow
-- **28 supporting files**: Infrastructure, tests, documentation, configuration
+- **46 workflow-triggered files**: Actively participate in the workflow
+- **23 supporting files**: Infrastructure, tests, documentation, configuration
 
 **All core plugin components (commands, skills, agents, hooks) are referenced in at least one usage pattern**, demonstrating complete coverage of the workflow ecosystem.
 

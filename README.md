@@ -57,7 +57,7 @@ Or enable auto-updates through `/plugin` → Marketplaces → workflow-ecosystem
 /verify               # Run pre-completion verification
 /commit               # Create atomic commit with conventional format
 /pr                   # Generate PR description
-/workflow             # Manage enforcement state (skip/status/reset)
+/workflow             # Manage enforcement state (skip/status/reset/help)
 ```
 
 ## Components
@@ -175,9 +175,15 @@ workflow-ecosystem/
 │   ├── workflow-skip-set.sh     # Sets skip marker for bypass
 │   ├── verify-before-commit.sh  # Pre-commit verification reminder
 │   ├── validate-task-description.sh # Validate subagent task descriptions
-│   ├── tdd-precommit-check.sh   # BLOCKS commits without tests
+│   ├── tdd-precommit-check.sh   # BLOCKS commits without tests + trivial test detection
 │   ├── subagent-dispatch-tracker.sh # Tracks subagent dispatches during /implement
-│   └── subagent-review-check.sh # WARNS if task completed without reviewers
+│   ├── subagent-review-check.sh # WARNS if task completed without reviewers
+│   ├── backlog-task-counter.sh  # Counts tasks at /implement, warns on large backlogs
+│   ├── verify-task-count.sh     # Compares completed vs expected tasks at /verify
+│   ├── backlog-lint.sh          # Scans backlogs for placeholders and missing tests
+│   ├── implementer-evidence-check.sh # Validates completion evidence in reports
+│   ├── brainstorm-phase-start.sh # Sets phase at brainstorm skill start
+│   └── brainstorm-exit-plan-mode.sh # Phase transition after ExitPlanMode
 ├── skills/                       # Core competencies
 ├── commands/                     # User-invokable workflows
 ├── agents/                       # Specialized subagents

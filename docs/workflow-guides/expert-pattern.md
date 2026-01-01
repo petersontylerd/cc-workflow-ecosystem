@@ -326,31 +326,31 @@ User types: /workflow skip
      │
      ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│ commands/workflow.md (lines 1-19)                                   │
+│ commands/workflow.md (lines 1-97)                                   │
 │                                                                     │
 │   Line 2: description: "Manage workflow enforcement state"         │
 │   Line 3: argument-hint: "<subcommand> (skip|status|reset)"         │
-│   Line 18: "Use the **workflow-management** skill..."               │
+│   Line 97: "Use the **workflow-management** skill..."               │
 └─────────────────────────────────────────────────────────────────────┘
      │
      ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│ skills/workflow-management/SKILL.md (lines 1-127)                   │
+│ skills/workflow-management/SKILL.md (lines 1-125)                   │
 │                                                                     │
-│   Lines 19-40: Skip Enforcement                                     │
+│   Lines 19-41: Skip Enforcement                                     │
 │     - When to use: experienced users, quick fixes, exploration      │
 │     - Effect: Creates .workflow_skip marker                         │
 │     - Lasts until session ends or reset                             │
-│   Lines 42-66: Check Status                                         │
+│   Lines 42-67: Check Status                                         │
 │     - Shows phase, branch, skip mode, backlog                       │
-│   Lines 68-86: Reset State                                          │
+│   Lines 68-87: Reset State                                          │
 │     - Removes all markers, returns to idle                          │
-│   Lines 99-115: Workflow phases and transitions                     │
+│   Lines 98-114: Workflow phases and transitions                     │
 └─────────────────────────────────────────────────────────────────────┘
      │
      ▼ PostToolUse hook fires (matcher: Skill.*workflow.*skip)
 ┌─────────────────────────────────────────────────────────────────────┐
-│ hooks/hooks.json (lines 101-108)                                    │
+│ hooks/hooks.json (lines 124-132)                                    │
 │                                                                     │
 │   {                                                                 │
 │     "matcher": "Skill.*workflow.*skip",                             │
@@ -362,12 +362,12 @@ User types: /workflow skip
      │
      ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│ hooks/workflow-skip-set.sh (lines 1-31)                             │
+│ hooks/workflow-skip-set.sh (lines 1-30)                             │
 │                                                                     │
 │   Lines 9-13: Check if this is a workflow skip command              │
 │   Lines 15-17: Create session directory if needed                   │
 │   Lines 19-21: Create .workflow_skip marker                         │
-│   Lines 23-29: Output message with reminder about TDD/quality       │
+│   Lines 23-28: Output message with reminder about TDD/quality       │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -404,16 +404,16 @@ Expert works on TypeScript project
      │
      ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│ skills/typescript-development/SKILL.md (lines 1-284)                │
+│ skills/typescript-development/SKILL.md (lines 1-283)                │
 │                                                                     │
-│   Lines 10-22: Environment setup                                    │
+│   Lines 14-22: Environment setup                                    │
 │     - TypeScript >=5.0, Node.js >=20                                │
 │     - pnpm > npm > yarn                                             │
-│   Lines 57-71: Strict tsconfig.json                                 │
+│   Lines 57-72: Strict tsconfig.json                                 │
 │     - strict: true, noUncheckedIndexedAccess: true                  │
-│   Lines 73-104: Interfaces vs Types                                 │
+│   Lines 75-105: Interfaces vs Types                                 │
 │     - Interfaces for objects, types for unions                      │
-│   Lines 106-135: Discriminated unions for state                     │
+│   Lines 119-135: Discriminated unions for state                     │
 │   Lines 137-155: Avoid any, use unknown + type guards               │
 │   Lines 208-255: Error handling patterns                            │
 │     - Custom error classes                                          │
@@ -428,23 +428,23 @@ Expert works on Angular project
      │
      ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│ skills/angular-development/SKILL.md (lines 1-300)                   │
+│ skills/angular-development/SKILL.md (lines 1-299)                   │
 │                                                                     │
-│   Lines 12-31: Discovery-first approach                             │
+│   Lines 14-31: Discovery-first approach                             │
 │     - Detect existing patterns before applying                      │
 │     - Check for standalone vs NgModule                              │
 │     - Detect state management (Signals, RxJS, NgRx)                 │
-│   Lines 63-108: State management patterns                           │
+│   Lines 63-109: State management patterns                           │
 │     - Signals pattern (signal, computed, effect)                    │
 │     - RxJS service pattern (BehaviorSubject)                        │
-│   Lines 110-162: Component standards                                │
+│   Lines 110-163: Component standards                                │
 │     - Standalone components, modern control flow                    │
 │     - @if, @for with track, @switch, @defer                         │
-│   Lines 164-206: Performance patterns                               │
+│   Lines 164-207: Performance patterns                               │
 │     - OnPush change detection                                       │
 │     - Track functions for @for                                      │
 │     - Lazy loading routes                                           │
-│   Lines 208-235: Subscription management                            │
+│   Lines 208-236: Subscription management                            │
 │     - takeUntilDestroyed, async pipe                                │
 └─────────────────────────────────────────────────────────────────────┘
 ```
@@ -475,14 +475,14 @@ Expert prepares a release
      │
      ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│ scripts/release.sh (lines 1-91)                                     │
+│ scripts/release.sh (lines 1-90)                                     │
 │                                                                     │
 │   Lines 10-21: Validate version argument (semver format)            │
-│   Lines 23-33: Check version is different and tag doesn't exist     │
+│   Lines 23-39: Check version is different and tag doesn't exist     │
 │   Lines 41-45: Check for uncommitted changes                        │
-│   Lines 47-61: Update version in both plugin.json and marketplace.json │
-│   Lines 65-70: Commit version bump and create tag                   │
-│   Lines 72-90: Optionally push to origin with tags                  │
+│   Lines 47-63: Update version in both plugin.json and marketplace.json │
+│   Lines 65-72: Commit version bump and create tag                   │
+│   Lines 74-90: Optionally push to origin with tags                  │
 └─────────────────────────────────────────────────────────────────────┘
      │
      ▼ Updates
@@ -507,11 +507,11 @@ Expert pushes to origin
      │
      ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│ scripts/pre-push-version-check.sh (lines 1-88)                      │
+│ scripts/pre-push-version-check.sh (lines 1-94)                      │
 │                                                                     │
-│   Lines 15-26: Check plugin.json and marketplace.json match         │
-│   Lines 30-47: Check for commits since last tag                     │
-│   Lines 52-84: Validate version was incremented for real changes    │
+│   Lines 22-36: Check plugin.json and marketplace.json match         │
+│   Lines 37-57: Check for commits since last tag                     │
+│   Lines 58-93: Validate version was incremented for real changes    │
 │     - If code changed but version same → ERROR                      │
 │     - If version bumped but no tag → ERROR                          │
 └─────────────────────────────────────────────────────────────────────┘
@@ -586,7 +586,7 @@ Experts craft optimized task descriptions for specific situations.
 
 ### Enhanced Task Description
 
-From `orchestrating-subagents/SKILL.md` lines 136-211, experts include all enhanced sections:
+From `orchestrating-subagents/SKILL.md` lines 188-266, experts include all enhanced sections:
 
 ```markdown
 ## Task: Implement rate limiting middleware
@@ -724,19 +724,25 @@ This expert pattern is self-contained with complete file references.
 - [x] `agents/spec-reviewer.md` - Requirements compliance
 - [x] `agents/quality-reviewer.md` - Code quality assessment
 
-### Hooks (12 of 12)
+### Hooks (18 of 18)
 - [x] `hooks/hooks.json` - Hook configuration
 - [x] `hooks/run-hook.cmd` - Cross-platform execution
-- [x] `hooks/session-start.sh` - Inject ecosystem context
+- [x] `hooks/session-start.sh` - Inject ecosystem context, auto-detect feature branch
 - [x] `hooks/main-branch-protection.sh` - **BLOCKS** edits on main/master
 - [x] `hooks/workflow-phase-check.sh` - **BLOCKS** edits before backlog
-- [x] `hooks/phase-transition.sh` - Update workflow phase
-- [x] `hooks/tdd-precommit-check.sh` - **BLOCKS** commits without tests
+- [x] `hooks/phase-transition.sh` - Update workflow phase, reset state on /branch
+- [x] `hooks/tdd-precommit-check.sh` - **BLOCKS** commits without tests, detects trivial tests
 - [x] `hooks/verify-before-commit.sh` - Verification reminder
 - [x] `hooks/validate-task-description.sh` - Validate task descriptions
+- [x] `hooks/backlog-task-counter.sh` - Counts tasks, warns on large backlogs
+- [x] `hooks/verify-task-count.sh` - Compares completed vs expected tasks
+- [x] `hooks/brainstorm-phase-start.sh` - Sets phase when brainstorming starts
+- [x] `hooks/brainstorm-exit-plan-mode.sh` - Phase transition after ExitPlanMode
 - [x] `hooks/workflow-skip-set.sh` - Set skip marker
-- [x] `hooks/subagent-dispatch-tracker.sh` - Tracks subagent dispatches per task
-- [x] `hooks/subagent-review-check.sh` - **WARNS** if task completed without reviewers
+- [x] `hooks/subagent-dispatch-tracker.sh` - Tracks subagent dispatches, detects fix cycles
+- [x] `hooks/subagent-review-check.sh` - **WARNS** if task completed without reviewers or re-review
+- [x] `hooks/backlog-lint.sh` - Scans backlogs for placeholders
+- [x] `hooks/implementer-evidence-check.sh` - Validates completion evidence
 
 ### Templates (1 of 1)
 - [x] `templates/pr-description.md` - PR template
@@ -769,14 +775,14 @@ This expert pattern is self-contained with complete file references.
 
 ## Complete File Coverage
 
-All 42 core plugin files are referenced in this pattern:
+All 46 core plugin files are referenced in this pattern:
 
 | Category | Count |
 |----------|-------|
 | Commands | 8/8 |
 | Skills | 12/12 |
 | Agents | 3/3 |
-| Hooks | 12/12 |
+| Hooks | 18/18 |
 | Templates | 1/1 |
 | Scripts | 2/2 |
 | Plugin Config | 2/2 |

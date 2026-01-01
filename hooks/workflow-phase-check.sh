@@ -30,7 +30,7 @@ case "$PHASE" in
     cat <<'EOF'
 {
   "decision": "block",
-  "reason": "BLOCKED: Branch created but design not complete. Run /brainstorm (in plan mode) then /backlog-development before coding. Use /workflow skip to bypass (not recommended)."
+  "reason": "BLOCKED: Edit prevented - design phase not complete.\n\n**Current state:**\n- Phase: branched\n- Next step: Design exploration needed\n\n**Required action:**\n1. Press shift+tab twice to enter plan mode\n2. Run: /brainstorm\n3. Then: /backlog-development\n\n**Why:** Design before code prevents rework. Explore requirements and create a backlog of bite-sized tasks before implementing.\n\n**Escape hatch:** /workflow skip (not recommended)"
 }
 EOF
     ;;
@@ -38,7 +38,7 @@ EOF
     cat <<'EOF'
 {
   "decision": "block",
-  "reason": "BLOCKED: Brainstorming complete but no backlog. Run /backlog-development (in plan mode) to create a bite-sized backlog before coding. Use /workflow skip to bypass (not recommended)."
+  "reason": "BLOCKED: Edit prevented - backlog not created.\n\n**Current state:**\n- Phase: brainstorming\n- Next step: Create implementation backlog\n\n**Required action:**\n1. Press shift+tab twice to enter plan mode\n2. Run: /backlog-development\n\n**Why:** A detailed backlog with 2-5 minute tasks ensures consistent, high-quality implementation.\n\n**Escape hatch:** /workflow skip (not recommended)"
 }
 EOF
     ;;
@@ -47,7 +47,7 @@ EOF
     cat <<'EOF'
 {
   "hookSpecificOutput": {
-    "additionalContext": "WORKFLOW ADVISORY: No active workflow detected. Consider: /branch → /brainstorm → /backlog-development → /implement for disciplined development."
+    "additionalContext": "WORKFLOW INFO: No active workflow detected.\n\n**Recommended workflow:**\n/branch → /brainstorm (plan mode) → /backlog-development (plan mode) → /implement → /verify\n\n**Quick start:**\nRun: /branch feat/<issue>-<slug>\n\nUse /workflow help for details."
   }
 }
 EOF
@@ -61,7 +61,7 @@ EOF
     cat <<EOF
 {
   "hookSpecificOutput": {
-    "additionalContext": "WORKFLOW WARNING: Unknown phase '$PHASE'. Proceeding but consider /workflow reset."
+    "additionalContext": "WORKFLOW WARNING: Unknown phase '$PHASE'. Consider running /workflow reset to clear state."
   }
 }
 EOF

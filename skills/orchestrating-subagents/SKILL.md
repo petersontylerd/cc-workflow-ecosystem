@@ -332,6 +332,60 @@ If you notice yourself thinking or saying:
 
 **Never skip the re-review.** Fixes must be verified.
 
+## Re-Review Requirement (NON-NEGOTIABLE)
+
+When a reviewer finds issues and you dispatch the implementer to fix them, you MUST dispatch **fresh reviews** after the fix. Reviews done before the fix are stale and do not count.
+
+### The Fix Cycle
+
+```
+1. spec-reviewer finds gaps
+2. Dispatch code-implementer to fix
+3. RE-DISPATCH spec-reviewer  ← Required, not optional
+4. If approved, THEN dispatch quality-reviewer
+5. quality-reviewer finds issues
+6. Dispatch code-implementer to fix
+7. RE-DISPATCH quality-reviewer  ← Required, not optional
+8. Only mark complete when BOTH approve AFTER all fixes
+```
+
+### Why Fresh Reviews Are Required
+
+Reviews done BEFORE a fix are invalidated BY the fix. The reviewer verified code that no longer exists. You don't know if:
+- The fix introduced new bugs
+- The fix broke something that was previously correct
+- The fix actually resolved the issue
+
+**A task marked complete without post-fix reviews is not actually verified.**
+
+### Anti-Pattern: The Silent Fix
+
+```
+❌ WRONG:
+Spec-reviewer: "Missing validation"
+Orchestrator: *dispatches implementer*
+Implementer: "Added validation"
+Orchestrator: *marks task complete*  ← NO! Spec-reviewer didn't verify fix!
+
+✅ CORRECT:
+Spec-reviewer: "Missing validation"
+Orchestrator: *dispatches implementer*
+Implementer: "Added validation"
+Orchestrator: *re-dispatches spec-reviewer*
+Spec-reviewer: "✅ Validation looks correct now"
+Orchestrator: *dispatches quality-reviewer*
+Quality-reviewer: "✅ Approved"
+Orchestrator: *marks task complete*
+```
+
+### Tracker Enforcement
+
+A hook tracks your dispatches. If you mark a task complete after the implementer was re-dispatched but without fresh reviews, you'll receive a warning:
+
+> "RE-REVIEW WARNING: Task marked complete but issues were found in previous review and implementer was re-dispatched. Reviewers dispatched before the fix don't count as fresh reviews."
+
+This is not a suggestion. Re-dispatch the reviewers.
+
 ## Example Execution
 
 ```

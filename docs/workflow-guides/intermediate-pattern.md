@@ -61,11 +61,12 @@ User starts session
      │
      ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│ hooks/session-start.sh (lines 1-44)                                 │
+│ hooks/session-start.sh (lines 1-62)                                 │
 │                                                                     │
-│   Line 11: Reads skills/using-ecosystem/SKILL.md                    │
-│   Lines 14-30: Escapes content for JSON                             │
-│   Lines 35-41: Outputs additionalContext with skill content         │
+│   Lines 16-26: Auto-detects feature branch, sets phase              │
+│   Line 29: Reads skills/using-ecosystem/SKILL.md                    │
+│   Lines 32-48: Escapes content for JSON                             │
+│   Lines 53-61: Outputs additionalContext with skill content         │
 └─────────────────────────────────────────────────────────────────────┘
      │
      ▼
@@ -121,7 +122,7 @@ User types: /branch feat/42-add-validation
      │
      ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│ commands/branch.md (lines 1-19)                                     │
+│ commands/branch.md (lines 1-18)                                     │
 │                                                                     │
 │   Line 2: description: "Create or switch to a feature branch..."   │
 │   Line 18: "Use the **git-workflow** skill..."                      │
@@ -138,7 +139,7 @@ User types: /branch feat/42-add-validation
      │
      ▼ PostToolUse hook fires (matcher: Skill.*(git-workflow|branch))
 ┌─────────────────────────────────────────────────────────────────────┐
-│ hooks/hooks.json (lines 70-77)                                      │
+│ hooks/hooks.json (lines 97-105)                                     │
 │                                                                     │
 │   {                                                                 │
 │     "matcher": "Skill.*(git-workflow|branch)",                      │
@@ -150,10 +151,10 @@ User types: /branch feat/42-add-validation
      │
      ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│ hooks/phase-transition.sh (lines 1-58)                              │
+│ hooks/phase-transition.sh (lines 1-64)                              │
 │                                                                     │
-│   Lines 20-24: *git-workflow*|*branch* → NEW_PHASE="branched"       │
-│   Lines 44-52: Write phase to .workflow_phase, output message       │
+│   Lines 22-30: *git-workflow*|*branch* → Resets state, sets branched│
+│   Lines 51-59: Write phase to .workflow_phase, output message       │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -205,11 +206,11 @@ User types: /brainstorm add validation (in plan mode)
      │
      ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│ commands/brainstorm.md (lines 1-21)                                 │
+│ commands/brainstorm.md (lines 1-30)                                 │
 │                                                                     │
 │   Line 2: description: "Explore requirements and design..."        │
-│   Line 10-11: IMPORTANT: MUST run in plan mode                      │
-│   Line 20: "Use the **brainstorming** skill..."                     │
+│   Line 10: IMPORTANT: Uses plan mode, EXITS before writing          │
+│   Line 30: "Use the **brainstorming** skill..."                     │
 └─────────────────────────────────────────────────────────────────────┘
      │
      ▼
@@ -226,7 +227,7 @@ User types: /brainstorm add validation (in plan mode)
      │
      ▼ PostToolUse hook fires (matcher: Skill.*brainstorming)
 ┌─────────────────────────────────────────────────────────────────────┐
-│ hooks/hooks.json (lines 52-59)                                      │
+│ hooks/hooks.json (lines 79-86)                                      │
 │                                                                     │
 │   {                                                                 │
 │     "matcher": "Skill.*brainstorming",                              │
@@ -238,7 +239,7 @@ User types: /brainstorm add validation (in plan mode)
      │
      ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│ hooks/phase-transition.sh (lines 26-28)                             │
+│ hooks/phase-transition.sh (lines 32-34)                             │
 │                                                                     │
 │   *brainstorm* → NEW_PHASE="brainstorming"                          │
 │   Message: "Ready for /backlog-development (use plan mode)."        │
@@ -298,11 +299,11 @@ User types: /backlog-development add-validation (in plan mode)
      │
      ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│ commands/backlog-development.md (lines 1-19)                        │
+│ commands/backlog-development.md (lines 1-30)                        │
 │                                                                     │
 │   Line 2: description: "Create a bite-sized backlog..."            │
-│   Line 10-11: IMPORTANT: MUST run in plan mode                      │
-│   Line 18: "Use the **developing-backlogs** skill..."               │
+│   Line 10: IMPORTANT: Uses plan mode, EXITS before writing          │
+│   Line 30: "Use the **developing-backlogs** skill..."               │
 └─────────────────────────────────────────────────────────────────────┘
      │
      ▼
@@ -321,7 +322,7 @@ User types: /backlog-development add-validation (in plan mode)
      │
      ▼ PostToolUse hook fires (matcher: Skill.*(backlog-development|developing-backlogs))
 ┌─────────────────────────────────────────────────────────────────────┐
-│ hooks/hooks.json (lines 61-68)                                      │
+│ hooks/hooks.json (lines 88-96)                                      │
 │                                                                     │
 │   {                                                                 │
 │     "matcher": "Skill.*(backlog-development|developing-backlogs)",  │
@@ -333,7 +334,7 @@ User types: /backlog-development add-validation (in plan mode)
      │
      ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│ hooks/phase-transition.sh (lines 30-32)                             │
+│ hooks/phase-transition.sh (lines 36-38)                             │
 │                                                                     │
 │   *developing-backlogs*|*backlog-development* → "backlog-ready"     │
 │   Writes "backlog-ready" to .workflow_phase                         │
@@ -397,31 +398,31 @@ User types: /implement
      │
      ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│ commands/implement.md (lines 1-90)                                  │
+│ commands/implement.md (lines 1-109)                                 │
 │                                                                     │
 │   Line 2: description: "Execute a backlog using orchestrated        │
 │            subagents with two-stage review"                         │
-│   Lines 17-35: Environment verification before starting             │
-│   Lines 37-53: Task description preparation guidance                │
-│   Lines 65-80: Execution flow overview                              │
-│   Line 67: "Use the **orchestrating-subagents** skill..."           │
+│   Lines 17-54: Testing strategy and environment verification        │
+│   Lines 56-72: Task description preparation guidance                │
+│   Lines 84-99: Execution flow overview                              │
+│   Line 86: "Use the **orchestrating-subagents** skill..."           │
 └─────────────────────────────────────────────────────────────────────┘
      │
      ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│ skills/orchestrating-subagents/SKILL.md (lines 1-388)               │
+│ skills/orchestrating-subagents/SKILL.md (lines 1-538)               │
 │                                                                     │
-│   Lines 14-53: The Orchestration Pattern                            │
-│   Lines 62-69: Subagent roles table                                 │
-│   Lines 136-190: Task Description Format                            │
-│   Lines 192-211: Task Description Checklist                         │
-│   Lines 229-251: Review Loop Pattern                                │
-│   Lines 335-350: Mandatory Task Tool Usage                          │
+│   Lines 32-113: The Orchestration Pattern                           │
+│   Lines 114-127: Subagent Roles table                               │
+│   Lines 188-247: Task Description Format                            │
+│   Lines 248-270: Task Description Checklist                         │
+│   Lines 311-370: Review Loop Pattern                                │
+│   Lines 471-500: Mandatory Task Tool Usage                          │
 └─────────────────────────────────────────────────────────────────────┘
      │
      ▼ PostToolUse hook fires (matcher: Skill.*(orchestrating|implement))
 ┌─────────────────────────────────────────────────────────────────────┐
-│ hooks/hooks.json (lines 83-90)                                      │
+│ hooks/hooks.json (lines 106-114)                                    │
 │                                                                     │
 │   {                                                                 │
 │     "matcher": "Skill.*(orchestrating|implement)",                  │
@@ -433,7 +434,7 @@ User types: /implement
      │
      ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│ hooks/phase-transition.sh (lines 33-35)                             │
+│ hooks/phase-transition.sh (lines 40-42)                             │
 │                                                                     │
 │   *orchestrating*|*implement* → NEW_PHASE="implementing"            │
 │   Writes "implementing" to .workflow_phase                          │
@@ -482,54 +483,54 @@ Orchestrator prepares task description and dispatches
      │
      ▼ PreToolUse hook fires (matcher: Task)
 ┌─────────────────────────────────────────────────────────────────────┐
-│ hooks/hooks.json (lines 45-52)                                      │
+│ hooks/hooks.json (lines 41-48)                                      │
 │                                                                     │
 │   {                                                                 │
 │     "matcher": "Task",                                              │
 │     "hooks": [                                                      │
-│       { "command": "validate-task-description.sh" }                   │
+│       { "command": "validate-task-description.sh" }                 │
 │     ]                                                               │
 │   }                                                                 │
 └─────────────────────────────────────────────────────────────────────┘
      │
      ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│ hooks/validate-task-description.sh (lines 1-99)                       │
+│ hooks/validate-task-description.sh (lines 1-112)                    │
 │                                                                     │
-│   Lines 11-15: Only checks Task tool calls                          │
-│   Lines 17-21: Only checks subagent dispatches                      │
-│   Lines 23-27: Only checks implementer/reviewer agents              │
-│   Lines 29-48: Checks core sections:                                │
+│   Lines 11-12: Only checks Task tool calls                          │
+│   Lines 18-22: Only checks subagent dispatches                      │
+│   Lines 24-28: Only checks implementer/reviewer agents              │
+│   Lines 34-48: Checks core sections:                                │
 │     - Task header                                                   │
 │     - Context section                                               │
 │     - Requirements section                                          │
 │     - Success Criteria                                              │
-│   Lines 50-65: Checks enhanced sections:                            │
+│   Lines 51-68: Checks enhanced sections:                            │
 │     - Purpose (WHY task matters)                                    │
 │     - Environment Verification                                      │
 │     - Potential Failure Modes                                       │
 │     - Required Skills                                               │
-│   Lines 67-93: Build and output warning message                     │
+│   Lines 70-106: Build and output warning message                    │
 └─────────────────────────────────────────────────────────────────────┘
      │
      ▼ code-implementer agent is dispatched
 ┌─────────────────────────────────────────────────────────────────────┐
-│ agents/code-implementer.md (lines 1-423)                            │
+│ agents/code-implementer.md (lines 1-461)                            │
 │                                                                     │
-│   Lines 9-17: Role and principles                                   │
+│   Lines 11-18: Role and principles                                  │
 │     - Build with Purpose                                            │
 │     - Look Around Corners                                           │
 │     - Inspire Trust                                                 │
-│   Lines 19-52: Session Startup Ritual                               │
+│   Lines 19-59: Session Startup Ritual                               │
 │     - Environment verification                                      │
 │     - Context orientation                                           │
 │     - Scope confirmation                                            │
-│   Lines 68-86: TDD is Mandatory                                     │
+│   Lines 74-93: TDD is Mandatory                                     │
 │     - Write test → Watch fail → Implement → Pass → Refactor         │
-│   Lines 88-98: Self-review before handoff                           │
-│   Lines 107-167: Error handling protocol                            │
-│   Lines 187-221: Completion verification with evidence              │
-│   Lines 271-309: Completion report format                           │
+│   Lines 117-127: Self-review before handoff                         │
+│   Lines 136-196: Error handling protocol                            │
+│   Lines 216-260: Completion verification with evidence              │
+│   Lines 310-348: Completion report format                           │
 └─────────────────────────────────────────────────────────────────────┘
      │
      ▼ Agent references additional skills
@@ -564,7 +565,7 @@ Orchestrator prepares task description and dispatches
 
 ### Task Description Example
 
-The orchestrator prepares a task description like this (from `orchestrating-subagents/SKILL.md` lines 140-190):
+The orchestrator prepares a task description like this (from `orchestrating-subagents/SKILL.md` lines 188-246):
 
 ```markdown
 ## Task: Add email validation
@@ -649,29 +650,29 @@ Orchestrator dispatches spec-reviewer
      │
      ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│ agents/spec-reviewer.md (lines 1-390)                               │
+│ agents/spec-reviewer.md (lines 1-416)                               │
 │                                                                     │
-│   Lines 9-17: Role definition                                       │
+│   Lines 11-19: Role definition                                      │
 │     - Compare implementation against requirements                   │
 │     - Verify with evidence                                          │
 │     - "Close enough" is not enough                                  │
-│   Lines 43-107: Review process                                      │
+│   Lines 62-137: Review process                                      │
 │     1. Understand requirements (extract checklist)                  │
 │     2. Examine implementation (git diff)                            │
 │     3. Verify each requirement with evidence                        │
 │     4. Check for over-implementation                                │
-│   Lines 119-145: Incomplete implementation detection                │
+│   Lines 139-172: Incomplete implementation detection                │
 │     - Red flags: TODO comments, tests pass but don't test requirement│
-│   Lines 147-155: "Close enough" is NOT enough                       │
-│   Lines 157-186: Output: APPROVED                                   │
-│   Lines 188-229: Output: GAPS FOUND                                 │
-│   Lines 267-296: Handoff to quality-reviewer                        │
+│   Lines 174-182: "Close enough" is NOT enough                       │
+│   Lines 186-215: Output: APPROVED                                   │
+│   Lines 218-257: Output: GAPS FOUND                                 │
+│   Lines 294-332: Handoff to quality-reviewer                        │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Review Loop Pattern
 
-If spec-reviewer finds gaps (from `orchestrating-subagents/SKILL.md` lines 229-251):
+If spec-reviewer finds gaps (from `orchestrating-subagents/SKILL.md` lines 311-331):
 
 ```
 ┌─────────────────────────┐
@@ -731,27 +732,27 @@ Orchestrator dispatches quality-reviewer
      │
      ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│ agents/quality-reviewer.md (lines 1-436)                            │
+│ agents/quality-reviewer.md (lines 1-459)                            │
 │                                                                     │
-│   Lines 9-19: Role definition                                       │
+│   Lines 11-21: Role definition                                      │
 │     - HOW the code is written, not WHAT it does                     │
 │     - Look around corners                                           │
-│   Lines 22-54: Scope boundary                                       │
+│   Lines 22-77: Scope boundary                                       │
 │     - What to check vs what NOT to check                            │
 │     - Do NOT re-check requirements (spec-reviewer's job)            │
-│   Lines 94-130: Quality lens                                        │
+│   Lines 116-151: Quality lens                                       │
 │     - Readability, maintainability, resilience, patterns            │
-│   Lines 131-149: Categorize issues                                  │
+│   Lines 153-177: Categorize issues                                  │
 │     - Critical (must fix): security, data corruption, leaks         │
 │     - Important (should fix): maintainability, patterns             │
 │     - Minor (nice to fix): style, naming                            │
-│   Lines 158-197: Resilience assessment                              │
+│   Lines 180-219: Resilience assessment                              │
 │     - What happens if this fails?                                   │
 │     - What happens at boundaries?                                   │
 │     - What resources need cleanup?                                  │
-│   Lines 199-230: Output: APPROVED                                   │
-│   Lines 232-297: Output: ISSUES FOUND                               │
-│   Lines 343-388: Actionable issue reporting                         │
+│   Lines 226-252: Output: APPROVED                                   │
+│   Lines 257-319: Output: ISSUES FOUND                               │
+│   Lines 367-412: Actionable issue reporting                         │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -768,7 +769,7 @@ User types: /verify
      │
      ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│ commands/verify.md (lines 1-19)                                     │
+│ commands/verify.md (lines 1-18)                                     │
 │                                                                     │
 │   Line 18: "Use the **verification** skill..."                      │
 └─────────────────────────────────────────────────────────────────────┘
@@ -786,7 +787,7 @@ User types: /verify
      │
      ▼ PostToolUse hook
 ┌─────────────────────────────────────────────────────────────────────┐
-│ hooks/phase-transition.sh (lines 37-39)                             │
+│ hooks/phase-transition.sh (lines 44-46)                             │
 │                                                                     │
 │   *verification*|*verify* → NEW_PHASE="verifying"                   │
 └─────────────────────────────────────────────────────────────────────┘
@@ -805,7 +806,7 @@ User types: /pr
      │
      ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│ commands/pr.md (lines 1-19)                                         │
+│ commands/pr.md (lines 1-18)                                         │
 │                                                                     │
 │   Line 2: description: "Create a pull request with proper           │
 │            template, linking to related issues"                     │
@@ -944,18 +945,24 @@ flowchart TD
 - [x] `agents/spec-reviewer.md` **NEW**
 - [x] `agents/quality-reviewer.md` **NEW**
 
-### Hooks (12 of 12)
+### Hooks (18 of 18)
 - [x] `hooks/hooks.json`
 - [x] `hooks/run-hook.cmd`
-- [x] `hooks/session-start.sh`
+- [x] `hooks/session-start.sh` - Auto-detects feature branch
 - [x] `hooks/main-branch-protection.sh`
 - [x] `hooks/workflow-phase-check.sh`
-- [x] `hooks/phase-transition.sh`
-- [x] `hooks/tdd-precommit-check.sh`
+- [x] `hooks/phase-transition.sh` - Resets state on /branch
+- [x] `hooks/tdd-precommit-check.sh` - Detects trivial tests
 - [x] `hooks/verify-before-commit.sh`
 - [x] `hooks/validate-task-description.sh`
-- [x] `hooks/subagent-dispatch-tracker.sh` **NEW** - Tracks subagent dispatches per task
-- [x] `hooks/subagent-review-check.sh` **NEW** - Warns if reviewers skipped
+- [x] `hooks/backlog-task-counter.sh` - Counts tasks, warns on large backlogs
+- [x] `hooks/verify-task-count.sh` - Compares completed vs expected tasks
+- [x] `hooks/brainstorm-phase-start.sh` - Sets phase when brainstorming starts
+- [x] `hooks/brainstorm-exit-plan-mode.sh` - Phase transition after ExitPlanMode
+- [x] `hooks/subagent-dispatch-tracker.sh` - Tracks subagent dispatches, detects fix cycles
+- [x] `hooks/subagent-review-check.sh` - Warns if reviewers skipped or re-review needed
+- [x] `hooks/backlog-lint.sh` - Scans backlogs for placeholders
+- [x] `hooks/implementer-evidence-check.sh` - Validates completion evidence
 - [ ] `hooks/workflow-skip-set.sh` (Expert pattern)
 
 ### Templates (1 of 1)

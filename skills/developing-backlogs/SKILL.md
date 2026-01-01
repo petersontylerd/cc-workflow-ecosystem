@@ -107,6 +107,93 @@ git commit -m "feat(scope): add specific feature"
 - "Set up the entire authentication system" (way too big)
 - "Add validation" (too vague)
 
+## Task Sizing Guidelines
+
+### Is Your Task Too Large?
+
+A properly sized task takes **2-5 minutes** for a focused engineer. If you're unsure, check these warning signs:
+
+| Warning Sign | Indicates |
+|--------------|-----------|
+| Code snippet >50 LOC | Task too large - split by function/method |
+| Touches >3 files | Task too large - split by file |
+| Vague verbs ("implement", "add", "create") | Undefined scope - be specific |
+| Multiple "and"s in description | Multiple tasks - split them |
+| No clear test target | Scope unclear - define testable behavior |
+
+### Task Size Examples
+
+**TOO LARGE - Split Required:**
+
+```markdown
+### Task: Implement user authentication
+Files: auth.py, routes.py, models.py, middleware.py, tests/
+Code: 200+ lines across multiple files
+```
+
+Why too large? Multiple files, vague scope, no single testable outcome.
+
+**APPROPRIATELY SIZED:**
+
+```markdown
+### Task 1: Add password hashing utility
+Files: src/auth/hashing.py, tests/auth/test_hashing.py
+Code: 15 lines implementation + 10 lines test
+
+### Task 2: Add User model with hashed password field
+Files: src/models/user.py, tests/models/test_user.py
+Code: 20 lines model + 15 lines test
+
+### Task 3: Add /login route handler
+Files: src/routes/auth.py, tests/routes/test_auth.py
+Code: 25 lines handler + 20 lines test
+```
+
+Why appropriate? Each task has one file pair, clear test target, <50 LOC.
+
+### The Split Rule
+
+When in doubt, split. A backlog with 20 tiny tasks is better than 5 large tasks because:
+- Each tiny task is more likely to succeed on first attempt
+- Failures are easier to diagnose and fix
+- Progress is visible and measurable
+- Reviews can be more focused
+
+## Backlog Sizing Guidelines
+
+### Optimal Backlog Size
+
+| Task Count | Assessment |
+|------------|------------|
+| 1-5 tasks | Small feature - ideal |
+| 6-10 tasks | Medium feature - good |
+| 11-15 tasks | Large - consider splitting into phases |
+| 16+ tasks | Very large - **strongly recommend splitting** |
+
+### Why Split Large Backlogs?
+
+Context limits affect quality. When a backlog has 20+ tasks:
+- Orchestrator context may overflow
+- Later tasks receive degraded attention
+- Error recovery becomes harder
+- Progress feels slow
+
+### Splitting Strategy
+
+For features requiring 15+ tasks, create **phased backlogs**:
+
+```
+docs/backlogs/YYYY-MM-DD-auth-phase1-models.md    (Tasks 1-7)
+docs/backlogs/YYYY-MM-DD-auth-phase2-routes.md    (Tasks 8-14)
+docs/backlogs/YYYY-MM-DD-auth-phase3-ui.md        (Tasks 15-20)
+```
+
+Each phase:
+- Implements independently
+- Has its own /implement cycle
+- Produces working, tested code
+- Can be reviewed separately
+
 ## Required Elements
 
 ### Exact File Paths

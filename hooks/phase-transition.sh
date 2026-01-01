@@ -20,8 +20,14 @@ MESSAGE=""
 # Workflow order: /branch → /brainstorm (plan mode) → /backlog-development (plan mode) → /implement → /verify
 case "$TOOL_INPUT" in
   *git-workflow*|*branch*)
+    # UNCONDITIONAL RESET: Starting new branch = new workflow
+    # Clear any stale session state from previous workflows
+    rm -f "${SESSION_DIR}/.backlog_path" 2>/dev/null || true
+    rm -f "${SESSION_DIR}/.subagent_dispatch" 2>/dev/null || true
+    rm -f "${SESSION_DIR}/.expected_task_count" 2>/dev/null || true
+    rm -f "${SESSION_DIR}/.needs_refix" 2>/dev/null || true
     NEW_PHASE="branched"
-    MESSAGE="Branch created. Ready for /brainstorm (use plan mode)."
+    MESSAGE="Branch created. Workflow reset. Ready for /brainstorm (use plan mode: shift+tab twice)."
     ;;
   *brainstorm*)
     NEW_PHASE="brainstorming"

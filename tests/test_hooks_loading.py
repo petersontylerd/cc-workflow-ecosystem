@@ -225,20 +225,28 @@ class TestSubagentTrackingHooks:
         assert is_executable, "subagent-review-check.sh not executable"
 
     def test_hooks_json_has_task_posttool_hook(self, plugin_root: Path) -> None:
-        """hooks.json must have subagent-dispatch-tracker.sh for Task PostToolUse."""
+        """hooks.json must have Task PostToolUse hooks for subagent tracking and evidence checks."""
         hooks_json = plugin_root / "hooks" / "hooks.json"
         data = json.loads(hooks_json.read_text())
 
         posttool_hooks = data.get("hooks", {}).get("PostToolUse", [])
         task_hooks = [h for h in posttool_hooks if h.get("matcher") == "Task"]
 
-        assert len(task_hooks) == 1, "Expected exactly one Task PostToolUse hook entry"
+        # Two Task hooks: subagent-dispatch-tracker.sh and implementer-evidence-check.sh
+        assert len(task_hooks) == 2, "Expected two Task PostToolUse hook entries"
 
-        commands = [hook.get("command", "") for hook in task_hooks[0].get("hooks", [])]
-        commands_str = " ".join(commands)
+        # Collect all commands from all Task hooks
+        all_commands = []
+        for hook_entry in task_hooks:
+            for hook in hook_entry.get("hooks", []):
+                all_commands.append(hook.get("command", ""))
+        commands_str = " ".join(all_commands)
 
         assert "subagent-dispatch-tracker.sh" in commands_str, (
             "Task PostToolUse hooks missing subagent-dispatch-tracker.sh"
+        )
+        assert "implementer-evidence-check.sh" in commands_str, (
+            "Task PostToolUse hooks missing implementer-evidence-check.sh"
         )
 
     def test_hooks_json_has_todowrite_posttool_hook(self, plugin_root: Path) -> None:

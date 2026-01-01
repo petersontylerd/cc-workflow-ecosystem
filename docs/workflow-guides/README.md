@@ -109,21 +109,27 @@ The ecosystem provides three tiers of automation, each building on the previous:
 | `spec-reviewer` | Requirements compliance | `/implement` orchestrator |
 | `quality-reviewer` | Code quality assessment | `/implement` orchestrator |
 
-### Hooks (11 scripts + 1 config)
+### Hooks (17 scripts + 1 config)
 
 | Hook Script | Type | Purpose |
 |-------------|------|---------|
 | `hooks.json` | Config | Defines all hook triggers |
-| `session-start.sh` | SessionStart | Injects `using-ecosystem` skill |
+| `session-start.sh` | SessionStart | Injects `using-ecosystem` skill, auto-detects feature branch |
 | `main-branch-protection.sh` | PreToolUse | **BLOCKS** edits on main/master |
 | `workflow-phase-check.sh` | PreToolUse | **BLOCKS** edits before backlog-ready phase |
-| `tdd-precommit-check.sh` | PreToolUse | **BLOCKS** commits without tests |
+| `tdd-precommit-check.sh` | PreToolUse | **BLOCKS** commits without tests, detects trivial tests |
 | `verify-before-commit.sh` | PreToolUse | Reminds about verification |
 | `validate-task-description.sh` | PreToolUse | Validates subagent task descriptions |
-| `phase-transition.sh` | PostToolUse | Updates workflow phase |
+| `backlog-task-counter.sh` | PreToolUse | Counts backlog tasks, warns on large backlogs |
+| `verify-task-count.sh` | PreToolUse | Compares completed vs expected tasks |
+| `brainstorm-phase-start.sh` | PreToolUse | Sets phase when brainstorming starts |
+| `phase-transition.sh` | PostToolUse | Updates workflow phase, resets state on /branch |
 | `workflow-skip-set.sh` | PostToolUse | Sets enforcement skip |
-| `subagent-dispatch-tracker.sh` | PostToolUse | Tracks subagent dispatches during `/implement` |
-| `subagent-review-check.sh` | PostToolUse | **WARNS** if task completed without reviewers |
+| `brainstorm-exit-plan-mode.sh` | PostToolUse | Phase transition after ExitPlanMode |
+| `subagent-dispatch-tracker.sh` | PostToolUse | Tracks subagent dispatches, detects fix cycles |
+| `subagent-review-check.sh` | PostToolUse | **WARNS** if task completed without reviewers or re-review |
+| `backlog-lint.sh` | PostToolUse | Scans backlogs for placeholders |
+| `implementer-evidence-check.sh` | PostToolUse | Validates completion evidence |
 | `run-hook.cmd` | Wrapper | Cross-platform execution |
 
 ---
@@ -134,10 +140,12 @@ The plugin tracks workflow state using files in `$CLAUDE_SESSION_DIR`:
 
 | File | Purpose | Created By | Read By |
 |------|---------|------------|---------|
-| `.workflow_phase` | Current phase | `phase-transition.sh` | `workflow-phase-check.sh`, `subagent-dispatch-tracker.sh`, `subagent-review-check.sh` |
+| `.workflow_phase` | Current phase | `phase-transition.sh`, `session-start.sh` | `workflow-phase-check.sh`, `subagent-dispatch-tracker.sh`, `subagent-review-check.sh` |
 | `.workflow_skip` | Bypass enforcement | `workflow-skip-set.sh` | All blocking hooks |
-| `.backlog_path` | Current backlog | Commands | Skills |
+| `.backlog_path` | Current backlog | `backlog-task-counter.sh` | Skills, agents, `verify-task-count.sh` |
 | `.subagent_dispatch` | Tracks dispatched agents per task | `subagent-dispatch-tracker.sh` | `subagent-review-check.sh` |
+| `.expected_task_count` | Expected number of tasks from backlog | `backlog-task-counter.sh` | `verify-task-count.sh` |
+| `.needs_refix` | Flag for fix cycle re-review | `subagent-dispatch-tracker.sh` | `subagent-review-check.sh` |
 
 ---
 
@@ -207,10 +215,16 @@ hooks/                   # Enforcement scripts
 ├── tdd-precommit-check.sh
 ├── verify-before-commit.sh
 ├── validate-task-description.sh
+├── backlog-task-counter.sh
+├── verify-task-count.sh
+├── brainstorm-phase-start.sh
 ├── phase-transition.sh
 ├── workflow-skip-set.sh
+├── brainstorm-exit-plan-mode.sh
 ├── subagent-dispatch-tracker.sh
-└── subagent-review-check.sh
+├── subagent-review-check.sh
+├── backlog-lint.sh
+└── implementer-evidence-check.sh
 ```
 
 ---

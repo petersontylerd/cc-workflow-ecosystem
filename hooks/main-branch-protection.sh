@@ -34,7 +34,7 @@ if [[ "$CURRENT_BRANCH" == "main" || "$CURRENT_BRANCH" == "master" ]]; then
   cat <<'EOF'
 {
   "decision": "block",
-  "reason": "BLOCKED: Cannot edit code on main/master branch. Feature branch workflow requires: /branch feat/<issue>-<slug> or /branch fix/<issue>-<slug> first. Use /workflow skip to bypass (not recommended)."
+  "reason": "BLOCKED: Edit prevented on main/master branch.\n\n**Current state:**\n- Branch: main/master (protected)\n- Phase: N/A (branch protection applies regardless of phase)\n\n**Required action:**\nRun: /branch feat/<issue>-<slug>  (for new features)\n  or: /branch fix/<issue>-<slug>   (for bug fixes)\n\n**Why:** Feature branch workflow protects main from incomplete work. Changes should be reviewed via PR before merging.\n\n**Escape hatch:** /workflow skip (not recommended - bypasses all enforcement)"
 }
 EOF
   exit 0

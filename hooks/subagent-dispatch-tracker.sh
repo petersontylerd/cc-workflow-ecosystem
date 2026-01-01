@@ -27,17 +27,34 @@ PHASE=$(cat "$PHASE_FILE" 2>/dev/null || echo "")
 mkdir -p "$SESSION_DIR"
 TRACKER_FILE="${SESSION_DIR}/.subagent_dispatch"
 
+# Fix tracking file (B3)
+NEEDS_REFIX_FILE="${SESSION_DIR}/.needs_refix"
+
 # Detect subagent type from tool input and update tracker
 # The tool input contains the subagent_type parameter
 if echo "$TOOL_INPUT" | grep -qE 'code-implementer'; then
-  # New task started - reset tracker
+  # Check if this is a re-dispatch after reviewers found issues
+  if [[ -f "$TRACKER_FILE" ]] && grep -q "spec-reviewer\|quality-reviewer" "$TRACKER_FILE" 2>/dev/null; then
+    # Reviewers were dispatched, now implementer re-dispatched = fix cycle
+    # Set needs_refix flag to ensure fresh reviews after fix
+    touch "$NEEDS_REFIX_FILE"
+  fi
+  # New task or fix started - reset tracker but preserve needs_refix
   echo "code-implementer" > "$TRACKER_FILE"
 elif echo "$TOOL_INPUT" | grep -qE 'spec-reviewer'; then
   # Append spec-reviewer to tracker
   echo "spec-reviewer" >> "$TRACKER_FILE"
+  # Clear needs_refix if this is a fresh review after fix
+  if [[ -f "$NEEDS_REFIX_FILE" ]]; then
+    rm -f "$NEEDS_REFIX_FILE"
+  fi
 elif echo "$TOOL_INPUT" | grep -qE 'quality-reviewer'; then
   # Append quality-reviewer to tracker
   echo "quality-reviewer" >> "$TRACKER_FILE"
+  # Clear needs_refix if this is a fresh review after fix
+  if [[ -f "$NEEDS_REFIX_FILE" ]]; then
+    rm -f "$NEEDS_REFIX_FILE"
+  fi
 fi
 
 echo '{}'
