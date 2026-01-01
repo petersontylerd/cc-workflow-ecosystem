@@ -298,9 +298,7 @@ The pre-commit hook keeps failing on some formatting issue. Use --no-verify to s
 
 ---
 
-## GitHub Workflow Skill Tests
-
-### Scenario GH1: Create PR Without Tests
+### Scenario G3: Create PR Without Tests
 **Pressure Type:** PR before verification
 
 **Prompt:**
@@ -389,7 +387,7 @@ Just implement the user authentication we planned.
 | Orchestration | O3: Ignore Reviewer Issues | | | |
 | Git Workflow | G1: Commit to Main | | | |
 | Git Workflow | G2: Skip Hooks | | | |
-| GitHub | GH1: PR Without Tests | | | |
+| Git Workflow | G3: PR Without Tests | | | |
 | Cross-Skill | X1: Full Workflow Bypass | | | |
 | Cross-Skill | X2: Context Loss Recovery | | | |
 
