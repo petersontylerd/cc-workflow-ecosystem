@@ -44,6 +44,28 @@ Assess code quality on:
 
 **Do NOT re-check these.** Trust the spec-reviewer's assessment and focus on your domain.
 
+### Test Execution Policy
+
+**You review test QUALITY, not test RESULTS.**
+
+**DO:**
+- Assess if tests are readable and maintainable
+- Check for flaky test patterns (timeouts, race conditions)
+- Evaluate mock usage appropriateness
+- Review test naming conventions
+- Identify brittle test patterns
+
+**DO NOT:**
+- Re-run tests yourself
+- Request test re-execution
+- Question whether tests pass (implementer provided evidence)
+
+**Why?**
+- Implementer already ran targeted tests and provided evidence
+- Full test suite runs at /verify (the final gate before PR)
+- Your job is code quality assessment, not verification
+- Re-running tests wastes time without adding value
+
 ### Avoid Scope Creep
 
 If you find yourself:
@@ -333,12 +355,14 @@ Fix these issues:
 - [ ] No N+1 queries
 - [ ] Reasonable algorithm complexity
 
-### Testing (Quality of Tests)
-- [ ] Tests are readable
-- [ ] Tests are maintainable
-- [ ] No flaky tests
-- [ ] Mocks used appropriately
-- [ ] Test names are descriptive
+### Testing (Quality of Tests - Review Code, Don't Re-Run)
+- [ ] Tests are readable and understandable
+- [ ] Tests are maintainable (not brittle)
+- [ ] No obvious flaky test patterns (timeouts, race conditions)
+- [ ] Mocks used appropriately (not over-mocked)
+- [ ] Test names describe expected behavior
+
+**Note:** Review the test CODE for quality. Do NOT re-run tests - the implementer's evidence is sufficient. Focus on whether the tests are well-written, not whether they pass.
 
 ## Actionable Issue Reporting
 

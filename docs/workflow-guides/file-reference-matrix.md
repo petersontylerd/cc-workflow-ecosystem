@@ -12,13 +12,13 @@ This document provides a complete inventory of all files in the workflow ecosyst
 | Commands | 8 | 8 | 100% |
 | Skills | 12 | 12 | 100% |
 | Agents | 3 | 3 | 100% |
-| Hooks | 10 | 10 | 100% |
+| Hooks | 12 | 12 | 100% |
 | Scripts | 2 | 2 | 100% |
 | Templates | 1 | 1 | 100% |
 | Tests | 8 | 8 | 100% |
 | Documentation | 12 | 12 | 100% |
 | Config | 6 | 6 | 100% |
-| **Total** | **64** | **64** | **100%** |
+| **Total** | **66** | **66** | **100%** |
 
 ---
 
@@ -85,7 +85,7 @@ This document provides a complete inventory of all files in the workflow ecosyst
 
 ---
 
-### Hooks (10 files)
+### Hooks (12 files)
 
 | File | Intermediate | Expert | Purpose |
 |------|:------------:|:------:|---------|
@@ -99,8 +99,10 @@ This document provides a complete inventory of all files in the workflow ecosyst
 | `hooks/verify-before-commit.sh` | [x] | | Reminds about verification before commit |
 | `hooks/validate-task-description.sh` | [x] | [x] | Validates subagent task descriptions |
 | `hooks/workflow-skip-set.sh` | | [x] | Sets `.workflow_skip` marker for escape hatch |
+| `hooks/subagent-dispatch-tracker.sh` | [x] | [x] | Tracks subagent dispatches during `/implement` |
+| `hooks/subagent-review-check.sh` | [x] | [x] | **WARNS** if task completed without reviewers |
 
-**Coverage**: All 10 hooks are referenced across both patterns.
+**Coverage**: All 12 hooks are referenced across both patterns.
 
 ---
 
@@ -203,7 +205,7 @@ The following files exist in the repository but are **not triggered** by the wor
 
 ### Workflow-Triggered Files
 
-The following 36 files are **actively triggered** during workflow execution:
+The following 38 files are **actively triggered** during workflow execution:
 
 | Category | Count | Files |
 |----------|-------|-------|
@@ -211,7 +213,7 @@ The following 36 files are **actively triggered** during workflow execution:
 | Commands | 8 | All 8 commands |
 | Skills | 12 | All 12 skills |
 | Agents | 3 | All 3 agents |
-| Hooks | 10 | All 10 hooks |
+| Hooks | 12 | All 12 hooks |
 | Scripts | 2 | release.sh, pre-push-version-check.sh |
 | Templates | 1 | pr-description.md |
 
@@ -254,17 +256,18 @@ skills/<name>/SKILL.md
 
 | File | Created By | Read By |
 |------|------------|---------|
-| `.workflow_phase` | `phase-transition.sh` | `workflow-phase-check.sh` |
+| `.workflow_phase` | `phase-transition.sh` | `workflow-phase-check.sh`, `subagent-dispatch-tracker.sh`, `subagent-review-check.sh` |
 | `.workflow_skip` | `workflow-skip-set.sh` | All blocking hooks |
 | `.backlog_path` | Commands | Skills, agents |
+| `.subagent_dispatch` | `subagent-dispatch-tracker.sh` | `subagent-review-check.sh` |
 
 ---
 
 ## Conclusion
 
-**All 64 files in the repository are accounted for:**
+**All 66 files in the repository are accounted for:**
 
-- **36 workflow-triggered files**: Actively participate in the workflow
+- **38 workflow-triggered files**: Actively participate in the workflow
 - **28 supporting files**: Infrastructure, tests, documentation, configuration
 
 **All core plugin components (commands, skills, agents, hooks) are referenced in at least one usage pattern**, demonstrating complete coverage of the workflow ecosystem.

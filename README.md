@@ -175,7 +175,9 @@ workflow-ecosystem/
 │   ├── workflow-skip-set.sh     # Sets skip marker for bypass
 │   ├── verify-before-commit.sh  # Pre-commit verification reminder
 │   ├── validate-task-description.sh # Validate subagent task descriptions
-│   └── tdd-precommit-check.sh   # BLOCKS commits without tests
+│   ├── tdd-precommit-check.sh   # BLOCKS commits without tests
+│   ├── subagent-dispatch-tracker.sh # Tracks subagent dispatches during /implement
+│   └── subagent-review-check.sh # WARNS if task completed without reviewers
 ├── skills/                       # Core competencies
 ├── commands/                     # User-invokable workflows
 ├── agents/                       # Specialized subagents

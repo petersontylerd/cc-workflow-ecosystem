@@ -109,7 +109,7 @@ The ecosystem provides three tiers of automation, each building on the previous:
 | `spec-reviewer` | Requirements compliance | `/implement` orchestrator |
 | `quality-reviewer` | Code quality assessment | `/implement` orchestrator |
 
-### Hooks (9 scripts + 1 config)
+### Hooks (11 scripts + 1 config)
 
 | Hook Script | Type | Purpose |
 |-------------|------|---------|
@@ -122,6 +122,8 @@ The ecosystem provides three tiers of automation, each building on the previous:
 | `validate-task-description.sh` | PreToolUse | Validates subagent task descriptions |
 | `phase-transition.sh` | PostToolUse | Updates workflow phase |
 | `workflow-skip-set.sh` | PostToolUse | Sets enforcement skip |
+| `subagent-dispatch-tracker.sh` | PostToolUse | Tracks subagent dispatches during `/implement` |
+| `subagent-review-check.sh` | PostToolUse | **WARNS** if task completed without reviewers |
 | `run-hook.cmd` | Wrapper | Cross-platform execution |
 
 ---
@@ -132,9 +134,10 @@ The plugin tracks workflow state using files in `$CLAUDE_SESSION_DIR`:
 
 | File | Purpose | Created By | Read By |
 |------|---------|------------|---------|
-| `.workflow_phase` | Current phase | `phase-transition.sh` | `workflow-phase-check.sh` |
+| `.workflow_phase` | Current phase | `phase-transition.sh` | `workflow-phase-check.sh`, `subagent-dispatch-tracker.sh`, `subagent-review-check.sh` |
 | `.workflow_skip` | Bypass enforcement | `workflow-skip-set.sh` | All blocking hooks |
 | `.backlog_path` | Current backlog | Commands | Skills |
+| `.subagent_dispatch` | Tracks dispatched agents per task | `subagent-dispatch-tracker.sh` | `subagent-review-check.sh` |
 
 ---
 
@@ -205,7 +208,9 @@ hooks/                   # Enforcement scripts
 ├── verify-before-commit.sh
 ├── validate-task-description.sh
 ├── phase-transition.sh
-└── workflow-skip-set.sh
+├── workflow-skip-set.sh
+├── subagent-dispatch-tracker.sh
+└── subagent-review-check.sh
 ```
 
 ---

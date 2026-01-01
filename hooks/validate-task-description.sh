@@ -64,6 +64,9 @@ if ! echo "$TOOL_INPUT" | grep -qiE '(required skill|##\s*Skills|### Skills|skil
   MISSING_ENHANCED="${MISSING_ENHANCED}Required Skills, "
 fi
 
+# Three-stage dispatch reminder (always included for subagent dispatches)
+THREE_STAGE_REMINDER="REMINDER: Every task requires THREE dispatches: code-implementer -> spec-reviewer -> quality-reviewer. Skipping reviewers is not optimization."
+
 # Build warning message
 WARNING_MSG=""
 
@@ -82,7 +85,7 @@ if [[ -n "$MISSING_ENHANCED" ]]; then
 fi
 
 if [[ -n "$WARNING_MSG" ]]; then
-  WARNING_MSG="${WARNING_MSG}Per orchestrating-subagents skill, complete task descriptions improve subagent performance. See skills/orchestrating-subagents/SKILL.md for the full format."
+  WARNING_MSG="${WARNING_MSG}Per orchestrating-subagents skill, complete task descriptions improve subagent performance. ${THREE_STAGE_REMINDER}"
   cat <<EOF
 {
   "hookSpecificOutput": {
@@ -93,6 +96,17 @@ EOF
   exit 0
 fi
 
-# All sections present
+# All sections present - still include three-stage reminder for code-implementer
+if echo "$TOOL_INPUT" | grep -qE 'code-implementer'; then
+  cat <<EOF
+{
+  "hookSpecificOutput": {
+    "additionalContext": "${THREE_STAGE_REMINDER}"
+  }
+}
+EOF
+  exit 0
+fi
+
 echo '{}'
 exit 0

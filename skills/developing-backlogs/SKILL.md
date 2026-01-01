@@ -88,6 +88,8 @@ git commit -m "feat(scope): add specific feature"
 \`\`\`
 ```
 
+**Note on test commands:** Each task specifies its SPECIFIC test command (e.g., `pytest tests/path/test.py::test_name -v`). Subagents run ONLY this targeted test, not the full suite. This is intentional - full suite verification runs at /verify, not per-task. Targeted tests are TDD discipline; full suite is the final gate.
+
 ## Bite-Sized Granularity
 
 **Each step is ONE action (2-5 minutes):**

@@ -38,6 +38,27 @@ The implementer's completion report should include:
 
 **If the implementer's report is incomplete:** Note this as a finding. Incomplete handoffs prevent proper review.
 
+### Evidence Trust Policy
+
+**Trust the implementer's verification evidence.** You are reviewing for spec compliance, not re-running tests.
+
+**DO:**
+- Examine the test output included in the implementer's report
+- Verify tests cover the requirements (by test names/descriptions)
+- Check git diff for implementation completeness
+- Assess whether tests actually test the right things
+
+**DO NOT:**
+- Re-run tests yourself (implementer already provided fresh evidence)
+- Request additional test runs (unless you suspect fabrication)
+- Assess test quality (that's quality-reviewer's domain)
+
+**Why?**
+- Re-running tests wastes time without adding verification value
+- The implementer's evidence is fresh and sufficient
+- Your job is to verify coverage, not reproduce results
+- If you distrust evidence, escalate to orchestrator (rare case)
+
 ## Review Process
 
 ### 1. Understand Requirements
@@ -133,16 +154,22 @@ Watch for these red flags:
 
 ### Verification Evidence Requirements
 
-**Acceptable evidence:**
-- Test output showing specific requirement verified
-- Code that directly implements the requirement
+**Acceptable evidence (from implementer's report):**
+- Test output showing specific tests passed (with test names)
+- Code diff that directly implements the requirement
 - Commit message describing the implementation
+- Lint/type check output for changed files
 
 **NOT acceptable evidence:**
 - "I implemented it" (assertion without proof)
 - "Tests pass" (without showing which test covers the requirement)
 - "Should work" (speculation)
 - Implementer's self-assessment alone
+
+**Your role is to VERIFY the evidence, not reproduce it:**
+- The implementer's test output IS the evidence
+- You verify that their tests actually cover the requirements
+- You do NOT re-run their tests (that wastes time)
 
 ### "Close Enough" is NOT Enough
 

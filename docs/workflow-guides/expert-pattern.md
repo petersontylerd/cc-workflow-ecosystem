@@ -724,19 +724,19 @@ This expert pattern is self-contained with complete file references.
 - [x] `agents/spec-reviewer.md` - Requirements compliance
 - [x] `agents/quality-reviewer.md` - Code quality assessment
 
-### Hooks (13 of 13)
+### Hooks (12 of 12)
 - [x] `hooks/hooks.json` - Hook configuration
 - [x] `hooks/run-hook.cmd` - Cross-platform execution
 - [x] `hooks/session-start.sh` - Inject ecosystem context
 - [x] `hooks/main-branch-protection.sh` - **BLOCKS** edits on main/master
 - [x] `hooks/workflow-phase-check.sh` - **BLOCKS** edits before backlog
-- [x] `hooks/phase-transition.sh` - Set brainstorming marker
-- [x] `hooks/phase-transition.sh` - Clear brainstorming marker
 - [x] `hooks/phase-transition.sh` - Update workflow phase
 - [x] `hooks/tdd-precommit-check.sh` - **BLOCKS** commits without tests
 - [x] `hooks/verify-before-commit.sh` - Verification reminder
 - [x] `hooks/validate-task-description.sh` - Validate task descriptions
 - [x] `hooks/workflow-skip-set.sh` - Set skip marker
+- [x] `hooks/subagent-dispatch-tracker.sh` - Tracks subagent dispatches per task
+- [x] `hooks/subagent-review-check.sh` - **WARNS** if task completed without reviewers
 
 ### Templates (1 of 1)
 - [x] `templates/pr-description.md` - PR template
@@ -769,14 +769,14 @@ This expert pattern is self-contained with complete file references.
 
 ## Complete File Coverage
 
-All 41 core plugin files are referenced in this pattern:
+All 42 core plugin files are referenced in this pattern:
 
 | Category | Count |
 |----------|-------|
 | Commands | 8/8 |
 | Skills | 12/12 |
 | Agents | 3/3 |
-| Hooks | 13/13 |
+| Hooks | 12/12 |
 | Templates | 1/1 |
 | Scripts | 2/2 |
 | Plugin Config | 2/2 |

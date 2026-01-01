@@ -195,3 +195,125 @@ class TestEnforcementHooks:
         assert "phase-transition.sh" in commands_str, (
             "PostToolUse hooks missing phase-transition.sh"
         )
+
+
+class TestSubagentTrackingHooks:
+    """Tests for subagent dispatch tracking hooks."""
+
+    def test_subagent_dispatch_tracker_exists(self, plugin_root: Path) -> None:
+        """subagent-dispatch-tracker.sh must exist and be executable."""
+        script = plugin_root / "hooks" / "subagent-dispatch-tracker.sh"
+        assert script.exists(), "Missing subagent-dispatch-tracker.sh"
+
+        import os
+        import stat
+
+        mode = os.stat(script).st_mode
+        is_executable = mode & (stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+        assert is_executable, "subagent-dispatch-tracker.sh not executable"
+
+    def test_subagent_review_check_exists(self, plugin_root: Path) -> None:
+        """subagent-review-check.sh must exist and be executable."""
+        script = plugin_root / "hooks" / "subagent-review-check.sh"
+        assert script.exists(), "Missing subagent-review-check.sh"
+
+        import os
+        import stat
+
+        mode = os.stat(script).st_mode
+        is_executable = mode & (stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+        assert is_executable, "subagent-review-check.sh not executable"
+
+    def test_hooks_json_has_task_posttool_hook(self, plugin_root: Path) -> None:
+        """hooks.json must have subagent-dispatch-tracker.sh for Task PostToolUse."""
+        hooks_json = plugin_root / "hooks" / "hooks.json"
+        data = json.loads(hooks_json.read_text())
+
+        posttool_hooks = data.get("hooks", {}).get("PostToolUse", [])
+        task_hooks = [h for h in posttool_hooks if h.get("matcher") == "Task"]
+
+        assert len(task_hooks) == 1, "Expected exactly one Task PostToolUse hook entry"
+
+        commands = [hook.get("command", "") for hook in task_hooks[0].get("hooks", [])]
+        commands_str = " ".join(commands)
+
+        assert "subagent-dispatch-tracker.sh" in commands_str, (
+            "Task PostToolUse hooks missing subagent-dispatch-tracker.sh"
+        )
+
+    def test_hooks_json_has_todowrite_posttool_hook(self, plugin_root: Path) -> None:
+        """hooks.json must have subagent-review-check.sh for TodoWrite PostToolUse."""
+        hooks_json = plugin_root / "hooks" / "hooks.json"
+        data = json.loads(hooks_json.read_text())
+
+        posttool_hooks = data.get("hooks", {}).get("PostToolUse", [])
+        todowrite_hooks = [h for h in posttool_hooks if h.get("matcher") == "TodoWrite"]
+
+        assert len(todowrite_hooks) == 1, (
+            "Expected exactly one TodoWrite PostToolUse hook entry"
+        )
+
+        commands = [
+            hook.get("command", "") for hook in todowrite_hooks[0].get("hooks", [])
+        ]
+        commands_str = " ".join(commands)
+
+        assert "subagent-review-check.sh" in commands_str, (
+            "TodoWrite PostToolUse hooks missing subagent-review-check.sh"
+        )
+
+    def test_dispatch_tracker_checks_implementing_phase(
+        self, plugin_root: Path
+    ) -> None:
+        """subagent-dispatch-tracker.sh must check for implementing phase."""
+        script = plugin_root / "hooks" / "subagent-dispatch-tracker.sh"
+        content = script.read_text()
+
+        assert "implementing" in content, (
+            "subagent-dispatch-tracker.sh should check for implementing phase"
+        )
+        assert ".workflow_phase" in content, (
+            "subagent-dispatch-tracker.sh should read .workflow_phase file"
+        )
+
+    def test_review_check_checks_implementing_phase(self, plugin_root: Path) -> None:
+        """subagent-review-check.sh must check for implementing phase."""
+        script = plugin_root / "hooks" / "subagent-review-check.sh"
+        content = script.read_text()
+
+        assert "implementing" in content, (
+            "subagent-review-check.sh should check for implementing phase"
+        )
+        assert ".workflow_phase" in content, (
+            "subagent-review-check.sh should read .workflow_phase file"
+        )
+
+    def test_both_hooks_respect_workflow_skip(self, plugin_root: Path) -> None:
+        """Both tracking hooks must respect the .workflow_skip file."""
+        tracker = plugin_root / "hooks" / "subagent-dispatch-tracker.sh"
+        checker = plugin_root / "hooks" / "subagent-review-check.sh"
+
+        tracker_content = tracker.read_text()
+        checker_content = checker.read_text()
+
+        assert ".workflow_skip" in tracker_content, (
+            "subagent-dispatch-tracker.sh should check for .workflow_skip"
+        )
+        assert ".workflow_skip" in checker_content, (
+            "subagent-review-check.sh should check for .workflow_skip"
+        )
+
+    def test_review_check_warns_on_missing_reviewers(self, plugin_root: Path) -> None:
+        """subagent-review-check.sh must warn when reviewers are missing."""
+        script = plugin_root / "hooks" / "subagent-review-check.sh"
+        content = script.read_text()
+
+        assert "spec-reviewer" in content, (
+            "subagent-review-check.sh should check for spec-reviewer"
+        )
+        assert "quality-reviewer" in content, (
+            "subagent-review-check.sh should check for quality-reviewer"
+        )
+        assert "SUBAGENT DISPATCH WARNING" in content, (
+            "subagent-review-check.sh should output warning when reviewers missing"
+        )

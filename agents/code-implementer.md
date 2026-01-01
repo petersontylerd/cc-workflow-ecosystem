@@ -28,10 +28,16 @@ git status              # Working tree should be clean or expected state
 git log -3 --oneline    # Understand recent context
 ```
 
-If environment verification commands are provided in your task description, run them:
+**Environment verification (full test suite) is handled by the orchestrator at /implement startup.** As a subagent, you should NOT re-run the full suite.
+
+If your task description includes specific verification commands, they should be targeted checks:
 ```bash
-# Example: Quick smoke test
-pytest tests/ -x -q --tb=short
+# Good: Targeted checks
+python -c "import required_module"    # Verify dependency available
+ls src/expected/file.py               # Verify file exists
+
+# Bad: Full suite (orchestrator already did this)
+pytest tests/ -v                      # DO NOT run full suite
 ```
 
 **If environment is unhealthy:** STOP. Report to orchestrator before proceeding.
@@ -84,6 +90,29 @@ Write test → Watch it fail → Implement → Watch it pass → Refactor
 7. **Refactor**: Clean up while keeping tests green
 8. **Commit**: Atomic commit with clear message
 9. **Document**: Update progress notes
+
+### Testing Philosophy: Targeted Tests Only
+
+During implementation, run ONLY tests related to your task:
+
+```bash
+# Good: Targeted tests (what you should run)
+pytest tests/auth/test_login.py::test_email_validation -v
+pytest tests/ -k "test_feature_name" -v
+npm test -- path/to/your.test.ts
+
+# Bad: Full suite (wastes time, not your job)
+pytest tests/ -v
+npm test
+```
+
+**Why targeted tests?**
+1. **TDD discipline** requires testing your specific feature (red → green)
+2. **Full suite** is /verify's responsibility (the final gate before PR)
+3. **Time efficiency** - a 20-min suite × 10 tasks = 200 min wasted
+4. **Fresh evidence** - your targeted test output IS your verification
+
+The test command in your task description tells you exactly what to run. If not specified, run only the test file(s) you created or modified.
 
 ### Self-Review Before Handoff
 
@@ -190,18 +219,28 @@ Consult the skill by referencing its patterns. For example:
 
 ### Verification Checklist
 
-Before reporting completion:
+Before reporting completion, verify your specific changes with targeted commands:
 
 ```bash
-# Run full test suite
-pytest tests/ -v
+# Run ONLY tests related to your task (examples)
+pytest tests/path/to/your_test.py -v          # Your specific test file
+pytest tests/ -k "test_feature_name" -v       # Tests matching your feature
+npm test -- path/to/your.test.ts              # Specific test file (JS/TS)
 
-# Check for linting issues
-ruff check .
+# Quick lint check on changed files only
+ruff check path/to/changed/file.py
+# or for JS/TS:
+npm run lint -- path/to/changed/file.ts
 
-# Verify type checking (if applicable)
-mypy src/
+# Type check changed files (if applicable)
+mypy path/to/changed/file.py
 ```
+
+**IMPORTANT:**
+- Run ONLY targeted tests for your specific task
+- DO NOT run the full test suite - that is /verify's responsibility
+- Your TDD cycle already proves your specific feature works
+- Full suite runs waste time and provide diminishing returns per-task
 
 ### Evidence-Based Reporting
 

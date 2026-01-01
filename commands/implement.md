@@ -14,25 +14,44 @@ Execute a backlog with automated subagent orchestration.
 /implement user-authentication
 ```
 
+## Testing Strategy
+
+This workflow uses three testing tiers to minimize wasted time:
+
+| Tier | Who | When | What | Duration |
+|------|-----|------|------|----------|
+| Smoke Test | Orchestrator | /implement startup (once) | Quick suite, fail-fast | ~2 min |
+| TDD Tests | code-implementer | Per task | Specific tests only | ~30 sec |
+| Full Suite | /verify | Before PR (once) | Everything | ~20 min |
+
+**Key principles:**
+1. **Subagents run targeted tests only** - no full suite per task
+2. **Reviewers trust implementer evidence** - no re-running tests
+3. **Full verification at /verify** - the final quality gate
+
+**Time savings:** A 10-task backlog with 20-min suite goes from ~600 min to ~30 min.
+
 ## Before You Start
 
-### Environment Verification
+### Environment Verification (Smoke Test - Once)
 
-Before dispatching any subagents, verify the environment is healthy:
+Before dispatching any subagents, verify the environment is healthy with a quick smoke test:
 
 ```bash
 # Check git status
 git status
 
-# Run quick test suite
+# Quick smoke test (fail-fast, minimal output)
 pytest tests/ -x -q --tb=short
 # or: npm test -- --passWithNoTests
 
-# Verify build works
-npm run build  # or equivalent
+# Verify build works (if applicable)
+npm run build
 ```
 
-**If environment is unhealthy:** Fix issues before proceeding. Subagents building on a broken foundation will fail.
+**This is the ONLY full-ish test run before /verify.** Subagents run targeted tests only.
+
+**If environment is unhealthy:** Fix issues before proceeding. Do not dispatch subagents to a broken environment.
 
 ### Task Description Preparation
 

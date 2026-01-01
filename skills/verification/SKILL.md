@@ -116,6 +116,35 @@ If that passes, we have evidence for that specific claim.
 Never ship with zero verification.
 ```
 
+## /verify as the Final Gate
+
+**Full verification runs at /verify, not per-task during /implement.**
+
+### During /implement
+- Subagents run **targeted tests only** (TDD cycle for their specific feature)
+- Reviewers **trust implementer evidence** (don't re-run tests)
+- No full suite runs per-task
+
+### At /verify
+- Full test suite runs
+- Full lint check
+- Full type check
+- Full build (if applicable)
+- This is THE verification gate before PR
+
+### Why This Separation?
+
+| Approach | Time for 10-task backlog |
+|----------|-------------------------|
+| Full suite per task (old) | ~600 minutes |
+| Targeted + final verify (new) | ~30 minutes |
+
+- **Targeted TDD tests** prove each feature works individually
+- **Full suite at /verify** catches any integration issues
+- **Reviewers verifying evidence** is faster than re-running tests
+
+This is not skipping verification - it's doing the right verification at the right time.
+
 ## Verification Patterns
 
 ### Tests

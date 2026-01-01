@@ -11,6 +11,24 @@ Execute backlogs by dispatching fresh subagents per task with two-stage review: 
 
 **Core principle:** Fresh subagent per task + two-stage review = high quality, no context pollution.
 
+## The Iron Law of Subagent Dispatch
+
+```
+NO TASK COMPLETION WITHOUT THREE-STAGE REVIEW
+```
+
+Skipping spec-reviewer or quality-reviewer is not optimization - it is negligence.
+A task "completed" without review is a task where bugs were invited.
+
+**Core principle:** Claiming task completion without dispatching all three subagents is dishonesty, not efficiency.
+
+For every task, you MUST dispatch:
+1. **code-implementer** - Execute the implementation
+2. **spec-reviewer** - Verify requirements are met
+3. **quality-reviewer** - Assess code quality
+
+There are no exceptions. "Simple" tasks still have bugs. "Quick" fixes still need review.
+
 ## The Orchestration Pattern
 
 ```
@@ -51,6 +69,40 @@ PARENT CLAUDE (Orchestrator)
 │
 └── After all tasks: Final holistic review
 ```
+
+## Testing Tiers
+
+The workflow uses a three-tier testing strategy to minimize test execution time while maintaining quality:
+
+### Tier 1: Environment Smoke Test (Once per /implement)
+- **Run by:** Orchestrator at /implement startup
+- **Command:** `pytest tests/ -x -q --tb=short` or equivalent
+- **Purpose:** Verify environment is healthy before dispatching any subagents
+- **Frequency:** Once, before the first task
+
+### Tier 2: Targeted TDD Tests (Per Task)
+- **Run by:** code-implementer during TDD cycle
+- **Command:** Specific test file/function from task description
+- **Purpose:** Red-green verification for the specific feature
+- **Frequency:** 2x per task (red phase, green phase)
+
+### Tier 3: Full Suite Verification (Once per Feature)
+- **Run by:** /verify command before PR
+- **Command:** Full test suite, lint, type check, build
+- **Purpose:** Final validation before merge
+- **Frequency:** Once, at end of /implement
+
+### Time Savings
+
+For a 10-task backlog with 20-minute test suite:
+- **Old approach:** ~600 minutes in testing (full suite per task × 3 agents)
+- **New approach:** ~30 minutes in testing (smoke + targeted + final verify)
+
+### Reviewer Testing Policy
+
+**Reviewers DO NOT run tests.** They trust implementer evidence:
+- **spec-reviewer:** Verifies test output covers requirements (doesn't re-run)
+- **quality-reviewer:** Assesses test code quality (doesn't re-run)
 
 ## When to Use
 
@@ -152,11 +204,15 @@ This task builds on: [Dependencies]
 ### Requirements
 [FULL task text - not summarized. Copy verbatim from backlog.]
 
-### Environment Verification
-[Commands to run before starting to verify environment health]
+### Environment Verification (Orchestrator Handles Full Suite)
+The orchestrator runs the smoke test at /implement startup. For subagents, provide targeted checks only:
 ```bash
-pytest tests/ -x -q --tb=short
-npm run build
+# Good: Targeted checks for subagent
+python -c "import required_module"    # Verify dependency available
+ls src/expected/file.py               # Verify file exists
+
+# Bad: Full suite (orchestrator already did this)
+pytest tests/ -v                      # DO NOT include this
 ```
 
 ### Files
@@ -225,6 +281,32 @@ Before dispatching any subagent, verify your task description includes:
 | Omit Purpose section | Implementer makes poor trade-offs |
 | Omit Failure Modes | Preventable errors occur |
 | Omit Required Skills | Agent doesn't use available guidance |
+
+### Trigger Phrases - STOP IMMEDIATELY
+
+If you notice yourself thinking or saying:
+- "This task is straightforward, no review needed"
+- "I'll skip this review and catch it later"
+- "The implementer report shows everything passed"
+- "Just this one task..."
+- "I'm confident the implementation is correct"
+- "Reviews would just slow us down"
+- "I'll be more thorough on the next task"
+- "Time is short, let me skip to the next task"
+
+**STOP.** These are rationalizations. Dispatch the reviewers.
+
+## Rationalization Prevention
+
+| Excuse | Reality |
+|--------|---------|
+| "This task is simple, no review needed" | Simple tasks still have bugs. Reviews catch what you missed. |
+| "The code-implementer already verified" | Implementers implement; reviewers verify. Different perspectives catch different issues. |
+| "I'll review it myself" | You are the orchestrator, not the reviewer. Dispatch the subagent. |
+| "Time is short" | Time on reviews < time on bug fixes. Reviews are investment, not cost. |
+| "Spec review is redundant with quality review" | Spec catches requirement gaps; quality catches code issues. Both are required. |
+| "I'll be more thorough on the next task" | This task is incomplete. Complete it now. |
+| "The backlog has too many tasks" | Each task deserves full review. Rushing creates debt. |
 
 ## Review Loop Pattern
 
@@ -332,20 +414,35 @@ Quality-reviewer: "✅ Approved."
 8. **Review loops** - Issues found = fix = re-review
 9. **Sequential execution** - One task at a time, avoid conflicts
 
-## Mandatory Task Tool Usage
+## Mandatory Task Tool Usage (NON-NEGOTIABLE)
 
 You MUST use the Task tool to dispatch each subagent. This is not optional.
 
-### Dispatch Checklist
+### Three-Stage Dispatch Requirement
 
-For each task, verify you have:
-- [ ] Dispatched code-implementer via Task tool with complete task description
+For EVERY task in the backlog, you are REQUIRED to dispatch ALL THREE subagents:
+
+```
+code-implementer → spec-reviewer → quality-reviewer
+```
+
+Skipping any stage means the task is NOT complete, regardless of implementation status.
+
+### Dispatch Checklist (NON-NEGOTIABLE)
+
+For each task, you MUST verify:
+- [ ] Dispatched **code-implementer** via Task tool with complete task description
 - [ ] Received and reviewed completion report (with verification evidence)
-- [ ] Dispatched spec-reviewer via Task tool with requirements + implementer report
-- [ ] Received approval OR fixed gaps and re-dispatched
-- [ ] Dispatched quality-reviewer via Task tool with spec-reviewer handoff
-- [ ] Received approval OR fixed issues and re-dispatched
-- [ ] Updated TodoWrite to mark task complete
+- [ ] Dispatched **spec-reviewer** via Task tool with requirements + implementer report
+- [ ] Received approval OR fixed gaps and re-dispatched until approved
+- [ ] Dispatched **quality-reviewer** via Task tool with spec-reviewer handoff
+- [ ] Received approval OR fixed issues and re-dispatched until approved
+- [ ] Updated TodoWrite to mark task complete ONLY after all three stages approve
+
+**Consequences of skipping:**
+- Missing spec-reviewer = requirements may not be met, bugs shipped
+- Missing quality-reviewer = code quality issues accumulate, technical debt grows
+- Both missing = negligent delivery, workflow violation
 
 **Violation:** Implementing code yourself instead of dispatching code-implementer is a workflow violation. The orchestrator orchestrates; subagents implement.
 

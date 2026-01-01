@@ -944,7 +944,7 @@ flowchart TD
 - [x] `agents/spec-reviewer.md` **NEW**
 - [x] `agents/quality-reviewer.md` **NEW**
 
-### Hooks (10 of 10)
+### Hooks (12 of 12)
 - [x] `hooks/hooks.json`
 - [x] `hooks/run-hook.cmd`
 - [x] `hooks/session-start.sh`
@@ -953,7 +953,9 @@ flowchart TD
 - [x] `hooks/phase-transition.sh`
 - [x] `hooks/tdd-precommit-check.sh`
 - [x] `hooks/verify-before-commit.sh`
-- [x] `hooks/validate-task-description.sh` **NEW**
+- [x] `hooks/validate-task-description.sh`
+- [x] `hooks/subagent-dispatch-tracker.sh` **NEW** - Tracks subagent dispatches per task
+- [x] `hooks/subagent-review-check.sh` **NEW** - Warns if reviewers skipped
 - [ ] `hooks/workflow-skip-set.sh` (Expert pattern)
 
 ### Templates (1 of 1)
