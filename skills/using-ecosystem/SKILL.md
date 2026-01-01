@@ -73,6 +73,7 @@ These skills provide techniques and standards for specific situations:
 
 2. **Brainstorm in Plan Mode**: Explore requirements (shift+tab twice first)
    - One question at a time
+   - **EXIT plan mode before writing** (prevents auto-execution)
    - Writes to `docs/designs/`
    - **STOPS after writing design** - does NOT proceed
 

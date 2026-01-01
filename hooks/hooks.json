@@ -46,6 +46,15 @@
             "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" validate-task-description.sh"
           }
         ]
+      },
+      {
+        "matcher": "Skill.*brainstorming",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" brainstorm-phase-start.sh"
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -100,6 +109,15 @@
           {
             "type": "command",
             "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" workflow-skip-set.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "ExitPlanMode",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" brainstorm-exit-plan-mode.sh"
           }
         ]
       }

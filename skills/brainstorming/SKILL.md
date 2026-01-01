@@ -38,11 +38,11 @@ This ensures efficient context management and leverages Claude Code's optimized 
 **This skill MUST be run in plan mode** (shift+tab twice before invoking `/brainstorm`).
 
 Plan mode ensures:
-- No premature code suggestions
-- Design documentation before implementation
+- Explore/Plan subagents available for codebase research
+- No premature code suggestions during exploration
 - Clear separation between exploration and execution
 
-After completing the design and saving to `docs/designs/`, this skill **STOPS** - it does NOT proceed to implementation. The user must explicitly invoke `/backlog-development` to continue.
+**CRITICAL**: You will EXIT plan mode before writing the design document. This prevents auto-execution and ensures the design is written to `docs/designs/`.
 
 ## The Process
 
@@ -105,14 +105,30 @@ Once approach is selected:
 
 ## After the Design
 
-### Documentation
+### Step 1: Exit Plan Mode
 
-Write validated design to:
+**CRITICAL**: Before writing the design document, you MUST exit plan mode.
+
+Why? Plan mode auto-execution would immediately start implementing. Exiting first ensures:
+- The design is written to `docs/designs/`, not `~/.claude/plans/`
+- No auto-execution after you accept the design
+- User controls when to proceed to next phase
+
+**Announce your intent:**
+```
+"Design exploration is complete. I'm now exiting plan mode to write the design document to docs/designs/."
+```
+
+**Then use the ExitPlanMode tool.**
+
+### Step 2: Write Documentation
+
+After exiting plan mode, write the validated design to:
 ```
 docs/designs/YYYY-MM-DD-<topic>-design.md
 ```
 
-### STOP - Do Not Proceed
+### Step 3: STOP - Do Not Proceed
 
 **After writing the design document, you MUST STOP.**
 
@@ -254,12 +270,21 @@ You are a design facilitator. Your job is to help the user think through their i
 
 ---
 
-## Critical: Plan Mode and Output Only
+## Critical: Plan Mode Flow
 
-**This skill MUST be run in plan mode** (shift+tab twice before invoking).
+**This skill uses plan mode for exploration, then EXITS before writing output.**
 
-**After completing the design:**
-1. Write the design document to `docs/designs/YYYY-MM-DD-<topic>-design.md`
-2. **STOP** - Do not proceed to implementation
-3. Let the user review and approve the design
-4. User will invoke `/backlog-development` when ready
+**Complete Workflow:**
+1. Enter plan mode (shift+tab twice before invoking)
+2. Use Explore/Plan subagents for codebase research
+3. Ask clarifying questions (one at a time)
+4. Design the solution collaboratively
+5. **EXIT plan mode** using ExitPlanMode tool
+6. Write design document to `docs/designs/YYYY-MM-DD-<topic>-design.md`
+7. **STOP** - Do not proceed to implementation
+8. User will invoke `/backlog-development` when ready
+
+**Why exit plan mode before writing?**
+- Prevents auto-execution when user accepts
+- Ensures design goes to `docs/designs/`, not `~/.claude/plans/`
+- Gives user control over when to proceed

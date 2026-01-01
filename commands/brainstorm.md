@@ -7,8 +7,17 @@ argument-hint: "[topic or feature description]"
 
 Start a collaborative exploration of requirements and design.
 
-**IMPORTANT**: This command MUST be run in plan mode (shift+tab twice).
-After writing the design document, this command will STOP and NOT proceed to implementation.
+**IMPORTANT**: This command uses plan mode for exploration, then EXITS plan mode before writing the design.
+
+## Workflow
+
+1. Enter plan mode (shift+tab twice) - enables exploration subagents
+2. Run `/brainstorm <topic>` - explores codebase, asks questions, designs
+3. **Claude will EXIT plan mode** before writing the design document
+4. Design is written to `docs/designs/YYYY-MM-DD-<topic>-design.md`
+5. Command **STOPS** - user must run `/backlog-development` to continue
+
+**WARNING**: Do NOT use "auto-accept edits" with this command. Wait for Claude to exit plan mode and write the design to `docs/designs/`.
 
 ## Usage
 
