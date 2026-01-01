@@ -20,7 +20,7 @@ Plan mode ensures:
 - Complete code in each task (no placeholders)
 - No premature implementation
 
-After completing the backlog and saving to `docs/backlogs/`, this skill **STOPS** - it does NOT proceed to implementation. The user must explicitly invoke `/implement` to continue.
+**CRITICAL**: You will EXIT plan mode before writing the backlog document. This prevents auto-execution and ensures the backlog is written to `docs/backlogs/`.
 
 ## Backlog Document Structure
 
@@ -194,14 +194,32 @@ Expected: No errors
 Expected: No errors
 ```
 
-## After Writing the Backlog
+## After Creating the Backlog
 
-Save the backlog to:
+### Step 1: Exit Plan Mode
+
+**CRITICAL**: Before writing the backlog document, you MUST exit plan mode.
+
+Why? Plan mode auto-execution would immediately start implementing. Exiting first ensures:
+- The backlog is written to `docs/backlogs/`, not `~/.claude/plans/`
+- No auto-execution after you accept the backlog
+- User controls when to proceed to implementation
+
+**Announce your intent:**
+```
+"Backlog creation is complete. I'm now exiting plan mode to write the backlog document to docs/backlogs/."
+```
+
+**Then use the ExitPlanMode tool.**
+
+### Step 2: Write the Backlog
+
+After exiting plan mode, save the backlog to:
 ```
 docs/backlogs/YYYY-MM-DD-<feature-name>-backlog.md
 ```
 
-### STOP - Do Not Proceed
+### Step 3: STOP - Do Not Proceed
 
 **After writing the backlog document, you MUST STOP.**
 
@@ -278,12 +296,20 @@ Every detail matters. Lack of specificity indicates insufficient understanding o
 
 ---
 
-## Critical: Plan Mode and Output Only
+## Critical: Plan Mode Flow
 
-**This skill MUST be run in plan mode** (shift+tab twice before invoking).
+**This skill uses plan mode for exploration, then EXITS before writing output.**
 
-**After completing the backlog:**
-1. Write the backlog document to `docs/backlogs/YYYY-MM-DD-<feature>-backlog.md`
-2. **STOP** - Do not proceed to implementation
-3. Let the user review and approve the backlog
-4. User will invoke `/implement` when ready
+**Complete Workflow:**
+1. Enter plan mode (shift+tab twice before invoking)
+2. Use Explore/Plan subagents for codebase research
+3. Create detailed task definitions with complete code
+4. **EXIT plan mode** using ExitPlanMode tool
+5. Write backlog document to `docs/backlogs/YYYY-MM-DD-<feature>-backlog.md`
+6. **STOP** - Do not proceed to implementation
+7. User will invoke `/implement` when ready
+
+**Why exit plan mode before writing?**
+- Prevents auto-execution when user accepts
+- Ensures backlog goes to `docs/backlogs/`, not `~/.claude/plans/`
+- Gives user control over when to proceed

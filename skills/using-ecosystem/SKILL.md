@@ -79,6 +79,7 @@ These skills provide techniques and standards for specific situations:
 
 3. **Backlog in Plan Mode**: Create bite-sized tasks (shift+tab twice first)
    - Exact file paths, complete code, test commands
+   - **EXIT plan mode before writing** (prevents auto-execution)
    - Writes to `docs/backlogs/`
    - **STOPS after writing backlog** - does NOT proceed
 
