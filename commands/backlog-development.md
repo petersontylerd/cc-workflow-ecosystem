@@ -17,7 +17,7 @@ Create a detailed backlog from a design or requirements.
 4. Backlog is written to `docs/backlogs/YYYY-MM-DD-<feature>-backlog.md`
 5. Command **STOPS** - user must run `/implement` to continue
 
-**WARNING**: Do NOT use "auto-accept edits" with this command. Wait for Claude to exit plan mode and write the backlog to `docs/backlogs/`.
+**CRITICAL**: Once the user selects "auto-accept edits" and you ExitPlanMode, write the design to `docs/backlogs/` as a markdown file. Then, you **MUST** stop and await the next command. Do **NOT** proceed directly to executing the backlog.
 
 ## Usage
 
@@ -27,4 +27,4 @@ Create a detailed backlog from a design or requirements.
 /backlog-development "add email validation to registration"
 ```
 
-Use the **developing-backlogs** skill for the full backlog creation process.
+**ESSENTIAL REQUIREMENT** Use the **developing-backlogs** skill for the full exploration and design process.

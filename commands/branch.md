@@ -15,4 +15,4 @@ Create or switch to a properly named feature branch.
 /branch fix/123-login-bug
 ```
 
-Use the **git-workflow** skill for branching conventions and workflow.
+**ESSENTIAL REQUIREMENT** Use the **git-workflow** skill for the full exploration and design process.

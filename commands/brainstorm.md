@@ -17,7 +17,7 @@ Start a collaborative exploration of requirements and design.
 4. Design is written to `docs/designs/YYYY-MM-DD-<topic>-design.md`
 5. Command **STOPS** - user must run `/backlog-development` to continue
 
-**WARNING**: Do NOT use "auto-accept edits" with this command. Wait for Claude to exit plan mode and write the design to `docs/designs/`.
+**CRITICAL**: Once the user selects "auto-accept edits" and you ExitPlanMode, write the design to `docs/designs/` as a markdown file. Then, you **MUST** stop and await the next command. Do **NOT** proceed directly to executing the design.
 
 ## Usage
 
@@ -27,4 +27,4 @@ Start a collaborative exploration of requirements and design.
 /brainstorm refactor the payment system
 ```
 
-Use the **brainstorming** skill for the full exploration and design process.
+**ESSENTIAL REQUIREMENT** Use the **brainstorming** skill for the full exploration and design process.
