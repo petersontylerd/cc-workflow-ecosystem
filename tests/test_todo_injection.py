@@ -320,21 +320,22 @@ class TestHooksJsonRegistration:
     """Tests that new hooks are properly registered in hooks.json."""
 
     def test_todo_injector_registered_in_hooks_json(self, plugin_root: Path) -> None:
-        """todo-injector.sh must be registered in hooks.json."""
+        """todo-injector.sh must be registered in PreToolUse hooks.json."""
         hooks_json = plugin_root / "hooks" / "hooks.json"
         data = json.loads(hooks_json.read_text())
 
-        posttool_hooks = data.get("hooks", {}).get("PostToolUse", [])
+        pretool_hooks = data.get("hooks", {}).get("PreToolUse", [])
 
-        # Collect all commands from PostToolUse hooks
+        # Collect all commands from PreToolUse Task hooks
         all_commands = []
-        for hook_entry in posttool_hooks:
-            for hook in hook_entry.get("hooks", []):
-                all_commands.append(hook.get("command", ""))
+        for hook_entry in pretool_hooks:
+            if hook_entry.get("matcher") == "Task":
+                for hook in hook_entry.get("hooks", []):
+                    all_commands.append(hook.get("command", ""))
         commands_str = " ".join(all_commands)
 
         assert "todo-injector.sh" in commands_str, (
-            "todo-injector.sh not registered in PostToolUse hooks"
+            "todo-injector.sh not registered in PreToolUse Task hooks"
         )
 
     def test_todo_sweep_registered_in_hooks_json(self, plugin_root: Path) -> None:

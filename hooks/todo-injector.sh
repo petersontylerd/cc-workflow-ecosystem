@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# PostToolUse hook: Inject TODO:BACKLOG markers into test files
-# Fires when: Task tool completes with code-implementer dispatch
+# PreToolUse hook: Inject TODO:BACKLOG markers into test files
+# Fires when: Task tool is about to dispatch code-implementer
 # Purpose: Create persistent anchors in code that remind implementers of their task
 #
 # Injects format: # TODO:BACKLOG[task-N]: See backlog for requirements
@@ -12,7 +12,7 @@ TOOL_NAME="${CLAUDE_TOOL_NAME:-}"
 TOOL_INPUT="${CLAUDE_TOOL_INPUT:-}"
 SESSION_DIR="${CLAUDE_SESSION_DIR:-${TMPDIR:-/tmp}/claude-session}"
 
-# Only process Task tool completions
+# Only process Task tool invocations
 [[ "$TOOL_NAME" != "Task" ]] && { echo '{}'; exit 0; }
 
 # Only process code-implementer dispatches
