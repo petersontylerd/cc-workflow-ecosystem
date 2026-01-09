@@ -53,7 +53,23 @@ Read your task description and confirm you understand:
 - [ ] **Failure Modes**: WHAT could go wrong?
 - [ ] **Skills**: WHICH skills should I consult?
 
-### 3. Scope Confirmation
+### 3. Check for TODO Markers
+
+Look for `TODO:BACKLOG[task-N]` markers in your target files (especially test files). These are injected by the workflow to anchor your work:
+
+```bash
+# Find any backlog markers in your target files
+grep -n "TODO:BACKLOG" tests/path/to/your_test.py
+```
+
+**If found:**
+- The marker confirms you're working on the correct file
+- Remove the marker as part of completing the task
+- Leaving markers behind will trigger a warning at `/verify`
+
+**If not found:** Proceed normally - markers are not always injected (e.g., when creating new files).
+
+### 4. Scope Confirmation
 
 If anything is unclear, ask the orchestrator BEFORE starting. Do NOT proceed with assumptions.
 

@@ -261,6 +261,7 @@ Before claiming ANY work is complete:
 - [ ] Linter passes (run fresh, see output)
 - [ ] Build passes (run fresh, see exit code)
 - [ ] Type checker passes (if applicable)
+- [ ] No TODO:BACKLOG markers remain (check hook output)
 - [ ] No TODO/FIXME in new code
 - [ ] Documentation updated (if applicable)
 - [ ] Each requirement verified individually
