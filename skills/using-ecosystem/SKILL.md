@@ -136,22 +136,25 @@ These disciplines are NON-NEGOTIABLE:
 
 ## Workflow Enforcement
 
-The ecosystem **actively enforces** workflow discipline through blocking hooks:
+The ecosystem enforces workflow discipline through hooks:
 
-### What Gets Blocked
+### What Gets Blocked vs Warned
 
-| Action | Blocked When | How to Proceed |
-|--------|--------------|----------------|
-| Write/Edit code | On main/master branch | Run `/branch` first |
-| Write/Edit code | Branch created but no design | Run `/brainstorm` (plan mode) first |
-| Write/Edit code | Design done but no backlog | Run `/backlog-development` (plan mode) first |
-| Git commit | Source files without tests staged | Stage test files or `/workflow skip` |
+| Action | Condition | Enforcement | How to Proceed |
+|--------|-----------|-------------|----------------|
+| Write/Edit code | On main/master branch | ⚠️ **WARNS** after | Undo, run `/branch` first |
+| Write/Edit code | Branch created but no design | ⚠️ **WARNS** after | Undo, run `/brainstorm` first |
+| Write/Edit code | Design done but no backlog | ⚠️ **WARNS** after | Undo, run `/backlog-development` first |
+| Git commit | Source files without tests staged | 🛑 **BLOCKS** | Stage test files or `/workflow skip` |
+| Task completion | Missing reviewer dispatches | ⚠️ **WARNS** after | Dispatch reviewers |
+
+**Note:** Due to a Claude Code runtime limitation ([Issue #4669](https://github.com/anthropics/claude-code/issues/4669)), PreToolUse blocking only works for Bash commands. Write/Edit/TodoWrite actions are warned after-the-fact rather than blocked.
 
 ### Workflow Phases
 
 ```
 idle → branched → brainstorming → backlog-ready → implementing → verifying → idle
-       (blocks)    (blocks)        (allows edits)
+       (warns)     (warns)         (allows edits)
 ```
 
 ### Escape Hatch
@@ -159,7 +162,7 @@ idle → branched → brainstorming → backlog-ready → implementing → verif
 For experienced users who understand the risks:
 
 ```
-/workflow skip    # Bypass enforcement for this session
+/workflow skip    # Suppress warnings for this session
 /workflow status  # Check current phase
 /workflow reset   # Re-enable enforcement
 ```

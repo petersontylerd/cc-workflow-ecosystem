@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
-# PreToolUse hook: Block Write/Edit on main/master branch
-# Enforces feature branch workflow by preventing direct edits to main branches
+# PostToolUse hook: Warn after Write/Edit on main/master branch
+# Detects direct edits to main branches and warns (blocking is broken in Claude Code)
+#
+# NOTE: This was previously a PreToolUse blocking hook, but Claude Code runtime
+# ignores blocking for Write/Edit tools (Issue #4669, closed as "not planned").
+# Converted to PostToolUse warning in v1.20.0.
 
 set -euo pipefail
 
@@ -33,13 +37,12 @@ CURRENT_BRANCH=$(git branch --show-current 2>/dev/null || echo "")
 if [[ "$CURRENT_BRANCH" == "main" || "$CURRENT_BRANCH" == "master" ]]; then
   cat <<'EOF'
 {
-  "decision": "block",
-  "reason": "BLOCKED: Edit prevented on main/master branch.\n\n**Current state:**\n- Branch: main/master (protected)\n- Phase: N/A (branch protection applies regardless of phase)\n\n**Required action:**\nRun: /branch feat/<issue>-<slug>  (for new features)\n  or: /branch fix/<issue>-<slug>   (for bug fixes)\n\n**Why:** Feature branch workflow protects main from incomplete work. Changes should be reviewed via PR before merging.\n\n**Escape hatch:** /workflow skip (not recommended - bypasses all enforcement)"
+  "systemMessage": "⚠️ WARNING: Edit made on main/master branch!\n\n**What happened:**\n- You just edited a file on the protected main/master branch\n- This bypasses the feature branch workflow\n\n**Recommended action:**\n1. Undo this change: `git checkout -- <file>`\n2. Create a feature branch: `git checkout -b feat/<slug>`\n3. Redo the change on the feature branch\n\n**Why this matters:** Feature branch workflow protects main from incomplete work. Changes should be reviewed via PR before merging.\n\n**Note:** Blocking was attempted but Claude Code runtime ignores PreToolUse blocks for Write/Edit (Issue #4669)."
 }
 EOF
   exit 0
 fi
 
-# On feature branch - allow
+# On feature branch - no warning needed
 echo '{}'
 exit 0

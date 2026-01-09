@@ -6,8 +6,6 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-import pytest
-
 
 class TestTodoInjectorBehavior:
     """Behavioral tests for todo-injector.sh hook."""
@@ -153,9 +151,7 @@ class TestTodoSweepBehavior:
         assert ".venv" in content or "venv" in content, (
             "todo-sweep.sh should exclude .venv"
         )
-        assert "node_modules" in content, (
-            "todo-sweep.sh should exclude node_modules"
-        )
+        assert "node_modules" in content, "todo-sweep.sh should exclude node_modules"
         assert ".git" in content, "todo-sweep.sh should exclude .git"
 
     def test_todo_sweep_outputs_warning_when_markers_remain(
@@ -219,9 +215,7 @@ class TestTodoInjectionIntegration:
             assert result.returncode == 0
             assert result.stdout.strip() == "{}"
 
-    def test_todo_injector_injects_into_existing_file(
-        self, plugin_root: Path
-    ) -> None:
+    def test_todo_injector_injects_into_existing_file(self, plugin_root: Path) -> None:
         """todo-injector.sh should inject TODO into existing test file."""
         with tempfile.TemporaryDirectory() as tmpdir:
             # Create a test file
@@ -254,7 +248,9 @@ class TestTodoInjectionIntegration:
 
             # Check file was modified
             content = test_file.read_text()
-            assert "TODO:BACKLOG[task-3]" in content, f"TODO not injected. Content: {content}"
+            assert "TODO:BACKLOG[task-3]" in content, (
+                f"TODO not injected. Content: {content}"
+            )
 
             # Check tracking file
             tracker = Path(tmpdir) / ".backlog_todos"

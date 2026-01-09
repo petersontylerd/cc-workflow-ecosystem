@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
-# PreToolUse hook: Block TodoWrite when task marked complete without reviews
+# PostToolUse hook: Warn after TodoWrite marks task complete without reviews
 # Checks tracker for missing spec-reviewer or quality-reviewer dispatch
 #
-# This hook fires when TodoWrite marks a task as completed.
+# This hook fires after TodoWrite marks a task as completed.
 # It checks the dispatch tracker to ensure all three subagents were dispatched.
-# If reviews are missing, it blocks the TodoWrite operation.
+# If reviews are missing, it warns about the violation.
 # Only active during the implementing phase.
+#
+# NOTE: This was previously a PreToolUse blocking hook, but Claude Code runtime
+# ignores blocking for TodoWrite tools (Issue #4669, closed as "not planned").
+# Converted to PostToolUse warning in v1.20.0.
 
 set -euo pipefail
 
@@ -61,22 +65,20 @@ if [[ -n "$MISSING" ]] || [[ -n "$FIX_WARNING" ]]; then
   if [[ -n "$MISSING" ]]; then
     cat <<EOF
 {
-  "decision": "block",
-  "reason": "BLOCKED: Task completion requires reviewer dispatch.\\n\\n**Current state:**\\n- Missing reviewers: ${MISSING}${FIX_WARNING}\\n\\n**Required action:**\\n1. Dispatch missing reviewers via Task tool\\n2. Wait for approvals (or fix issues if found)\\n3. Then mark task complete\\n\\n**Why:** Per orchestrating-subagents skill, every task requires:\\n  code-implementer -> spec-reviewer -> quality-reviewer\\n\\n**Escape hatch:** /workflow skip (not recommended)"
+  "systemMessage": "⚠️ WARNING: Task marked complete without required reviews!\\n\\n**What happened:**\\n- You just marked a task as completed\\n- Missing reviewers: ${MISSING}${FIX_WARNING}\\n\\n**Recommended action:**\\n1. Dispatch missing reviewers via Task tool\\n2. Wait for approvals (or fix issues if found)\\n3. Consider reverting the completion status until reviewed\\n\\n**Why this matters:** Per orchestrating-subagents skill, every task requires:\\n  code-implementer -> spec-reviewer -> quality-reviewer\\n\\n**Note:** Blocking was attempted but Claude Code runtime ignores PreToolUse blocks for TodoWrite (Issue #4669)."
 }
 EOF
   elif [[ -n "$FIX_WARNING" ]]; then
     # All dispatches present but needs_refix is set
     cat <<EOF
 {
-  "decision": "block",
-  "reason": "BLOCKED: Fresh reviews required after fix.\\n\\n**Current state:**\\n- Previous review found issues\\n- Implementer was re-dispatched to fix\\n- Reviewers NOT re-dispatched after fix\\n\\n**Required action:**\\n1. Re-dispatch spec-reviewer to verify fix\\n2. Re-dispatch quality-reviewer to verify fix\\n3. Only mark complete when BOTH approve AFTER fix\\n\\n**Why:** Reviews before fixes are stale and don't validate the fix.\\n\\n**Escape hatch:** /workflow skip (not recommended)"
+  "systemMessage": "⚠️ WARNING: Task marked complete without fresh reviews after fix!\\n\\n**What happened:**\\n- Previous review found issues\\n- Implementer was re-dispatched to fix\\n- Reviewers NOT re-dispatched after fix\\n- You marked the task complete anyway\\n\\n**Recommended action:**\\n1. Re-dispatch spec-reviewer to verify fix\\n2. Re-dispatch quality-reviewer to verify fix\\n3. Consider reverting the completion status until re-reviewed\\n\\n**Why this matters:** Reviews before fixes are stale and don't validate the fix.\\n\\n**Note:** Blocking was attempted but Claude Code runtime ignores PreToolUse blocks for TodoWrite (Issue #4669)."
 }
 EOF
   fi
   exit 0
 fi
 
-# All dispatches present, no fix needed - output nothing
+# All dispatches present, no fix needed - no warning
 echo '{}'
 exit 0
