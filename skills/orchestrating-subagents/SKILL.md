@@ -468,6 +468,77 @@ Quality-reviewer: "✅ Approved."
 8. **Review loops** - Issues found = fix = re-review
 9. **Sequential execution** - One task at a time, avoid conflicts
 
+## Automatic Task Tracking (TODO:BACKLOG)
+
+The workflow automatically tracks task progress via code markers:
+
+### How It Works
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ You dispatch code-implementer                                    │
+│     ↓                                                           │
+│ Hook injects: # TODO:BACKLOG[task-N]: See backlog for requirements │
+│     ↓                                                           │
+│ Marker appears in test file (line 2)                            │
+│     ↓                                                           │
+│ Subagent sees marker during startup ritual                      │
+│     ↓                                                           │
+│ Subagent removes marker as part of completing task              │
+│     ↓                                                           │
+│ At /verify: sweep checks for remaining markers                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### What You'll See
+
+When you dispatch code-implementer, you may see a hook message:
+```
+TODO:BACKLOG[task-3] injected into tests/test_auth.py. Remove this marker as you implement the task.
+```
+
+This is informational - the system is creating a persistent anchor in the code.
+
+### Why This Matters
+
+| Benefit | Explanation |
+|---------|-------------|
+| **Prevents task drift** | Marker anchors the subagent to the correct file |
+| **Survives context loss** | Even if subagent loses context, marker remains in code |
+| **Catches incomplete work** | `/verify` sweep warns about remaining markers |
+| **Creates audit trail** | Git history shows marker addition/removal |
+
+### Your Responsibilities
+
+1. **Understand the messages** - Hook messages about injection are normal, not errors
+2. **Reinforce in handoffs** - Mention that markers should be removed if needed
+3. **Check sweep results** - At `/verify`, remaining markers indicate incomplete tasks
+
+### Code-Implementer Behavior
+
+The code-implementer agent is instructed to:
+1. Check for `TODO:BACKLOG[task-N]` markers during startup
+2. Confirm they're working on the correct file
+3. Remove the marker as part of completing the task
+
+If markers remain after implementation, it may indicate:
+- Subagent didn't complete the task
+- Subagent forgot to remove the marker
+- Test file wasn't the one specified in the task
+
+### Sweep at /verify
+
+When you run `/verify`, a hook sweeps the codebase for remaining markers:
+
+```
+TODO:BACKLOG WARNING: 2 task marker(s) remain in codebase. These indicate
+incomplete tasks: ./tests/test_auth.py:2: TODO:BACKLOG[task-3];
+./tests/test_api.py:2: TODO:BACKLOG[task-5]. Review implementations and
+ensure markers are removed before claiming verification complete.
+```
+
+**Action:** Investigate why markers remain. Either complete the tasks or manually remove markers if they're false positives.
+
 ## Mandatory Task Tool Usage (NON-NEGOTIABLE)
 
 You MUST use the Task tool to dispatch each subagent. This is not optional.

@@ -134,6 +134,25 @@ These disciplines are NON-NEGOTIABLE:
 3. **Atomic Commits**: One logical change per commit
 4. **Feature Branches**: Never commit to main directly
 
+## Automatic Task Tracking (TODO:BACKLOG)
+
+During `/implement`, the system automatically tracks task completion via code markers:
+
+| Event | What Happens |
+|-------|--------------|
+| Dispatch code-implementer | `TODO:BACKLOG[task-N]` marker injected into test file |
+| Subagent implements | Subagent removes marker as part of completing task |
+| Run `/verify` | System sweeps for remaining markers, warns if any found |
+
+**Why this matters:**
+- Markers create persistent anchors in code that survive context loss
+- Remaining markers indicate potentially incomplete tasks
+- The sweep at `/verify` catches tasks that were started but not finished
+
+**For orchestrators:** You'll see hook messages about injection. The code-implementer knows to remove markers - reinforce this in task handoffs if needed.
+
+**For implementers:** Check test files for `TODO:BACKLOG[task-N]` markers during startup. Remove them as you complete the task.
+
 ## Workflow Enforcement
 
 The ecosystem enforces workflow discipline through hooks:
