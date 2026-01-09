@@ -249,16 +249,16 @@ class TestSubagentTrackingHooks:
             "Task PostToolUse hooks missing implementer-evidence-check.sh"
         )
 
-    def test_hooks_json_has_todowrite_posttool_hook(self, plugin_root: Path) -> None:
-        """hooks.json must have subagent-review-check.sh for TodoWrite PostToolUse."""
+    def test_hooks_json_has_todowrite_pretool_hook(self, plugin_root: Path) -> None:
+        """hooks.json must have subagent-review-check.sh for TodoWrite PreToolUse."""
         hooks_json = plugin_root / "hooks" / "hooks.json"
         data = json.loads(hooks_json.read_text())
 
-        posttool_hooks = data.get("hooks", {}).get("PostToolUse", [])
-        todowrite_hooks = [h for h in posttool_hooks if h.get("matcher") == "TodoWrite"]
+        pretool_hooks = data.get("hooks", {}).get("PreToolUse", [])
+        todowrite_hooks = [h for h in pretool_hooks if h.get("matcher") == "TodoWrite"]
 
         assert len(todowrite_hooks) == 1, (
-            "Expected exactly one TodoWrite PostToolUse hook entry"
+            "Expected exactly one TodoWrite PreToolUse hook entry"
         )
 
         commands = [
@@ -267,7 +267,7 @@ class TestSubagentTrackingHooks:
         commands_str = " ".join(commands)
 
         assert "subagent-review-check.sh" in commands_str, (
-            "TodoWrite PostToolUse hooks missing subagent-review-check.sh"
+            "TodoWrite PreToolUse hooks missing subagent-review-check.sh"
         )
 
     def test_dispatch_tracker_checks_implementing_phase(
@@ -311,8 +311,8 @@ class TestSubagentTrackingHooks:
             "subagent-review-check.sh should check for .workflow_skip"
         )
 
-    def test_review_check_warns_on_missing_reviewers(self, plugin_root: Path) -> None:
-        """subagent-review-check.sh must warn when reviewers are missing."""
+    def test_review_check_blocks_on_missing_reviewers(self, plugin_root: Path) -> None:
+        """subagent-review-check.sh must block when reviewers are missing."""
         script = plugin_root / "hooks" / "subagent-review-check.sh"
         content = script.read_text()
 
@@ -322,6 +322,9 @@ class TestSubagentTrackingHooks:
         assert "quality-reviewer" in content, (
             "subagent-review-check.sh should check for quality-reviewer"
         )
-        assert "SUBAGENT DISPATCH WARNING" in content, (
-            "subagent-review-check.sh should output warning when reviewers missing"
+        assert '"decision": "block"' in content, (
+            "subagent-review-check.sh should block when reviewers missing"
+        )
+        assert "BLOCKED:" in content, (
+            "subagent-review-check.sh should output block reason"
         )
